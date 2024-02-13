@@ -1,45 +1,38 @@
-interface Product {
-   id?: number;
-   product_name: string;
-   product_name_ascii: string;
-   category_id?: number;
-   brand_id?: number;
-   image_url: string;
-   installment: boolean;
-   category_data: {
-      category_name: string;
-      category_ascii: string;
-      attributes: CategoryAttribute[];
-   };
-   brand_data: {
-      brand_name: string;
-      brand_ascii: string;
-   };
-   combines_data: ProductCombine[];
-   attributes_data: ProductAttribute[];
-}
+type Category = {
+   id: number;
+   category_name: string;
+   category_ascii: string;
+   attributes: CategoryAttribute[];
+};
+
+type CategorySchema = Omit<Category, "id" | "attributes">;
 
 type CategoryAttribute = {
-     id?: number;
-     category_id: number;
-     attribute: string;
-     attribute_ascii: string;
-  };
+   id: number;
+   category_id: number;
+   attribute_name: string;
+   attribute_ascii: string;
+};
 
-interface ProductCombine {
-   id?: number;
-   product_name_ascii: string;
-   color_id: number;
-   storage_id: number;
-   quantity: number;
-   price: number;
-   default: boolean;
-   color_data: {
-      color: string;
-      color_ascii: string;
-   };
-   storage_data: {
-      storage: string;
-      storage_ascii: string;
-   };
-}
+type CategoryAttributeSchema = Omit<CategoryAttribute, "id">;
+
+type Product = {
+   id: number;
+   product_name: string;
+   product_ascii: string;
+   category_id: number;
+   image_url: string;
+   category: Category;
+   attributes: ProductAttribute[];
+};
+
+type ProductSchema = Omit<Product, "id" | "attributes" | "category">;
+
+type ProductAttribute = {
+   id: number;
+   category_attribute_id: number;
+   product_id: number;
+   value: string;
+};
+
+type ProductAttributeSchema = Omit<ProductAttribute, "id">;
