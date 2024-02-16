@@ -36,3 +36,9 @@ type ProductAttribute = {
 };
 
 type ProductAttributeSchema = Omit<ProductAttribute, "id">;
+
+type Toast = {
+   title?: "success" | "error" | "warning";
+   desc: string;
+   id: string;
+};
