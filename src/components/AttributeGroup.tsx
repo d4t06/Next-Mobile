@@ -1,5 +1,14 @@
-import { Dispatch, Ref, SetStateAction, forwardRef, useEffect, useImperativeHandle, useRef, useState } from "react";
-import { inputClasses } from "./MyInput";
+import {
+   Dispatch,
+   Ref,
+   SetStateAction,
+   forwardRef,
+   useEffect,
+   useImperativeHandle,
+   useRef,
+   useState,
+} from "react";
+import { inputClasses } from "./ui/MyInput";
 import { publicRequest } from "@/utils/request";
 
 export type AttributeRef = {
@@ -21,10 +30,15 @@ type EditAttribute = {
 
 type Props = AddAttribute | EditAttribute;
 
-const PRODUCT_ATTRIBUTE_URL = "/product-management/attributes";
+const PRODUCT_ATTRIBUTE_URL = "/products/attributes";
 
-const findInitValue = (attributes_data: ProductAttribute[], catAttr: CategoryAttribute) => {
-   const target = attributes_data.find((item) => item.category_attribute_id === catAttr.id);
+const findInitValue = (
+   attributes_data: ProductAttribute[],
+   catAttr: CategoryAttribute
+) => {
+   const target = attributes_data.find((item) => {
+      return item.category_attribute_id === catAttr.id;
+   });
 
    return target;
 };
@@ -34,7 +48,8 @@ function AttributeGroup({ ...allProps }: Props, ref: Ref<AttributeRef>) {
    const stock = useRef<ProductAttribute>();
 
    const submit = async () => {
-      if (allProps.categoryAttribute.id === undefined) throw new Error("category attribute id is undefined");
+      if (allProps.categoryAttribute.id === undefined)
+         throw new Error("category attribute id is undefined");
 
       if (stock.current === undefined && !!value) {
          const data: ProductAttributeSchema = {
@@ -48,30 +63,15 @@ function AttributeGroup({ ...allProps }: Props, ref: Ref<AttributeRef>) {
 
       // update must have value
       if (stock.current && !!value && stock.current.value !== value) {
-         console.log("update attribute");
-         // const data = initProductAttributeSchema({
-         //    category_attr_id: catAttr.id,
-         //    product_name_ascii,
-         //    value,
-         // });
-
-         // await publicRequest.put(`${PRODUCT_ATTRIBUTE_URL}/${stock.current.id}`, data);
+         await publicRequest.put(
+            `${PRODUCT_ATTRIBUTE_URL}/${stock.current.id}`,
+            { value }
+         );
       } else {
-         if (stock.current === null) throw new Error("stock.current id is undefined");
+         if (stock.current === null)
+            throw new Error("stock.current id is undefined");
       }
    };
-
-   useImperativeHandle(ref, () => ({ submit }));
-
-   useEffect(() => {
-      if (allProps.type === "Edit") {
-         const target = findInitValue(allProps.product.attributes, allProps.categoryAttribute);
-         if (target) {
-            setValue(target.value);
-            stock.current = target;
-         }
-      }
-   }, [allProps.product, allProps.categoryAttribute]);
 
    const handleOnChange = (value: string) => {
       setValue(value);
@@ -79,10 +79,27 @@ function AttributeGroup({ ...allProps }: Props, ref: Ref<AttributeRef>) {
       if (allProps.type === "Edit") allProps.setIsChange(true);
    };
 
+   useImperativeHandle(ref, () => ({ submit }));
+
+   useEffect(() => {
+      if (allProps.type === "Edit") {
+         const target = findInitValue(
+            allProps.product.attributes,
+            allProps.categoryAttribute
+         );
+         if (target) {
+            setValue(target.value);
+            stock.current = target;
+         }
+      }
+   }, [allProps.product, allProps.categoryAttribute]);
+
    return (
       <div className="flex items-center">
          <div className="col w-1/3">
-            <h5 className={`text-[16px] text-center font-[500]`}>{allProps.categoryAttribute.attribute_name}</h5>
+            <h5 className={`text-[16px] text-center font-[500]`}>
+               {allProps.categoryAttribute.attribute_name}
+            </h5>
          </div>
 
          <div className="col flex-grow">

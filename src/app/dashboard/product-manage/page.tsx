@@ -1,11 +1,16 @@
 import Button from "@/components/ui/Button";
 import { getAllProducts } from "@/libs/getAllProducts";
-import { PlusIcon } from "@heroicons/react/24/outline";
-import { log } from "console";
 import Link from "next/link";
+
+export const revalidate = 0;
 
 export default async function ProductManage() {
   const data = await getAllProducts(2, 1);
+
+  const classes = {
+    linkItem: "list-disc",
+    aItem: "text-[#333] font-[500] hover:text-[#cd1818]",
+  };
 
   return (
     <>
@@ -15,15 +20,23 @@ export default async function ProductManage() {
           Add new
         </Button>
       </div>
-      <ul className="space-y-[4px] mt-[10px]">
-        {data.products.map((p, index) => (
-          <li>
-            <Link key={index} href={`product-manage/${p.product_ascii}`}>
-              {p.product_name}
-            </Link>
-          </li>
-        ))}
-      </ul>
+
+      {!!data.products.length && (
+        <ul className="space-y-[4px] mt-[10px] mx-[10px]">
+          {data.products.map((p, index) => (
+            <li key={index} className={classes.linkItem}>
+              <Link
+                className={classes.aItem}
+                key={index}
+                href={`product-manage/${p.product_ascii}`}
+              >
+                {p.product_name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      )}
+      {!data.products.length && <p>No products jet...</p>}
     </>
   );
 }

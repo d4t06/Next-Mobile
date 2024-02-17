@@ -19,7 +19,7 @@ function Modal({ children, setShowModal }: Props) {
           ></div>
           {children && (
             <div className="fixed z-[100] top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]">
-              <div className="p-[10px] rounded-[8px] bg-white">{children}</div>
+              <div className="py-[12px] px-[16px] rounded-[8px] bg-white">{children}</div>
             </div>
           )}
         </>,

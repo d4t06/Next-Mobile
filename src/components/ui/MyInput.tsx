@@ -5,7 +5,7 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const inputClasses = {
-   input: "p-[6px] pl-[12px] bg-[#f1f1f1] w-full h-full rounded-[12px] placeholder:text-[#808080] outline-none text-[#333] border border-black/10 text-[16px] translate-y-[-4px]",
+   input: "p-[6px] pl-[12px] font-[500] bg-[#f1f1f1] w-full h-full rounded-[12px] placeholder:text-[#808080] outline-none text-[#333] border border-black/10 text-[16px] translate-y-[-4px]",
 };
 
 function Input({ cb, className, type, ...props }: Props, ref: Ref<any>) {
