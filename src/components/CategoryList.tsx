@@ -10,9 +10,10 @@ import { useRouter } from "next/navigation";
 import { useMemo, useRef, useState, useTransition } from "react";
 import OverlayCTA from "./ui/OverlayCta";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { useToast } from "@/stores/ToastContext";
 
 type Props = {
-   categories: Category[];
+  categories: Category[];
 };
 
 type ModalTarget = "add-category" | "edit-category" | "delete-category";
@@ -20,172 +21,171 @@ type ModalTarget = "add-category" | "edit-category" | "delete-category";
 const CAT_URL = "/categories";
 
 export default function CategoryList({ categories }: Props) {
-   const [isOpenModal, setIsOpenModal] = useState(false);
-   const [apiLoading, setApiLoading] = useState(false);
+  const [isOpenModal, setIsOpenModal] = useState(false);
+  const [apiLoading, setApiLoading] = useState(false);
 
-   const openModalTarget = useRef<ModalTarget | "">("");
-   const curCatIndex = useRef<number>();
+  const openModalTarget = useRef<ModalTarget | "">("");
+  const curCatIndex = useRef<number>();
 
-   // use hooks
-   const [isPending, startTransition] = useTransition();
-   const router = useRouter();
+  // use hooks
+  const router = useRouter();
+  const [isPending, startTransition] = useTransition();
+  const { setSuccessToast, setErrorToast } = useToast();
 
-   const isFetching = apiLoading || isPending;
+  const isFetching = apiLoading || isPending;
 
-   const handleOpenModal = (
-      target: typeof openModalTarget.current,
-      index?: number
-   ) => {
-      openModalTarget.current = target;
-      switch (target) {
-         case "edit-category":
-         case "delete-category":
-            curCatIndex.current = index ?? undefined;
-            break;
-      }
-      setIsOpenModal(true);
-   };
+  const handleOpenModal = (
+    target: typeof openModalTarget.current,
+    index?: number
+  ) => {
+    openModalTarget.current = target;
+    switch (target) {
+      case "edit-category":
+      case "delete-category":
+        curCatIndex.current = index ?? undefined;
+        break;
+    }
+    setIsOpenModal(true);
+  };
 
-   const handleAddCategory = async (value: string, type: "Add" | "Edit") => {
-      if (!value.trim()) {
-         return;
-      }
+  const handleAddCategory = async (value: string, type: "Add" | "Edit") => {
+    if (!value.trim()) {
+      return;
+    }
 
-      try {
-         setApiLoading(true);
-         const newCategory: CategorySchema = {
-            category_name: value,
-            category_ascii: generateId(value),
-         };
+    try {
+      setApiLoading(true);
+      const newCategory: CategorySchema = {
+        category_name: value,
+        category_ascii: generateId(value),
+      };
 
-         switch (type) {
-            case "Add":
-               await publicRequest.post(CAT_URL, newCategory);
+      switch (type) {
+        case "Add":
+          await publicRequest.post(CAT_URL, newCategory);
 
-               startTransition(() => {
-                  router.refresh();
-               });
-               break;
-
-            case "Edit":
-               if (curCatIndex.current === undefined) return;
-               const curCategory = categories[curCatIndex.current];
-               if (curCategory === undefined) return;
-
-               await publicRequest.put(
-                  `${CAT_URL}/${curCategory.id}`,
-                  newCategory
-               );
-
-               startTransition(() => {
-                  router.refresh();
-               });
-
-               break;
-         }
-      } catch (error) {
-         console.log(error);
-      } finally {
-         setApiLoading(false);
-         setIsOpenModal(false);
-      }
-   };
-
-   const handleDeleteCategory = async () => {
-      if (curCatIndex.current === undefined) return;
-      try {
-         setApiLoading(true);
-         const curCategory = categories[curCatIndex.current];
-
-         await publicRequest.delete(`${CAT_URL}/${curCategory.id}`);
-
-         startTransition(() => {
+          startTransition(() => {
             router.refresh();
-         });
-      } catch (error) {
-         console.log(error);
-      } finally {
-         setIsOpenModal(false);
-         setApiLoading(false);
+            setSuccessToast(`Category '${newCategory.category_name}' added`);
+          });
+          break;
+
+        case "Edit":
+          if (curCatIndex.current === undefined) return;
+          const curCategory = categories[curCatIndex.current];
+          if (curCategory === undefined) return;
+
+          await publicRequest.put(`${CAT_URL}/${curCategory.id}`, newCategory);
+
+          startTransition(() => {
+            router.refresh();
+            setSuccessToast(`Update category successful`);
+          });
+
+          break;
       }
-   };
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setApiLoading(false);
+      setIsOpenModal(false);
+    }
+  };
 
-   const renderModal = useMemo(() => {
-      if (!isOpenModal) return;
-      switch (openModalTarget.current) {
-         case "add-category":
-            return (
-               <AddItem
-                  loading={isFetching}
-                  title="Add category"
-                  cbWhenSubmit={(value) => handleAddCategory(value, "Add")}
-                  setIsOpenModal={setIsOpenModal}
-               />
-            );
+  const handleDeleteCategory = async () => {
+    if (curCatIndex.current === undefined) return;
+    try {
+      setApiLoading(true);
+      const curCategory = categories[curCatIndex.current];
 
-         case "edit-category":
-            if (curCatIndex.current === undefined) return "Index not found";
-            const curCategory = categories[curCatIndex.current];
-            return (
-               <AddItem
-                  loading={isFetching}
-                  initValue={curCategory.category_name}
-                  title={`Edit category '${curCategory.category_name}'`}
-                  cbWhenSubmit={(value) => handleAddCategory(value, "Edit")}
-                  setIsOpenModal={setIsOpenModal}
-               />
-            );
-         case "delete-category":
-            if (curCatIndex.current === undefined) return "Index not found";
+      await publicRequest.delete(`${CAT_URL}/${curCategory.id}`);
 
-            return (
-               <ConfirmModal
-                  callback={handleDeleteCategory}
-                  loading={isFetching}
-                  setOpenModal={setIsOpenModal}
-                  label={`Delete category '${
-                     categories[curCatIndex.current].category_name
-                  }'`}
-               />
-            );
+      startTransition(() => {
+        router.refresh();
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsOpenModal(false);
+      setApiLoading(false);
+    }
+  };
 
-         default:
-            return <h1 className="text-3xl">Not thing to show</h1>;
-      }
-   }, [isOpenModal, isPending, apiLoading]);
+  const renderModal = useMemo(() => {
+    if (!isOpenModal) return;
+    switch (openModalTarget.current) {
+      case "add-category":
+        return (
+          <AddItem
+            loading={isFetching}
+            title="Add category"
+            cbWhenSubmit={(value) => handleAddCategory(value, "Add")}
+            setIsOpenModal={setIsOpenModal}
+          />
+        );
 
-   return (
-      <>
-         <div className="flex -mx-[8px]">
-            {categories.map((c, index) => (
-               <div key={index} className="w-1/6 px-[8px]">
-                  <Box>
-                     {c.category_name}
-                     <OverlayCTA
-                        data={[
-                           {
-                              cb: () => handleOpenModal("edit-category", index),
-                              icon: <PencilSquareIcon className="w-[22px]" />,
-                           },
-                           {
-                              cb: () =>
-                                 handleOpenModal("delete-category", index),
-                              icon: <TrashIcon className="w-[22px]" />,
-                           },
-                        ]}
-                     />
-                  </Box>
-               </div>
-            ))}
+      case "edit-category":
+        if (curCatIndex.current === undefined) return "Index not found";
+        const curCategory = categories[curCatIndex.current];
+        return (
+          <AddItem
+            loading={isFetching}
+            initValue={curCategory.category_name}
+            title={`Edit category '${curCategory.category_name}'`}
+            cbWhenSubmit={(value) => handleAddCategory(value, "Edit")}
+            setIsOpenModal={setIsOpenModal}
+          />
+        );
+      case "delete-category":
+        if (curCatIndex.current === undefined) return "Index not found";
 
-            <div className="w-1/6 px-[8px]">
-               <Box onClick={() => handleOpenModal("add-category")} />
-            </div>
-         </div>
+        return (
+          <ConfirmModal
+            callback={handleDeleteCategory}
+            loading={isFetching}
+            setOpenModal={setIsOpenModal}
+            label={`Delete category '${
+              categories[curCatIndex.current].category_name
+            }'`}
+          />
+        );
 
-         {isOpenModal && (
-            <Modal setShowModal={setIsOpenModal}>{renderModal}</Modal>
-         )}
-      </>
-   );
+      default:
+        return <h1 className="text-3xl">Not thing to show</h1>;
+    }
+  }, [isOpenModal, isPending, apiLoading]);
+
+  return (
+    <>
+      <div className="flex -mx-[8px]">
+        {categories.map((c, index) => (
+          <div key={index} className="w-1/6 px-[8px]">
+            <Box>
+              {c.category_name}
+              <OverlayCTA
+                data={[
+                  {
+                    cb: () => handleOpenModal("edit-category", index),
+                    icon: <PencilSquareIcon className="w-[22px]" />,
+                  },
+                  {
+                    cb: () => handleOpenModal("delete-category", index),
+                    icon: <TrashIcon className="w-[22px]" />,
+                  },
+                ]}
+              />
+            </Box>
+          </div>
+        ))}
+
+        <div className="w-1/6 px-[8px]">
+          <Box onClick={() => handleOpenModal("add-category")} />
+        </div>
+      </div>
+
+      {isOpenModal && (
+        <Modal setShowModal={setIsOpenModal}>{renderModal}</Modal>
+      )}
+    </>
+  );
 }

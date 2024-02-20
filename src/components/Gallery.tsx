@@ -1,235 +1,253 @@
-import { useEffect, useState, useRef, Dispatch, SetStateAction, useMemo } from "react";
-// import usePrivateRequest from "@/hooks/usePrivateRequest";
-// import { useUploadContext } from "@/store/ImageContext";
+"use client";
+import {
+  useEffect,
+  useState,
+  useRef,
+  Dispatch,
+  SetStateAction,
+  useMemo,
+} from "react";
+
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { PlusIcon } from "@heroicons/react/16/solid";
+import { useUploadContext } from "@/stores/ImageContext";
+import { publicRequest } from "@/utils/request";
+import Button from "./ui/Button";
 
 type Props = {
-   setImageUrl: (image_url: string[]) => void;
-   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
-   multiple?: boolean;
+  setImageUrl: (image_url: string) => void;
+  setIsOpenModal: Dispatch<SetStateAction<boolean>>;
+  multiple?: boolean;
 };
 
-const IMAGE_URL = "/image-management/images";
+const IMAGE_URL = "/images";
 
-function Gallery({ setImageUrl, setIsOpenModal, multiple = false }: Props) {
-   const [choseList, setChoseList] = useState<string[]>([]);
-   const [active, setActive] = useState<any>();
-   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-   const [apiLoading, setApiLoading] = useState(false);
+function Gallery({ setImageUrl, setIsOpenModal }: Props) {
+  const [active, setActive] = useState<ImageType>();
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading"
+  );
+  const [apiLoading, setApiLoading] = useState(false);
 
-   const ranUseEffect = useRef(false);
+  const ranUseEffect = useRef(false);
 
-   // const privateRequest = usePrivateRequest();
-   // const { addedImageIds, currentImages, setCurrentImages, tempImages, status: uploadStatus } = useUploadContext();
+  // hooks
+  const {
+    addedImageIds,
+    currentImages,
+    setCurrentImages,
+    tempImages,
+    status: uploadStatus,
+  } = useUploadContext();
 
-   const formatSize = (size: number) => {
-      const units = ["Kb", "Mb"];
-      let mb = 0;
+  const formatSize = (size: number) => {
+    const units = ["Kb", "Mb"];
+    let mb = 0;
 
-      if (size < 1024) return size + units[mb];
-      while (size > 1024) {
-         size -= 1024;
-         mb++;
-      }
+    if (size < 1024) return size + units[mb];
+    while (size > 1024) {
+      size -= 1024;
+      mb++;
+    }
 
-      return mb + "," + size + units[1];
-   };
+    return mb + "," + size + units[1];
+  };
 
-   const handleSubmit = () => {
-      switch (multiple) {
-         case true:
-            if (!choseList.length) return;
+  const ableToChosenImage = !!active;
 
-            setImageUrl(choseList);
-            break;
-         case false:
-            if (!active) return;
-            setImageUrl([active.image_url]);
-      }
-      setIsOpenModal(false);
-   };
+  const isFetching = apiLoading || uploadStatus === "uploading";
 
-   const handleSelect = (image: any) => {
-      const newChoseList = [...choseList];
-      const index = newChoseList.indexOf(image.image_url);
+  const handleSubmit = () => {
+    if (!active) return;
+    setImageUrl(active.image_url);
+    setIsOpenModal(false);
+  };
 
-      if (index === -1) newChoseList.push(image.image_url);
-      else newChoseList.splice(index, 1);
+  const handleDeleteImage = async () => {
+    try {
+      if (!active || !active.public_id) return;
 
-      setChoseList(newChoseList);
-   };
+      setApiLoading(true);
+      const controller = new AbortController();
 
-   // const handleDeleteImage = async () => {
-   //    try {
-   //       if (!active || !active.public_id) return;
+      await publicRequest.delete(`${IMAGE_URL}/${active.public_id}`);
 
-   //       setApiLoading(true);
-   //       const controller = new AbortController();
+      const newImages = currentImages.filter(
+        (image) => image.public_id !== active.public_id
+      );
+      setCurrentImages(newImages);
 
-   //       await privateRequest.delete(`${IMAGE_URL}/${active.public_id}`);
+      return () => {
+        controller.abort();
+      };
+    } catch (error) {
+      console.log({ message: error });
+    } finally {
+      setApiLoading(false);
+    }
+  };
 
-   //       const newImages = currentImages.filter((image) => image.public_id !== active.public_id);
-   //       setCurrentImages(newImages);
+  const getImages = async () => {
+    try {
+      console.log("run getImages");
 
-   //       return () => {
-   //          controller.abort();
-   //       };
-   //    } catch (error) {
-   //       console.log({ message: error });
-   //    } finally {
-   //       setApiLoading(false);
-   //    }
-   // };
+      const res = await publicRequest.get(`${IMAGE_URL}?page=1`); //res.data
+      setCurrentImages(res.data.images);
 
-   // const getImages = async () => {
-   //    try {
-   //       console.log("run getImages");
+      //  if (import.meta.env.DEV) await sleep(300);
+      setStatus("success");
+    } catch (error) {
+      console.log({ message: error });
+      setStatus("error");
+    }
+  };
 
-   //       const res = await privateRequest.get(IMAGE_URL); //res.data
-   //       setCurrentImages(res.data);
+  const classes = {
+    container: "w-[90vw] h-[80vh] overflow-hidden",
+    imageContainer: "relative pt-[100%]",
+    imageFrame: "absolute inset-0 rounded-[8px] border-[2px] border-[#ccc] overflow-hidden",
+    galleryTop:
+      "h-[40px] flex justify-between items-center border-b border-[#ccc] mb-[10px] pb-[10px]",
+    galleryBody: "flex mx-[-10px]",
+    bodyLeft:
+      "h-[calc(80vh-60px)] w-2/3 no-scrollbar px-[10px] overflow-x-hidden overflow-y-auto",
+    bodyRight: "px-[10px] w-1/3 overflow-hidden border-l-[2px]",
+  };
 
-   //       if (import.meta.env.DEV) await sleep(300);
-   //       setStatus("success");
-   //    } catch (error) {
-   //       console.log({ message: error });
-   //       setStatus("error");
-   //    }
-   // };
+  const imageSkeleton = useMemo(
+    () =>
+      [...Array(8).keys()].map((item) => (
+        <div key={item} className={"col w-1/4 gallery-item"}>
+          {/* <Skeleton className="pt-[100%] w-[100% rounded-[6px]" /> */}
+        </div>
+      )),
+    []
+  );
 
-   // const imageSkeleton = useMemo(
-   //    () =>
-   //       [...Array(8).keys()].map((item) => (
-   //          <div key={item} className={cx("col w-1/4", "gallery-item")}>
-   //             <Skeleton className="pt-[100%] w-[100% rounded-[6px]" />
-   //          </div>
-   //       )),
-   //    []
-   // );
-
-   const ableToChosenImage = useMemo(() => (multiple ? !!choseList.length : !!active), [active, choseList]);
-
-   // const renderImages = useMemo(() => {
-   //    return currentImages?.map((item, index) => {
-   //       const indexOf = choseList.indexOf(item.image_url);
-   //       const isInChoseList = indexOf !== -1;
-
-   //       return (
-   //          <div key={index} className={cx("col w-1/4")}>
-   //             <div className={cx("image-container", "group")}>
-   //                <div
-   //                   onClick={() => setActive(item)}
-   //                   className={cx("image-frame", {
-   //                      active: active ? active.id === item.id : false,
-   //                   })}
-   //                >
-   //                   <img src={item.image_url} alt="img" />
-   //                </div>
-   //                {multiple && (
-   //                   <Button
-   //                      onClick={() => handleSelect(item)}
-   //                      className={`${
-   //                         isInChoseList ? "bg-[#cd1818] " : "bg-[#ccc] hover:bg-[#cd1818]"
-   //                      } z-10 h-[24px] w-[24px] absolute rounded-[6px] text-[white]  left-[10px] bottom-[10px]`}
-   //                   >
-   //                      {isInChoseList && <span className="text-[18px] font-semibold leading-[1]">{indexOf + 1}</span>}
-   //                   </Button>
-   //                )}
-   //             </div>
-   //          </div>
-   //       );
-   //    });
-   // }, [active, currentImages, choseList]);
-
-   // const renderTempImages = useMemo(
-   //    () =>
-   //       tempImages?.map((item, index) => {
-   //          const added = addedImageIds.includes(item.public_id);
-   //          return (
-   //             <div key={index} className={cx("col w-1/4")}>
-   //                <div className={cx("image-container")}>
-   //                   <div className={cx("image-frame", "relative")}>
-   //                      <img className="opacity-[.4]" src={item.image_url} alt="img" />
-   //                      {!added && <ArrowPathIcon className="animate-spin absolute text-[30px]" />}
-   //                   </div>
-   //                </div>
-   //             </div>
-   //          );
-   //       }),
-   //    [tempImages, addedImageIds]
-   // );
-
-   useEffect(() => {
-      // if (currentImages.length) {
-      //    setTimeout(() => {
-      //       setStatus("success");
-      //    }, 300);
-      //    return;
-      // }
-
-      if (!ranUseEffect.current) {
-         ranUseEffect.current = true;
-         // getImages();
-      }
-   }, []);
-
-   return (
-      <div className={"gallery"}>
-         <div className={"gallery__top"}>
-            <div className={"left"}>
-               <h1 className="text-[22px] font-semibold">Images</h1>
-               <div>
-                  <label className={"input-label"} htmlFor="image_upload">
-                     <span>
-                        <PlusIcon className="w-[22px] mr-[4px]" />
-                        Upload
-                     </span>
-                  </label>
-               </div>
+  const renderImages = useMemo(() => {
+    return currentImages?.map((item, index) => {
+      return (
+        <div key={index} className={"px-[8px] relative w-1/4"}>
+          <div className={classes.imageContainer}>
+            <div
+              onClick={() => setActive(item)}
+              className={`${classes.imageFrame}
+                        ${active?.id === item.id ? "border-[#cd1818]" : ""}`}
+            >
+              <img className="w-full h-auto" src={item.image_url} alt="img" />
             </div>
+          </div>
+        </div>
+      );
+    });
+  }, [active, currentImages]);
 
-            <button className={"choose-image-btn"} onClick={handleSubmit}>
-               Chọn
-            </button>
-         </div>
-         <div className={"gallery__body flex mx-[-8px]"}>
-            <div className={"w-2/3 px-[8px] no-scrollbar left"}>
-               <div className="row">
-                  {status === "loading" && ""}
+  const renderTempImages = useMemo(
+    () =>
+      tempImages?.map((item, index) => {
+        const added = addedImageIds.includes(item.public_id);
+        return (
+          <div key={index} className={"px-[8px] w-1/4"}>
+            <div className={classes.imageContainer}>
+              <div className={"relative"}>
+                <img className="opacity-[.4]" src={item.image_url} alt="img" />
+                {!added && (
+                  <ArrowPathIcon className="animate-spin absolute text-[30px]" />
+                )}
+              </div>
+            </div>
+          </div>
+        );
+      }),
+    [tempImages, addedImageIds]
+  );
 
-                  {status !== "loading" && (
-                     <>
-                        {status === "success" ? (
-                           <>{/* {!!tempImages?.length && renderTempImages} {renderImages} */}</>
-                        ) : (
-                           <h1>Some thing went wrong</h1>
-                        )}
-                     </>
-                  )}
-               </div>
-            </div>
-            <div className={"col w-1/3 px-[8px] overflow-hidden border-l-[2px]"}>
-               {active && (
-                  <div className={"image-info"}>
-                     <h2 className="break-words">{active.name}</h2>
-                     <ul>
-                        <li>
-                           <h4 className="font-semibold">Image path:</h4>{" "}
-                           <a target="blank" href={active.image_url}>
-                              {active.image_url}
-                           </a>
-                        </li>
-                        <li>
-                           <h4 className="font-semibold">Size:</h4> {formatSize(active.size)}
-                        </li>
-                     </ul>
-                     <button>Xóa</button>
-                  </div>
-               )}
-            </div>
-         </div>
+  useEffect(() => {
+    console.log("chcek current images", currentImages);
+
+    if (currentImages.length) {
+      console.log("run here");
+
+      setTimeout(() => {
+        setStatus("success");
+      }, 300);
+      return;
+    }
+
+    if (!ranUseEffect.current) {
+      ranUseEffect.current = true;
+      getImages();
+    }
+  }, []);
+
+  return (
+    <div className={classes.container}>
+      <div className={classes.galleryTop}>
+        <div className={"flex items-center"}>
+          <h1 className="text-[22px] font-[500]">Gallery</h1>
+          <Button className="ml-[10px] !p-0">
+            <label
+              className={`px-[20px] py-[4px] cursor-pointer inline-block ${
+                isFetching ? "opacity-60 pointer-events-none" : ""
+              }`}
+              htmlFor="image_upload"
+            >
+              Upload
+            </label>
+          </Button>
+        </div>
+
+        <Button
+          disabled={!ableToChosenImage}
+          onClick={handleSubmit}
+          variant={"primary"}
+        >
+          Chọn
+        </Button>
       </div>
-   );
+      <div className={classes.galleryBody}>
+        <div className={classes.bodyLeft}>
+          <div className="flex">
+            {status === "loading" && imageSkeleton}
+
+            {status !== "loading" && (
+              <>
+                {status === "success" ? (
+                  <>
+                    {!!tempImages?.length && renderTempImages} {renderImages}
+                  </>
+                ) : (
+                  <h1>Some thing went wrong</h1>
+                )}
+              </>
+            )}
+          </div>
+        </div>
+        <div className={classes.bodyRight}>
+          {active && (
+            <div className={"image-info"}>
+              <h2 className="break-words">{active.name}</h2>
+              <ul>
+                <li>
+                  <h4 className="font-semibold">Image path:</h4>{" "}
+                  <a target="blank" href={active.image_url}>
+                    {active.image_url}
+                  </a>
+                </li>
+                <li>
+                  <h4 className="font-semibold">Size:</h4>{" "}
+                  {formatSize(active.size)}
+                </li>
+              </ul>
+              <Button isLoading={apiLoading} onClick={handleDeleteImage}>
+                Xóa
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default Gallery;

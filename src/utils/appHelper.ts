@@ -13,3 +13,16 @@ export const generateId = (name: string): string => {
    };
    return convertToEn(name).replaceAll(/[\W_]/g, "-");
 };
+
+export const initImageObject = (data: Partial<ImageType>) => {
+   const newImage: ImageType = {
+      public_id: "",
+      image_url: "",
+      link_to: "",
+      name: "",
+      size: 0,
+      ...data,
+   };
+
+   return newImage;
+};

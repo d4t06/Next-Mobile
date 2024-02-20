@@ -19,7 +19,10 @@ export default function RootLayout({
       <html lang="en">
          <body className={montserrat.className}>
             <Header />
-            <div className="container min-[768px]:w-[800px] mx-auto px-[10px] sm:px-0"> {children}</div>
+            <div className="container min-[768px]:w-[800px] mx-auto px-[10px] sm:px-0">
+               {children}
+            </div>
+
             <div id="portals"></div>
          </body>
       </html>

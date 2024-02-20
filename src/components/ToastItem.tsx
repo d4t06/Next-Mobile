@@ -9,10 +9,18 @@ type Props = {
 };
 
 export default function ToastItem({ toast, onClick }: Props) {
+
+
+
+  const classes = {
+    container: 'flex items-center font-[500] px-[12px] py-[6px] rounded-[8px]'
+  }
+
+
   return (
     <div
       onClick={() => (onClick ? onClick(toast.id) : undefined)}
-      className={` ${toast.title === "error" && "bg-red-500 text-white"} ${
+      className={` ${classes.container} ${toast.title === "error" && "bg-red-500 text-white"} ${
         toast.title === "success" && "bg-emerald-500 text-white"
       } `}
     >
@@ -22,7 +30,7 @@ export default function ToastItem({ toast, onClick }: Props) {
           {toast.title === "error" && <XMarkIcon className="w-[24px]" />}
         </>
       )}
-      <p className="text-[16px]">{toast.desc}</p>
+      <p className="text-[16px] ml-[8px]">{toast.desc}</p>
     </div>
   );
 }

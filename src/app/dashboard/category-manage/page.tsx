@@ -1,6 +1,6 @@
 import { getAllCategories } from "@/libs/getAllCategory";
 import CategoryList from "../../../components/CategoryList";
-import CategoryAttributeGroup from "../../../components/CategoryAttribute";
+import CategoryAttributeGroup from "../../../components/CategoryAttributeList";
 
 
 export const revalidate = 0
