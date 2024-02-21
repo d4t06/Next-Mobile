@@ -6,15 +6,16 @@ import { createPortal } from "react-dom";
 type Props = {
   children?: ReactNode;
   setShowModal: Dispatch<SetStateAction<boolean>>;
+  className?: string
 };
 
-function Modal({ children, setShowModal }: Props) {
+function Modal({ children, setShowModal, className }: Props) {
   return (
     <>
       {createPortal(
         <>
           <div
-            className="fixed inset-0 z-[99] bg-black/60"
+            className={`fixed inset-0 z-[99] bg-black/60 ${className}`}
             onClick={() => setShowModal(false)}
           ></div>
           {children && (

@@ -1,17 +1,16 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Frame from "@/components/ui/Frame";
-import Box from "@/components/ui/Box";
 import Link from "next/link";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import Skeleton from "@/components/Skeleton";
+
+export const revalidate = 0;
 
 const getProductDetail = async (product_ascii: string) => {
   if (!product_ascii) throw new Error("missing id fetch data");
 
   const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products/${product_ascii}`,
-    { cache: "no-cache" }
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products/${product_ascii}`
   );
   if (!res.ok) return undefined;
   return (await res.json()) as Product;
@@ -38,15 +37,10 @@ export async function generateMetadata({
   };
 }
 
-export default async function ProductDetailPage({
-  params: { product_id },
-}: Params) {
+export default async function ProductDetailPage({ params: { product_id } }: Params) {
   const productDetail = await getProductDetail(product_id);
 
-  const attributeOrder =
-    productDetail?.category.attributes_order.split("_") || [];
-
-  console.log("chcek order", attributeOrder);
+  const attributeOrder = productDetail?.category.attributes_order.split("_") || [];
 
   const classes = {
     backBtn:
@@ -55,13 +49,13 @@ export default async function ProductDetailPage({
     detailBody: "flex space-y-[20px] sm:space-y-0 mx-[-8px]",
     detailLeft: "w-full sm:w-1/4 px-[8px] flex-shrink-0",
     detailRight: "flex-grow px-[8px]",
-    td: "group-even:bg-[#f1f1f1] px-[8px] py-[10px]",
+    td: "group-even:bg-[#f1f1f1] px-[10px] py-[12px]",
   };
 
   if (!productDetail) return <p>Some thing went wrong</p>;
 
   return (
-    <div className="my-[20px] space-y-[20px]">
+    <div className="space-y-[20px] pb-[30px]">
       <Link
         className={classes.backBtn}
         href={`/${productDetail.category.category_ascii}`}
@@ -81,14 +75,13 @@ export default async function ProductDetailPage({
           />
         </div>
         <div className={classes.detailRight}>
-          <Frame>
+          <>
             <table className="w-full">
               <tbody>
                 {attributeOrder.map((orderItem, index) => {
-                  const categoryAttribute =
-                    productDetail.category.attributes.find(
-                      (item) => item.attribute_ascii === orderItem
-                    );
+                  const categoryAttribute = productDetail.category.attributes.find(
+                    (item) => item.attribute_ascii === orderItem
+                  );
                   if (categoryAttribute === undefined) return;
                   const foundedValue = productDetail.attributes.find(
                     (attr) => attr.category_attribute_id == categoryAttribute.id
@@ -97,12 +90,12 @@ export default async function ProductDetailPage({
                   return (
                     <tr className=" group" key={index}>
                       <td
-                        className={`${classes.td} w-[30%] rounded-[8px_0_0_8px] text-[#666]"`}
+                        className={`${classes.td} w-[30%] text-[#666] rounded-[8px_0_0_8px] text-[#666]"`}
                       >
                         {categoryAttribute.attribute_name}
                       </td>
                       <td
-                        className={`${classes.td} rounded-[0_8px_8px_0] whitespace-break-spaces`}
+                        className={`${classes.td} leading-[2] rounded-[0_8px_8px_0] whitespace-break-spaces`}
                       >
                         {foundedValue?.value || "..."}
                       </td>
@@ -111,7 +104,7 @@ export default async function ProductDetailPage({
                 })}
               </tbody>
             </table>
-          </Frame>
+          </>
         </div>
       </div>
     </div>

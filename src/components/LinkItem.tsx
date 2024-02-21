@@ -13,13 +13,13 @@ export default function LinkItem({ children, href, activeClass }: Props) {
   const pathName = usePathname();
 
   const classes = {
-    linkItem: "font-[500]",
+    linkItem: "font-[500] text-[#333]",
   };
 
   return (
     <Link
       className={`${classes.linkItem} ${
-        pathName === href ? activeClass || "text-[#cd1818]" : ""
+        pathName === href ? activeClass || "text-[#9e0d1d]" : ""
       }`}
       href={href}
     >
