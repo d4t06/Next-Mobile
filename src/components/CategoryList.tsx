@@ -58,6 +58,7 @@ export default function CategoryList({ categories }: Props) {
       const newCategory: CategorySchema = {
         category_name: value,
         category_ascii: generateId(value),
+        attributes_order: "",
       };
 
       switch (type) {

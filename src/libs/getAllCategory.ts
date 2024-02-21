@@ -1,5 +1,8 @@
-export const getAllCategories = async () => {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT}/categories`);
+export const getAllCategories = async (rest: RequestInit | undefined) => {
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/categories`,
+    {...rest}
+  );
 
-  return await res.json() as Category[];
+  return (await res.json()) as Category[];
 };
