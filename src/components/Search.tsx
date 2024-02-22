@@ -1,14 +1,17 @@
 "use client";
 
 import useDebounce from "@/hooks/useDebounce";
-import { ArrowPathIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+  ArrowPathIcon,
+  MagnifyingGlassIcon,
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import Link from "next/link";
 import { ElementRef, useEffect, useRef, useState } from "react";
 import Modal from "./modal";
-import useMouseEnter from "@/hooks/useMouseEnter";
 
 export default function Search() {
+  // states
   const [value, setValue] = useState("");
   const [searchResult, setSearchResult] = useState<Product[]>([]);
   const [focus, setFocus] = useState(false);
@@ -17,21 +20,22 @@ export default function Search() {
   const inputRef = useRef<ElementRef<"input">>(null);
 
   // hooks
-  const { props } = useMouseEnter({
-    cb: () => {
-      setFocus(false);
-      inputRef.current?.blur();
-    },
-  });
   const query = useDebounce(value, 700);
 
+  // computed
   const isShowSearchResult = focus && !!searchResult.length && query;
+
+  // methods
+  const handleMouseLeave = () => {
+    setFocus(false);
+    inputRef.current?.blur();
+  };
 
   const classes = {
     container:
       "border border-black/15 flex items-center h-[30px] rounded-[6px] px-[10px]",
     input:
-      "placeholder:text-[#808080] font-[500] h-full bg-transparent outline-none text-[#333] text-[16px]",
+      "placeholder:text-[#808080] w-full font-[500] h-full bg-transparent outline-none text-[#333] text-[16px]",
     searchItem:
       "flex border-l-[2px] border-transparent px-[4px] transition-[border_padding] hover:border-[#cd1818] hover:pl-[10px] ",
     searchResultWrapper:
@@ -93,7 +97,10 @@ export default function Search() {
 
       <div className="absolute top-[calc(100%+6px)] w-full ">
         {isShowSearchResult && (
-          <div className={classes.searchResultWrapper} {...props}>
+          <div
+            className={classes.searchResultWrapper}
+            onMouseLeave={handleMouseLeave}
+          >
             <ul className={classes.searchResultContainer}>
               {setSearchResult.length ? (
                 searchResult.map((p, index) => {

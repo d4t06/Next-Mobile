@@ -228,7 +228,8 @@ export default function AddProductForm({ categories, product, type }: Props) {
           />
         );
     }
-  }, [isOpenModal]);
+  }, [isOpenModal, isLoading, handleInput, handleDeleteProduct]);
+
   const classes = {
     label: "text-[18px] mb-[4px]",
   };

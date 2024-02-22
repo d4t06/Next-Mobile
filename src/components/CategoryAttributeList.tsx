@@ -25,7 +25,9 @@ const CAT_URL = "/categories";
 
 function CategoryAttributeGroup({ categories }: Props) {
   const [curCategory, setCurCategory] = useState<Category | undefined>();
-  const [curCategoryAttrs, setCurCategoryAttrs] = useState<CategoryAttribute[]>([]);
+  const [curCategoryAttrs, setCurCategoryAttrs] = useState<CategoryAttribute[]>(
+    []
+  );
   const [curCategoryIndex, setCurCategoryIndex] = useState<number>();
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
@@ -43,7 +45,8 @@ function CategoryAttributeGroup({ categories }: Props) {
   const isLoading = isFetching || isPending;
 
   const handleAddAttr = async (value: string, type: "Add" | "Edit") => {
-    if (curCategory?.id === undefined) throw new Error("curCategory.id is undefined");
+    if (curCategory?.id === undefined)
+      throw new Error("curCategory.id is undefined");
 
     const newCatAttr: CategoryAttributeSchema = {
       attribute_name: value,
@@ -68,7 +71,10 @@ function CategoryAttributeGroup({ categories }: Props) {
         case "Edit":
           if (curAttr.current === undefined) return;
           const { category_id, ...updateData } = newCatAttr;
-          await publicRequest.put(`${CAT_ATTR_URL}/${curAttr.current.id}`, updateData);
+          await publicRequest.put(
+            `${CAT_ATTR_URL}/${curAttr.current.id}`,
+            updateData
+          );
 
           startTransition(() => {
             router.refresh();
@@ -126,7 +132,8 @@ function CategoryAttributeGroup({ categories }: Props) {
     let newOrder = "";
     newList.forEach(
       (item, index) =>
-        (newOrder += index == 0 ? item.attribute_ascii : `_${item.attribute_ascii}`)
+        (newOrder +=
+          index == 0 ? item.attribute_ascii : `_${item.attribute_ascii}`)
     );
 
     try {
@@ -156,7 +163,7 @@ function CategoryAttributeGroup({ categories }: Props) {
     setIsOpenModal(true);
   };
 
-  const renderModal = useMemo(() => {
+  const renderModal = () => {
     if (!isOpenModal) return;
 
     switch (openModalTarget.current) {
@@ -200,7 +207,7 @@ function CategoryAttributeGroup({ categories }: Props) {
       default:
         return <h1 className="text-3xl">Not thing to show</h1>;
     }
-  }, [isOpenModal, isFetching, isPending]);
+  };
 
   useEffect(() => {
     if (curCategoryIndex === undefined) return;
@@ -214,7 +221,8 @@ function CategoryAttributeGroup({ categories }: Props) {
 
   const classes = {
     label: "font-[500] text-[#333]",
-    attrItem: " bg-[#f1f1f1] px-[18px] py-[8px] border-[2px] border-[#ccc] rounded-[8px]",
+    attrItem:
+      " bg-[#f1f1f1] px-[18px] py-[8px] border-[2px] border-[#ccc] rounded-[8px]",
     cta: "ml-[10px] pl-[10px] border-[#ccc] border-l-[1px] flex items-center space-x-[4px] text-[#333]",
   };
 
@@ -294,7 +302,9 @@ function CategoryAttributeGroup({ categories }: Props) {
         </div>
       </Frame>
 
-      {isOpenModal && <Modal setShowModal={setIsOpenModal}>{renderModal}</Modal>}
+      {isOpenModal && (
+        <Modal setShowModal={setIsOpenModal}>{renderModal()}</Modal>
+      )}
     </div>
   );
 }

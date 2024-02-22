@@ -30,7 +30,7 @@ export default function CategoryList({ categories }: Props) {
   // use hooks
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const { setSuccessToast, setErrorToast } = useToast();
+  const { setSuccessToast } = useToast();
 
   const isFetching = apiLoading || isPending;
 
@@ -112,7 +112,7 @@ export default function CategoryList({ categories }: Props) {
     }
   };
 
-  const renderModal = useMemo(() => {
+  const renderModal = () => {
     if (!isOpenModal) return;
     switch (openModalTarget.current) {
       case "add-category":
@@ -154,7 +154,7 @@ export default function CategoryList({ categories }: Props) {
       default:
         return <h1 className="text-3xl">Not thing to show</h1>;
     }
-  }, [isOpenModal, isPending, apiLoading]);
+  };
 
   return (
     <>
@@ -185,7 +185,7 @@ export default function CategoryList({ categories }: Props) {
       </div>
 
       {isOpenModal && (
-        <Modal setShowModal={setIsOpenModal}>{renderModal}</Modal>
+        <Modal setShowModal={setIsOpenModal}>{renderModal()}</Modal>
       )}
     </>
   );

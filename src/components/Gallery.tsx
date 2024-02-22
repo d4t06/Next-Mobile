@@ -1,10 +1,18 @@
 "use client";
-import { useEffect, useState, useRef, Dispatch, SetStateAction, useMemo } from "react";
+import {
+  useEffect,
+  useState,
+  useRef,
+  Dispatch,
+  SetStateAction,
+  useMemo,
+} from "react";
 
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import { useUploadContext } from "@/stores/ImageContext";
 import { publicRequest } from "@/utils/request";
 import Button from "./ui/Button";
+import Image from "next/image";
 
 type Props = {
   setImageUrl: (image_url: string) => void;
@@ -16,13 +24,20 @@ const IMAGE_URL = "/images";
 
 function Gallery({ setImageUrl, setIsOpenModal }: Props) {
   const [active, setActive] = useState<ImageType>();
-  const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
+  const [status, setStatus] = useState<"loading" | "success" | "error">(
+    "loading"
+  );
   const [apiLoading, setApiLoading] = useState(false);
 
   const ranUseEffect = useRef(false);
 
   // hooks
-  const { currentImages, setCurrentImages, tempImages, status: uploadStatus } = useUploadContext();
+  const {
+    currentImages,
+    setCurrentImages,
+    tempImages,
+    status: uploadStatus,
+  } = useUploadContext();
 
   const formatSize = (size: number) => {
     const units = ["Kb", "Mb"];
@@ -56,7 +71,9 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
 
       await publicRequest.delete(`${IMAGE_URL}/${active.public_id}`);
 
-      const newImages = currentImages.filter((image) => image.public_id !== active.public_id);
+      const newImages = currentImages.filter(
+        (image) => image.public_id !== active.public_id
+      );
       setCurrentImages(newImages);
 
       return () => {
@@ -87,22 +104,19 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
   const classes = {
     container: "w-[90vw] h-[80vh] overflow-hidden",
     imageContainer: "relative pt-[100%]",
-    imageFrame: "absolute flex  w-full items-center justify-center bg-[#f1f1f1] inset-0 rounded-[8px] border-[2px] border-[#ccc] hover:border-[#cd1818] overflow-hidden",
-    galleryTop: "h-[40px] flex justify-between items-center border-b border-[#ccc] mb-[10px] pb-[10px]",
+    imageFrame:
+      "absolute flex  w-full items-center justify-center bg-[#f1f1f1] inset-0 rounded-[8px] border-[2px] border-[#ccc] hover:border-[#cd1818] overflow-hidden",
+    galleryTop:
+      "h-[40px] flex justify-between items-center border-b border-[#ccc] mb-[10px] pb-[10px]",
     galleryBody: "flex mx-[-10px]",
-    bodyLeft: "h-[calc(80vh-60px)] w-2/3 no-scrollbar px-[10px] overflow-x-hidden overflow-y-auto",
+    bodyLeft:
+      "h-[calc(80vh-60px)] w-2/3 no-scrollbar px-[10px] overflow-x-hidden overflow-y-auto",
     bodyRight: "px-[10px] w-1/3 overflow-hidden border-l-[2px] space-y-[14px]",
   };
 
-  const imageSkeleton = useMemo(
-    () =>
-      [...Array(8).keys()].map((item) => (
-        <div key={item} className={"col w-1/4 gallery-item"}>
-          {/* <Skeleton className="pt-[100%] w-[100% rounded-[6px]" /> */}
-        </div>
-      )),
-    []
-  );
+  const imageSkeleton = [...Array(8).keys()].map((item) => (
+    <div key={item} className={"col w-1/4 gallery-item"}></div>
+  ));
 
   const renderImages = useMemo(() => {
     if (currentImages.length)
@@ -115,7 +129,13 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                 className={`${classes.imageFrame}
                         ${active?.id === item.id ? "border-[#cd1818]" : ""}`}
               >
-                <img className="w-full h-auto" src={item.image_url} alt="img" />
+                <Image
+                  width={200}
+                  height={200}
+                  className="w-full h-auto"
+                  src={item.image_url}
+                  alt="img"
+                />
               </div>
             </div>
           </div>
@@ -124,23 +144,26 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
     else return <p>No image jet...</p>;
   }, [active, currentImages]);
 
-  const renderTempImages = useMemo(
-    () =>
-      !!tempImages.length &&
-      tempImages.map((item, index) => {
-        return (
-          <div key={index} className={"px-[8px] w-1/4"}>
-            <div className={classes.imageContainer}>
-              <div className={classes.imageFrame}>
-                <img className="opacity-[.4]" src={item.image_url} alt="img" />
-                <ArrowPathIcon className="animate-spin absolute duration-1000 text-[#000] w-[30px]" />
-              </div>
+  const renderTempImages = () =>
+    !!tempImages.length &&
+    tempImages.map((item, index) => {
+      return (
+        <div key={index} className={"px-[8px] w-1/4"}>
+          <div className={classes.imageContainer}>
+            <div className={classes.imageFrame}>
+              <Image
+                className="opacity-[.4]"
+                src={item.image_url}
+                alt="img"
+                width={200}
+                height={200}
+              />
+              <ArrowPathIcon className="animate-spin absolute duration-1000 text-[#000] w-[30px]" />
             </div>
           </div>
-        );
-      }),
-    [tempImages]
-  );
+        </div>
+      );
+    });
 
   useEffect(() => {
     if (currentImages.length) {
@@ -164,13 +187,22 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
         <div className={"flex items-center"}>
           <h1 className="text-[22px] font-[500]">Gallery</h1>
           <Button className="ml-[10px] !p-0">
-            <label className={`px-[20px] py-[4px] cursor-pointer inline-block ${isFetching ? "opacity-60 pointer-events-none" : ""}`} htmlFor="image_upload">
+            <label
+              className={`px-[20px] py-[4px] cursor-pointer inline-block ${
+                isFetching ? "opacity-60 pointer-events-none" : ""
+              }`}
+              htmlFor="image_upload"
+            >
               Upload
             </label>
           </Button>
         </div>
 
-        <Button disabled={!ableToChosenImage} onClick={handleSubmit} variant={"primary"}>
+        <Button
+          disabled={!ableToChosenImage}
+          onClick={handleSubmit}
+          variant={"primary"}
+        >
           Chọn
         </Button>
       </div>
@@ -199,12 +231,17 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
               <ul>
                 <li>
                   <h4 className="font-semibold">Image path:</h4>{" "}
-                  <a className="hover:underline" target="blank" href={active.image_url}>
+                  <a
+                    className="hover:underline"
+                    target="blank"
+                    href={active.image_url}
+                  >
                     {active.image_url}
                   </a>
                 </li>
                 <li>
-                  <h4 className="font-semibold">Size:</h4> {formatSize(active.size)}
+                  <h4 className="font-semibold">Size:</h4>{" "}
+                  {formatSize(active.size)}
                 </li>
               </ul>
               <Button isLoading={apiLoading} onClick={handleDeleteImage}>

@@ -3,8 +3,6 @@ import { getAllCategories } from "@/libs/getAllCategory";
 import { getAllProducts } from "@/libs/getAllProducts";
 import Link from "next/link";
 
-export const revalidate = 0
-
 export default async function Home() {
   const categories = await getAllCategories();
 
@@ -24,8 +22,8 @@ export default async function Home() {
 
   return (
     <div className="pt-[30px] space-y-[20px]">
-      {categories.map((cat) => (
-        <Frame>
+      {categories.map((cat, index) => (
+        <Frame key={index}>
           <h5 className="text-[18px] text-[#333] font-[500]">
             Recent {cat.category_name}
             {!!productMaps[cat.category_ascii].length && (

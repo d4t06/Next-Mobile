@@ -3,8 +3,6 @@ import { getAllProducts } from "@/libs/getAllProducts";
 import { Metadata } from "next";
 import Link from "next/link";
 
-export const revalidate = 0;
-
 export async function generateMetadata({
   params: { category },
 }: Params): Promise<Metadata> {
@@ -22,7 +20,9 @@ type Params = {
 export default async function ProductPage({ params: { category } }: Params) {
   const categories = await getAllCategories();
 
-  const targetCategory = categories.find((cat) => cat.category_ascii === category);
+  const targetCategory = categories.find(
+    (cat) => cat.category_ascii === category
+  );
   if (!targetCategory) return <p>Some thing went wrong</p>;
 
   const data = await getAllProducts(1, targetCategory.id);
@@ -36,7 +36,7 @@ export default async function ProductPage({ params: { category } }: Params) {
   return (
     <>
       {!!data.products.length && (
-        <ul className="space-y-[4px]">
+        <ul className="space-y-[4px] ml-[16px]">
           {data.products.map((p, index) => (
             <li key={index} className={classes.linkItem}>
               <Link

@@ -1,8 +1,8 @@
-import { getProduct } from "@/libs/getProduct";
-import AddProductForm from "../../../../components/AddProductForm";
+import AddProductForm from "@/components/AddProductForm";
 import { getAllCategories } from "@/libs/getAllCategory";
 import Link from "next/link";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
+import { getProductDetail } from "@/libs/getProductDetail";
 
 type Props = {
   params: {
@@ -10,18 +10,15 @@ type Props = {
   };
 };
 
-
-export const revalidate = 0
-
-
 export default async function EditProduct({
   params: { product_ascii },
 }: Props) {
-  const product = await getProduct(product_ascii);
+  const product = await getProductDetail(product_ascii);
   const categories = await getAllCategories();
 
   const classes = {
-    backButton: "inline-flex items-center text-[16px] font-[500] hover:text-[#cd1818]",
+    backButton:
+      "inline-flex items-center text-[16px] font-[500] hover:text-[#cd1818]",
   };
 
   return (

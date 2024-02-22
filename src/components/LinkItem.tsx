@@ -8,17 +8,18 @@ type Props = {
   children: ReactNode;
   href: string;
   activeClass?: string;
+  className?: string
 };
-export default function LinkItem({ children, href, activeClass }: Props) {
+export default function LinkItem({ children, href, activeClass, className }: Props) {
   const pathName = usePathname();
 
   const classes = {
-    linkItem: "font-[500] text-[#333]",
+    linkItem: "font-[400]",
   };
 
   return (
     <Link
-      className={`${classes.linkItem} ${
+      className={`${classes.linkItem} ${className} ${
         pathName === href ? activeClass || "text-[#9e0d1d]" : ""
       }`}
       href={href}
