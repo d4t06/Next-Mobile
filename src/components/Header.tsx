@@ -12,7 +12,7 @@ export default async function Header() {
         <div className="container min-[768px]:w-[800px] px-[10px] mx-auto h-full sm:px-0">
           <div className="h-full flex flex-col sm:flex-row items-start sm:items-center">
             <Link href={"/"}>
-              <h1 className="text-[22px] font-[500] my-[5px] sm:mb-0 leading-[30px]">
+              <h1 className="text-[22px] font-[500] my-[5px] sm:my-0 leading-[30px]">
                 Mobile Wars
               </h1>
             </Link>

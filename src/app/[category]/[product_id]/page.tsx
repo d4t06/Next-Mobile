@@ -99,12 +99,12 @@ export default async function ProductDetailPage({
                   return (
                     <tr className=" group" key={index}>
                       <td
-                        className={`${classes.td} w-[30%] text-[#666] rounded-[8px_0_0_8px] text-[#666]"`}
+                        className={`${classes.td} w-[30%] text-[#666] font-[500] rounded-[6px_0_0_6px] text-[#666]"`}
                       >
                         {categoryAttribute.attribute_name}
                       </td>
                       <td
-                        className={`${classes.td} leading-[2] rounded-[0_8px_8px_0] whitespace-break-spaces`}
+                        className={`${classes.td} leading-[2] rounded-[0_6px_6px_0] whitespace-break-spaces`}
                       >
                         {foundedValue?.value || "..."}
                       </td>

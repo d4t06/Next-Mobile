@@ -2,6 +2,8 @@ import Button from "@/components/ui/Button";
 import { getAllProducts } from "@/libs/getAllProducts";
 import Link from "next/link";
 
+export const revalidate = 0
+
 export default async function ProductManage() {
   const data = await getAllProducts(2, 1);
 
