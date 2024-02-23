@@ -5,8 +5,6 @@ import Link from "next/link";
 import {notFound} from 'next/navigation'
 
 
-export const revalidate = 5
-
 const findCurCategory = (categories: Category[], curCategoryAscii: string) => {
    const curCategory = categories.find((cat) => cat.category_ascii === curCategoryAscii);
    return curCategory;

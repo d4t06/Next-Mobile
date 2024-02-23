@@ -90,7 +90,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
          const data = res.data as getImagesRes;
 
          const newImages = [...currentImages, ...data.images];
-         setImagesState((prev) => ({page: data.page, currentImages: newImages }));
+         setImagesState((prev) => ({...prev, page: data.page, currentImages: newImages }));
 
          setStatus("success");
       } catch (error) {

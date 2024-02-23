@@ -8,7 +8,7 @@ import { publicRequest } from "@/utils/request";
 const IMAGE_URL = "/images";
 
 export default function useUploadImage() {
-  const { setCurrentImages, setStatus, setTempImages } = useUploadContext();
+  const { setImagesState, setStatus, setTempImages } = useUploadContext();
   const { setErrorToast, setSuccessToast } = useToast();
 
   const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
@@ -22,7 +22,9 @@ export default function useUploadImage() {
       const fileNeedToUploadIndexes: number[] = [];
 
       const checkDuplicateImage = (ob: ImageType) => {
-        return processImageList.some((image) => image.name === ob.name && image.size == ob.size);
+        return processImageList.some(
+          (image) => image.name === ob.name && image.size == ob.size
+        );
       };
 
       let i = 0;
@@ -67,7 +69,10 @@ export default function useUploadImage() {
         processImageList.pop();
 
         setTempImages([...processImageList]);
-        setCurrentImages((prev) => [newImage, ...prev]);
+        setImagesState((prev) => ({
+          ...prev,
+          currentImages: [newImage, ...prev.currentImages],
+        }));
       }
       setSuccessToast("Upload images successful");
     } catch (error) {
