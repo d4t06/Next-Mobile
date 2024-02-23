@@ -3,8 +3,6 @@ import { getAllCategories } from "@/libs/getAllCategory";
 import { getAllProducts } from "@/libs/getAllProducts";
 import Link from "next/link";
 
-export const revalidate = 86400;
-
 export default async function Home() {
    const categories = await getAllCategories();
 

@@ -13,6 +13,8 @@ type Params = {
   };
 };
 
+export const revalidate = 86400
+
 export async function generateStaticParams({ params: { category } }: Params) {
   const categories = await getAllCategories();
 
