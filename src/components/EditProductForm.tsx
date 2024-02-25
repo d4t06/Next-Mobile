@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useRef, useState, useTransition } from "react";
-import MyInput, { inputClasses } from "./ui/MyInput";
+import MyInput from "./ui/MyInput";
 import { generateId } from "@/utils/appHelper";
 import Frame from "@/components/ui/Frame";
 import AttributeGroup, { AttributeRef } from "./AttributeGroup";
@@ -10,7 +10,7 @@ import Box from "@/components/ui/Box";
 import { publicRequest } from "@/utils/request";
 import Modal from "@/components/modal";
 import { ArrowPathIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
-import { useRouter } from "next/navigation";
+import ConfirmModal from "@/components/modal/Confirm";
 import { useToast } from "@/stores/ToastContext";
 import Gallery from "./Gallery";
 import Image from "next/image";
@@ -18,23 +18,15 @@ import OverlayCTA from "./ui/OverlayCta";
 import { runRevalidateTag } from "@/app/actions";
 
 type Props = {
-  categories: Category[];
+  product: Product;
 };
 
-type Modal = "gallery";
-
-const initProduct = {
-  category_id: 0,
-  image_url: "",
-  product_ascii: "",
-  product_name: "",
-} as ProductSchema;
+type Modal = "delete-product" | "gallery";
 
 const PRODUCT_URL = "/products";
 
-export default function AddProductForm({ categories }: Props) {
-  const [productData, setProductData] = useState<ProductSchema>(initProduct);
-  const [curCategory, setCurCategory] = useState<Category>();
+export default function EditProductForm({ product }: Props) {
+  const [productData, setProductData] = useState<Product>(product);
 
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [isChange, setIsChange] = useState(false);
@@ -45,7 +37,6 @@ export default function AddProductForm({ categories }: Props) {
   const attributeRefs = useRef<(AttributeRef | undefined)[]>([]);
 
   // use hooks
-  const router = useRouter();
   const { setSuccessToast, setErrorToast } = useToast();
   const [isPending, startTransition] = useTransition();
 
@@ -61,13 +52,6 @@ export default function AddProductForm({ categories }: Props) {
         [field]: value,
         product_ascii: generateId(value),
       });
-    }
-
-    if (field === "category_id") {
-      const curCategory = categories.find((cat) => cat.id === value);
-
-      if (!curCategory) return;
-      setCurCategory(curCategory);
     }
 
     setIsChange(true);
@@ -94,6 +78,11 @@ export default function AddProductForm({ categories }: Props) {
             if (product_id === undefined)
               return setErrorToast("Product id is undefine");
             newData["product_id"] = product_id;
+
+          // if have product before
+          case "Edit":
+            if (product === undefined) return;
+            newData["product_id"] = product.id;
         }
 
         newAttributes.push(newData);
@@ -114,24 +103,27 @@ export default function AddProductForm({ categories }: Props) {
     try {
       setIsFetching(true);
 
-      if (!curCategory) return setErrorToast();
-
-      const data: ProductSchema = {
-        category_id: curCategory.id,
+      const data: Partial<ProductSchema> = {
         image_url: productData.image_url,
         product_ascii: generateId(productData.product_name),
         product_name: productData.product_name,
       };
 
-      await publicRequest.post(PRODUCT_URL, data);
-      await submitAttributes("Add");
+      if (product === undefined) return;
+
+      await submitAttributes("Edit");
+
+      if (
+        data.product_name != product.product_name ||
+        data.category_id != product.category_id ||
+        data.image_url != product.image_url
+      ) {
+        await publicRequest.put(`${PRODUCT_URL}/${product.id}`, data);
+      }
 
       startTransition(() => {
-        router.refresh();
-
-        runRevalidateTag(`products-${curCategory.id}`);
-
-        setSuccessToast("Add product successful");
+        runRevalidateTag(productData.product_ascii);
+        setSuccessToast("Edit product successful");
       });
     } catch (error) {
       console.log(error);
@@ -140,11 +132,37 @@ export default function AddProductForm({ categories }: Props) {
     }
   };
 
+  const handleDeleteProduct = async () => {
+    if (product?.id === undefined) return;
+
+    try {
+      setIsFetching(true);
+
+      await publicRequest.delete(`${PRODUCT_URL}/${product.id}`);
+      startTransition(() => {
+        // runRevalidateTag("products");
+      });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsFetching(false);
+      setSuccessToast("Delete product successful");
+    }
+  };
+
   const renderModal = useMemo(() => {
     if (!isOpenModal) return;
     if (!openModalTarget.current) return <p>Not thing to show</p>;
 
     switch (openModalTarget.current) {
+      case "delete-product":
+        return (
+          <ConfirmModal
+            callback={handleDeleteProduct}
+            loading={isLoading}
+            setOpenModal={setIsOpenModal}
+          />
+        );
       case "gallery":
         return (
           <Gallery
@@ -153,17 +171,21 @@ export default function AddProductForm({ categories }: Props) {
           />
         );
     }
-  }, [isOpenModal]);
+  }, [isOpenModal, isLoading, handleInput, handleDeleteProduct]);
 
   const classes = {
     label: "text-[18px] mb-[4px]",
   };
 
+  const attributeOrder = product.category.attributes_order.split("_") || [];
+
   return (
     <>
       <div className="flex items-center space-x-[8px]">
         <PencilSquareIcon className="w-[24px]" />
-        <h1 className="text-[22px] font-[500]">Add new product</h1>
+        <h1 className="text-[22px] font-[500]">
+          Edit product {product?.product_name}
+        </h1>
       </div>
       <div className="flex mx-[-8px] mt-[14px]">
         <div className="w-1/3 px-[8px]">
@@ -206,39 +228,63 @@ export default function AddProductForm({ categories }: Props) {
               />
             </div>
 
-            <div className="flex flex-col mt-[14px]">
+            <div className="">
               <label className={classes.label} htmlFor="">
-                Danh mục
+                Cấu hình
               </label>
-              <select
-                name="category"
-                value={productData.category_id}
-                onChange={(e) => handleInput("category_id", +e.target.value)}
-                className={inputClasses.input}
-              >
-                <option value={undefined}>- - -</option>
-                {!!categories.length &&
-                  categories.map((category, index) => (
-                    <option key={index} value={category.id}>
-                      {category.category_name}
-                    </option>
-                  ))}
-              </select>
+              <Frame>
+                <div className="space-y-[10px]">
+                  {attributeOrder.length ? (
+                    <>
+                      {attributeOrder.map((ascii, index) => {
+                        const foundedCatAttribute =
+                          product.category.attributes.find(
+                            (attr) => attr.attribute_ascii === ascii
+                          );
+                        if (!foundedCatAttribute) return <p>Wrong index</p>;
+
+                        return (
+                          <AttributeGroup
+                            ref={(ref) => (attributeRefs.current[index] = ref!)}
+                            key={index}
+                            type={"Edit"}
+                            categoryAttribute={foundedCatAttribute}
+                            product={productData as Product}
+                            setIsChange={setIsChange}
+                          />
+                        );
+                      })}
+                    </>
+                  ) : (
+                    "No have attribute jet..."
+                  )}
+                </div>
+              </Frame>
             </div>
           </div>
-        </div>
-      </div>
 
-      <div className="text-center">
-        <Button
-          onClick={handleSubmit}
-          className="mt-[10px]"
-          variant={"push"}
-          isLoading={isLoading}
-          disabled={!ableToSubmit}
-        >
-          Save
-        </Button>
+          <div className="text-center">
+            <Button
+              onClick={handleSubmit}
+              className="mt-[10px]"
+              variant={"push"}
+              isLoading={isLoading}
+              disabled={!ableToSubmit}
+            >
+              Save
+            </Button>
+          </div>
+
+          <div className="mt-[30px] p-[10px] rounded-[8px] border border-[#cd1818]">
+            <Button
+              onClick={() => handleOpenModal("delete-product")}
+              className=""
+              variant={"push"}
+            >
+              Delete
+            </Button>
+          </div>
+        </div>
       </div>
 
       {isOpenModal && (

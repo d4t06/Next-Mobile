@@ -1,9 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 
 export async function testRevalidate() {
-   console.log("call revalidate from server");
+  console.log("call revalidate from server");
+  revalidatePath("/");
+}
 
-   revalidatePath("/");
+export async function runRevalidateTag(tag: string) {
+  console.log(">>> call revalidate tag", tag);
+  revalidateTag(tag);
 }

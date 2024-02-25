@@ -1,3 +1,4 @@
+'use client'
 import {
   Dispatch,
   Ref,
@@ -73,6 +74,9 @@ function AttributeGroup({ ...allProps }: Props, ref: Ref<AttributeRef>) {
   };
 
   const handleOnChange = (value: string) => {
+
+    console.log('check value', value);
+    
     setValue(value);
 
     if (allProps.type === "Edit") allProps.setIsChange(true);
@@ -91,7 +95,7 @@ function AttributeGroup({ ...allProps }: Props, ref: Ref<AttributeRef>) {
         stock.current = target;
       }
     }
-  }, [allProps.product, allProps]);
+  }, []);
 
   return (
     <div className="flex items-center">

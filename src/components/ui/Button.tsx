@@ -1,3 +1,5 @@
+'use client'
+
 import { ButtonHTMLAttributes, FC, MouseEventHandler, ReactNode } from "react";
 import { VariantProps, cva } from "class-variance-authority";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";

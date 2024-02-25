@@ -1,6 +1,8 @@
 import Skeleton from "@/components/Skeleton";
 
 export default function Loading() {
+  console.log("run detail page loading");
+
   return (
     <div className="mt-[20px] space-y-[22px]">
       <Skeleton className="h-[24px] w-[100px]" />

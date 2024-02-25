@@ -1,8 +1,6 @@
-import AddProductForm from "@/components/AddProductForm";
-import { getAllCategories } from "@/libs/getAllCategory";
+import EditProductForm from "@/components/EditProductForm";
 import Link from "next/link";
 import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import { getProductDetail } from "@/libs/getProductDetail";
 
 type Props = {
   params: {
@@ -13,8 +11,12 @@ type Props = {
 export default async function EditProduct({
   params: { product_ascii },
 }: Props) {
-  const product = await getProductDetail(product_ascii);
-  const categories = await getAllCategories();
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/products/${product_ascii}?withCategory`
+  );
+
+  if (!res.ok) return <p>Some thing went wrong</p>;
+  const productDetail = (await res.json()) as Product;
 
   const classes = {
     backButton:
@@ -28,15 +30,7 @@ export default async function EditProduct({
         All product
       </Link>
       <div className="mt-[10px]">
-        {product ? (
-          <AddProductForm
-            categories={categories}
-            type="Edit"
-            product={product}
-          />
-        ) : (
-          <p>Some thing went wrong</p>
-        )}
+        <EditProductForm product={productDetail} />
       </div>
     </>
   );

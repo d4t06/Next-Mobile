@@ -1,38 +1,41 @@
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeftIcon } from "@heroicons/react/24/outline";
-import { getProductDetail } from "@/libs/getProductDetail";
+import { ChevronLeftIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
+import {
+  getProductDetail,
+  getProductDetailWithCategory,
+} from "@/libs/getProductDetail";
 import { getAllProducts } from "@/libs/getAllProducts";
 import { getAllCategories } from "@/libs/getAllCategory";
+import { findCurCategory } from "@/utils/appHelper";
 
 type Params = {
   params: {
-    product_id: string;
-    category: string;
+    product_ascii: string;
+    category_ascii: string;
   };
 };
 
-export const revalidate = 86400
-
-export async function generateStaticParams({ params: { category } }: Params) {
+export async function generateStaticParams({
+  params: { category_ascii },
+}: Params) {
   const categories = await getAllCategories();
+  if (!categories) return;
 
-  const targetCategory = categories.find(
-    (cat) => cat.category_ascii === category
-  );
-  if (!targetCategory) return [];
-  const data = await getAllProducts(1, targetCategory.id);
+  const curCategory = findCurCategory(categories, category_ascii);
+  if (!curCategory) return [];
+  const data = await getAllProducts(1, curCategory.id);
 
   return data.products.map((p) => ({
-    product_id: p.product_ascii,
+    product_ascii: p.product_ascii,
   }));
 }
 
 export async function generateMetadata({
-  params: { product_id },
+  params: { product_ascii },
 }: Params): Promise<Metadata> {
-  const productDetail = await getProductDetail(product_id);
+  const productDetail = await getProductDetail(product_ascii);
 
   if (!productDetail)
     return {
@@ -45,12 +48,18 @@ export async function generateMetadata({
 }
 
 export default async function ProductDetailPage({
-  params: { product_id },
+  params: { product_ascii, category_ascii },
 }: Params) {
-  const productDetail = await getProductDetail(product_id);
+  const data = await getProductDetailWithCategory(
+    product_ascii,
+    category_ascii
+  );
 
-  const attributeOrder =
-    productDetail?.category.attributes_order.split("_") || [];
+  if (!data) return <p>Some thing went wrong</p>;
+
+  const { category: curCategory, productDetail } = data;
+
+  const attributeOrder = curCategory.attributes_order.split("_") || [];
 
   const classes = {
     backBtn:
@@ -66,14 +75,22 @@ export default async function ProductDetailPage({
 
   return (
     <div className="space-y-[20px] pb-[30px]">
-      <Link
-        className={classes.backBtn}
-        href={`/${productDetail.category.category_ascii}`}
-      >
+      <Link className={classes.backBtn} href={`/${curCategory.category_ascii}`}>
         <ChevronLeftIcon className="w-[18px]" />
         All products
       </Link>
-      <h1 className={classes.proName}>{productDetail.product_name}</h1>
+      <div className="flex justify-between items-center">
+        <h1 className={classes.proName}>{productDetail.product_name}</h1>
+        {process.env.NODE_ENV === "development" && (
+          <Link
+            className="flex font-[500] text-[#333]"
+            href={`/dashboard/product-manage/${productDetail.product_ascii}`}
+          >
+            <PencilSquareIcon className="w-[24px] mr-[4px]" />
+            Open in edit
+          </Link>
+        )}
+      </div>
       <div className={classes.detailBody}>
         <div className={classes.detailLeft}>
           <Image
@@ -89,10 +106,9 @@ export default async function ProductDetailPage({
             <table className="w-full">
               <tbody>
                 {attributeOrder.map((orderItem, index) => {
-                  const categoryAttribute =
-                    productDetail.category.attributes.find(
-                      (item) => item.attribute_ascii === orderItem
-                    );
+                  const categoryAttribute = curCategory.attributes.find(
+                    (item) => item.attribute_ascii === orderItem
+                  );
                   if (categoryAttribute === undefined) return;
                   const foundedValue = productDetail.attributes.find(
                     (attr) => attr.category_attribute_id == categoryAttribute.id

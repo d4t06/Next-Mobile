@@ -26,3 +26,11 @@ export const initImageObject = (data: Partial<ImageType>) => {
 
    return newImage;
 };
+
+
+export const findCurCategory = (categories: Category[], curCategoryAscii: string) => {
+   const curCategory = categories.find(
+     (cat) => cat.category_ascii === curCategoryAscii
+   );
+   return curCategory;
+ };

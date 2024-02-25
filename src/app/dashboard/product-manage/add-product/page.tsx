@@ -1,10 +1,9 @@
 import { getAllCategories } from "@/libs/getAllCategory";
-import AddProductForm from "../../../../components/AddProductForm";
-
-
-export const revalidate = 0
+import AddProductForm from "@/components/AddProductForm";
 
 export default async function AddProduct() {
   const categories = await getAllCategories();
-  return <AddProductForm type="Add" categories={categories} />;
+
+  if (!categories) return <p>Some thing went wrong</p>;
+  return <AddProductForm categories={categories} />;
 }
