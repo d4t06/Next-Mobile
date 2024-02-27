@@ -2,10 +2,11 @@
 import { useEffect, useState, useRef, Dispatch, SetStateAction, useMemo } from "react";
 
 import { ArrowPathIcon } from "@heroicons/react/24/outline";
-import { useUploadContext } from "@/stores/ImageContext";
+import { useImage } from "@/stores/ImageContext";
 import { publicRequest } from "@/utils/request";
 import Button from "./ui/Button";
 import Image from "next/image";
+import Skeleton from "./Skeleton";
 
 type Props = {
    setImageUrl: (image_url: string) => void;
@@ -17,24 +18,22 @@ type getImagesRes = {
    page: number;
    images: ImageType[];
    pageSize: number;
+   count: number;
 };
 
 const IMAGE_URL = "/images";
 
 function Gallery({ setImageUrl, setIsOpenModal }: Props) {
    const [active, setActive] = useState<ImageType>();
-   const [status, setStatus] = useState<"loading" | "success" | "error">("loading");
-   const [apiLoading, setApiLoading] = useState(false);
+   const [status, setStatus] = useState<"loading" | "success" | "fetching" | "error">("loading");
 
    const ranUseEffect = useRef(false);
 
    // hooks
    const {
-      imagesState: { currentImages, page },
-      setImagesState,
-      tempImages,
-      status: uploadStatus,
-   } = useUploadContext();
+      imageStore: { status: imageStoreStatus, currentImages, tempImages, page },
+      storeImages,
+   } = useImage();
 
    const formatSize = (size: number) => {
       const units = ["Kb", "Mb"];
@@ -51,7 +50,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
 
    const ableToChosenImage = !!active;
 
-   const isFetching = apiLoading || uploadStatus === "uploading";
+   const isLoading = status === "fetching" || status === "loading";
 
    const handleSubmit = () => {
       if (!active) return;
@@ -63,13 +62,13 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
       try {
          if (!active || !active.public_id) return;
 
-         setApiLoading(true);
+         setStatus("fetching");
          const controller = new AbortController();
 
          await publicRequest.delete(`${IMAGE_URL}/${active.public_id}`);
 
          const newImages = currentImages.filter((image) => image.public_id !== active.public_id);
-         setImagesState((prev) => ({ ...prev, currentImages: newImages }));
+         storeImages({ currentImages: newImages });
 
          return () => {
             controller.abort();
@@ -77,20 +76,23 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
       } catch (error) {
          console.log({ message: error });
       } finally {
-         setApiLoading(false);
+         setStatus("success");
       }
    };
 
    const getImages = async (page: number = 1) => {
       try {
-         console.log("run getImages");
-
-         const res = await publicRequest.get(`${IMAGE_URL}?page=${page}`); //res.data
-
+         const res = await publicRequest.get(`${IMAGE_URL}?page=${page}`);
          const data = res.data as getImagesRes;
 
          const newImages = [...currentImages, ...data.images];
-         setImagesState((prev) => ({...prev, page: data.page, currentImages: newImages }));
+         storeImages({
+            count: data.count,
+            pageSize: data.pageSize,
+            page: data.page,
+            currentImages: newImages,
+            status: "success",
+         });
 
          setStatus("success");
       } catch (error) {
@@ -112,9 +114,15 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
       bodyRight: "px-[10px] w-1/3 overflow-hidden border-l-[2px] space-y-[14px]",
    };
 
-   const imageSkeleton = [...Array(8).keys()].map((item) => (
-      <div key={item} className={"col w-1/6 gallery-item"}></div>
-   ));
+   const imageSkeleton = useMemo(
+      () =>
+         [...Array(18).keys()].map((item) => (
+            <div key={item} className={"w-1/6 px-[4px] mt-[8px]"}>
+               <Skeleton className="pt-[100%]" />
+            </div>
+         )),
+      []
+   );
 
    const renderImages = useMemo(() => {
       if (currentImages.length)
@@ -142,26 +150,29 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
       else return <p>No image jet...</p>;
    }, [active, currentImages]);
 
-   const renderTempImages = () =>
-      !!tempImages.length &&
-      tempImages.map((item, index) => {
-         return (
-            <div key={index} className={"px-[4px] w-1/6 mt-[8px]"}>
-               <div className={classes.imageContainer}>
-                  <div className={classes.imageFrame}>
-                     <Image
-                        className="opacity-[.4]"
-                        src={item.image_url}
-                        alt="img"
-                        width={200}
-                        height={200}
-                     />
-                     <ArrowPathIcon className="animate-spin absolute duration-1000 text-[#000] w-[30px]" />
+   const renderTempImages = useMemo(
+      () =>
+         !!tempImages.length &&
+         tempImages.map((item, index) => {
+            return (
+               <div key={index} className={"px-[4px] w-1/6 mt-[8px]"}>
+                  <div className={classes.imageContainer}>
+                     <div className={classes.imageFrame}>
+                        <Image
+                           className="opacity-[.4]"
+                           src={item.image_url}
+                           alt="img"
+                           width={200}
+                           height={200}
+                        />
+                        <ArrowPathIcon className="animate-spin absolute duration-1000 text-[#000] w-[30px]" />
+                     </div>
                   </div>
                </div>
-            </div>
-         );
-      });
+            );
+         }),
+      [tempImages]
+   );
 
    useEffect(() => {
       if (currentImages.length) {
@@ -177,8 +188,6 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
       }
    }, []);
 
-   console.log("check current iamge", currentImages);
-
    return (
       <div className={classes.container}>
          <div className={classes.galleryTop}>
@@ -187,7 +196,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                <Button className="ml-[10px] !p-0">
                   <label
                      className={`px-[20px] py-[4px] cursor-pointer inline-block ${
-                        isFetching ? "opacity-60 pointer-events-none" : ""
+                        isLoading ? "opacity-60 pointer-events-none" : ""
                      }`}
                      htmlFor="image_upload"
                   >
@@ -203,26 +212,25 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
          <div className={classes.galleryBody}>
             <div className={classes.bodyLeft}>
                <div className="flex flex-wrap mt-[-8px]">
-                  {status === "loading" && imageSkeleton}
-
-                  {status !== "loading" && (
+                  {status === "success" ? (
                      <>
-                        {status === "success" ? (
-                           <>
-                              {renderTempImages} {renderImages}
-                           </>
-                        ) : (
-                           <h1>Some thing went wrong</h1>
-                        )}
+                        {renderTempImages}
+                        {renderImages}
                      </>
+                  ) : (
+                     <>{status !== "loading" && <p>Some thing went wrong</p>}</>
                   )}
+
+                  {status === "loading" && imageSkeleton}
                </div>
 
-               <div className="text-center mt-[14px]">
-                  <Button onClick={() => getImages(page + 1)} variant={"push"}>
-                     Thêm
-                  </Button>
-               </div>
+               {!!currentImages.length && (
+                  <div className="text-center mt-[14px]">
+                     <Button onClick={() => getImages(page + 1)} variant={"push"}>
+                        Thêm
+                     </Button>
+                  </div>
+               )}
             </div>
             <div className={classes.bodyRight}>
                {active && (
@@ -239,7 +247,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                            <h4 className="font-semibold">Size:</h4> {formatSize(active.size)}
                         </li>
                      </ul>
-                     <Button isLoading={apiLoading} onClick={handleDeleteImage}>
+                     <Button isLoading={isLoading} onClick={handleDeleteImage}>
                         Xóa
                      </Button>
                   </>
