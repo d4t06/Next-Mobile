@@ -14,7 +14,7 @@ export default function DashBoardLayout({ children }: { children: ReactNode }) {
         <div className="py-[30px]">
           {/* <DashboardHeader /> */}
           {children}
-          <ToastPortal autoClose={false} />
+          <ToastPortal autoClose/>
           <UploadImagePortal />
         </div>
       </UploadImageProvider>

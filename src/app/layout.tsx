@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import Header from "@/components/Header";
 import "./globals.css";
+import { headers } from "next/headers";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -15,9 +16,17 @@ export default function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
+
+   const header = headers()
+   const path = header.get('x-invoke-path') || ''
+ 
+   console.log("check header", path)
+
    return (
       <html lang="en">
          <body className={montserrat.className}>
+
+            
             <Header />
             <div className="container min-[768px]:w-[800px] mx-auto px-[10px] sm:px-0">
                {children}

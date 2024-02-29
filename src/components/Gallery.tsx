@@ -7,6 +7,7 @@ import { publicRequest } from "@/utils/request";
 import Button from "./ui/Button";
 import Image from "next/image";
 import Skeleton from "./Skeleton";
+import { formatSize } from "@/utils/appHelper";
 
 type Props = {
    setImageUrl: (image_url: string) => void;
@@ -25,32 +26,22 @@ const IMAGE_URL = "/images";
 
 function Gallery({ setImageUrl, setIsOpenModal }: Props) {
    const [active, setActive] = useState<ImageType>();
-   const [status, setStatus] = useState<"loading" | "success" | "fetching" | "error">("loading");
+   const [status, setStatus] = useState<"loadingImages" | "success" | "fetching" | "error">(
+      "loadingImages"
+   );
 
    const ranUseEffect = useRef(false);
 
    // hooks
    const {
-      imageStore: { status: imageStoreStatus, currentImages, tempImages, page },
+      imageStore: { currentImages, tempImages, page, count, pageSize },
       storeImages,
    } = useImage();
 
-   const formatSize = (size: number) => {
-      const units = ["Kb", "Mb"];
-      let mb = 0;
+   const isRemaining = useMemo(() => count - page * pageSize > 0, [currentImages]);
 
-      if (size < 1024) return size + units[mb];
-      while (size > 1024) {
-         size -= 1024;
-         mb++;
-      }
-
-      return mb + "," + size + units[1];
-   };
-
-   const ableToChosenImage = !!active;
-
-   const isLoading = status === "fetching" || status === "loading";
+   const isLoading = status === "fetching" || status === "loadingImages";
+   const ableToChosenImage = !!active || !isLoading;
 
    const handleSubmit = () => {
       if (!active) return;
@@ -59,13 +50,12 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
    };
 
    const handleDeleteImage = async () => {
+      if (!active || !active.public_id) return;
       try {
-         if (!active || !active.public_id) return;
-
          setStatus("fetching");
          const controller = new AbortController();
 
-         await publicRequest.delete(`${IMAGE_URL}/${active.public_id}`);
+         await publicRequest.delete(`${IMAGE_URL}/${encodeURIComponent(active.public_id)}`);
 
          const newImages = currentImages.filter((image) => image.public_id !== active.public_id);
          storeImages({ currentImages: newImages });
@@ -91,7 +81,6 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
             pageSize: data.pageSize,
             page: data.page,
             currentImages: newImages,
-            status: "success",
          });
 
          setStatus("success");
@@ -102,7 +91,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
    };
 
    const classes = {
-      container: "w-[90vw] h-[80vh] overflow-hidden",
+      container: "w-[90vw] bg-white h-[80vh] overflow-hidden",
       imageContainer: "relative pt-[100%]",
       imageFrame:
          "absolute flex  w-full items-center justify-center bg-[#f1f1f1] inset-0 rounded-[8px] border-[2px] border-[#ccc] hover:border-[#cd1818] overflow-hidden",
@@ -147,7 +136,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                </div>
             );
          });
-      else return <p>No image jet...</p>;
+      else if (!tempImages.length) return <p>No image jet...</p>;
    }, [active, currentImages]);
 
    const renderTempImages = useMemo(
@@ -164,6 +153,10 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                            alt="img"
                            width={200}
                            height={200}
+                           onLoad={() => {
+                              if (item.image_url.includes("blob"))
+                                 URL.revokeObjectURL(item.image_url);
+                           }}
                         />
                         <ArrowPathIcon className="animate-spin absolute duration-1000 text-[#000] w-[30px]" />
                      </div>
@@ -192,7 +185,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
       <div className={classes.container}>
          <div className={classes.galleryTop}>
             <div className={"flex items-center"}>
-               <h1 className="text-[22px] font-[500]">Gallery</h1>
+               <h1 className="text-[22px] font-[500]">Gallery ({count})</h1>
                <Button className="ml-[10px] !p-0">
                   <label
                      className={`px-[20px] py-[4px] cursor-pointer inline-block ${
@@ -212,19 +205,18 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
          <div className={classes.galleryBody}>
             <div className={classes.bodyLeft}>
                <div className="flex flex-wrap mt-[-8px]">
-                  {status === "success" ? (
+                  {status === "error" && <p>Some thing went wrong</p>}
+                  {status !== "error" && (
                      <>
                         {renderTempImages}
                         {renderImages}
                      </>
-                  ) : (
-                     <>{status !== "loading" && <p>Some thing went wrong</p>}</>
                   )}
 
-                  {status === "loading" && imageSkeleton}
+                  {status === "loadingImages" && imageSkeleton}
                </div>
 
-               {!!currentImages.length && (
+               {!!currentImages.length && isRemaining && (
                   <div className="text-center mt-[14px]">
                      <Button onClick={() => getImages(page + 1)} variant={"push"}>
                         Thêm
@@ -247,7 +239,7 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                            <h4 className="font-semibold">Size:</h4> {formatSize(active.size)}
                         </li>
                      </ul>
-                     <Button isLoading={isLoading} onClick={handleDeleteImage}>
+                     <Button variant={"push"} isLoading={isLoading} onClick={handleDeleteImage}>
                         Xóa
                      </Button>
                   </>
