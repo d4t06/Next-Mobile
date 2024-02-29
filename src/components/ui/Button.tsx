@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { ButtonHTMLAttributes, FC, MouseEventHandler, ReactNode } from "react";
 import { VariantProps, cva } from "class-variance-authority";
@@ -7,11 +7,11 @@ import Link from "next/link";
 
 const classes = {
    primary: "rounded-[6px]  hover:brightness-90 text-[14px] bg-[#cd1818]",
-   push: 'active:translate-y-[4px] active:before:shadow-none before:z-[-1] border-b-[4px] border-transparent  before:absolute before:content-[""] before:bg-[#cd1818] before:inset-0 before:shadow-[0_4px_0_#aa0000] transition-[transform] before:transition-shadow',
+   push: 'active:translate-y-[4px] active:before:shadow-none before:z-[-1] border-b-[4px] border-transparent  before:absolute before:content-[""] before:bg-[#cd1818] before:inset-0 before:shadow-[0_4px_0_#9e010d] transition-[transform] before:transition-shadow',
 };
 
 const buttonVariant = cva(
-   "inline-flex disabled:opacity-[.6] relative justify-center items-center z-0",
+   "font-[500] text-white inline-flex disabled:opacity-[.6] relative justify-center items-center z-0",
    {
       variants: {
          variant: {
@@ -19,7 +19,9 @@ const buttonVariant = cva(
             push: classes.push,
          },
          size: {
-            primary: "text-[14px] font-[500] text-white px-[20px] py-[4px]",
+            primary: "px-[20px] py-[4px]",
+            full: "w-full py-[4px]",
+            clear: ''
          },
          rounded: {
             primary: "before:rounded-[8px] rounded-[8px]",
@@ -58,10 +60,7 @@ const Button: FC<Props> = ({
 }) => {
    if (href)
       return (
-         <Link
-            className={buttonVariant({ variant, size, className })}
-            href={href}
-         >
+         <Link className={buttonVariant({ variant, size, className })} href={href}>
             <span>{children}</span>
          </Link>
       );
