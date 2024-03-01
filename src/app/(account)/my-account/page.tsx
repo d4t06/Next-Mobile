@@ -14,13 +14,14 @@ export default function MyAccount() {
       <div className="pt-[30px]">
          <div className="">
             <b>Status:</b> {status} <br />
-            <b>user:</b> {data?.user?.name} <br />
+            <b>username:</b> {data?.user?.name} <br />
+            <b>role:</b> {data?.user?.role} <br />
             <b>expires:</b> {data?.expires} <br />
          </div>
 
-         <Button onClick={handleSignOut} variant={"push"} className="mt-[30px]">
+         {data?.user.name && <Button onClick={handleSignOut} variant={"push"} className="mt-[30px]">
             Sign Out
-         </Button>
+         </Button>}
       </div>
    );
 }

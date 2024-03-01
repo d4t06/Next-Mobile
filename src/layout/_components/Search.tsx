@@ -3,9 +3,8 @@
 import useDebounce from "@/hooks/useDebounce";
 import { ArrowPathIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import Image from "next/image";
-import Link from "next/link";
 import { ElementRef, useEffect, useRef, useState } from "react";
-import Modal from "./modal";
+import Modal from "@/components/modal";
 import { generateId } from "@/utils/appHelper";
 import { useRouter } from "next/navigation";
 

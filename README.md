@@ -7,12 +7,22 @@
 - revalidatePath('/') will purge client side cached
 - revalidate = Incremental Static Regeneration
 
+### update friday 1/3/2024
+- use Next auth with credential
+- use group route for multi layout
+- use next middleware to protected route
+
 ## Server Side Rendering
 1. All data for the page are fetching on server
 2. The server render HTML for the page
 3. The HTML, CSS and Javascript are send to client
 4. Loading page show on client 
 5. React make it interactive
+
+## Redirecting
+- redirect('/') server component,
+- router.push('/') form 'next/navigation' client component
+- pathName = usePathname(), client component
 
 ## Loading UI
 - create loading.tsx file in same level with page.tsx
@@ -73,7 +83,6 @@
 - use Dynamic Function like 'cookies()' will skip Full Route and still use Data cache
 - use 'revalidate = 0' will skip the Full Route & Data Cached, mean component will rerender on each request
 - Opt-out the Data Cach by make fetch(`https://...`, { cache: 'no-store' })
-    
 
 
 ### Router Cache
@@ -99,3 +108,11 @@
 - revalidate = 0: Opt-out Date and Full Route Cache
 - Dynamic function like 'header'...: Opt-out Full Route Cache, in other words, the route will dynamic rerender   
 - revalidateTag, revalidatePath: Revalidate the Data and Full Route Cache
+
+## Next Auth
+- getServerSession(option) , server
+- useServerSession(), client - context
+- all request handled by api/auth/[...nextauth]/ts
+### use 'callback' for custom session data
+- jwt({toke, user}), take user inputs
+- session({token, session}), store user inputs with custom format

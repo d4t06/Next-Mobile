@@ -16,7 +16,8 @@ export default async function Header() {
                <div className="sm:h-[60px] flex flex-col sm:flex-row items-start sm:items-center">
                   <Link href={"/"}>
                      <h1 className="text-[22px] font-[500] my-[5px] sm:my-0 leading-[30px]">
-                        Mobile Wars
+                        Mobile
+                        <span className="text-[#cd1818] ml-[6px]">Wars</span>
                      </h1>
                   </Link>
 

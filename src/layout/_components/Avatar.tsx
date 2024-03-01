@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import Skeleton from "./Skeleton";
+import Skeleton from "@/components/Skeleton";
 
 export default function Avatar() {
    const { data, status } = useSession();
@@ -24,36 +24,15 @@ export default function Avatar() {
          {status !== "loading" && (
             <>
                {data && data.user ? (
-                  <div className="flex">
-                     <p>{data.user.name}</p>
-                     <Link href={'/api/auth/signout'} className={""}>Sign Out</Link>
-                  </div>
+                  <p className="">
+                     hi <Link href={'/my-account'} className="font-[500] hover:text-[#cd1818]">{data.user.name}</Link>
+                  </p>
                ) : (
                   <Link className="font-[500] hover:text-[#cd1818]" href={"/signin"}>
                      Sign In
                   </Link>
                )}
             </>
-         )}
-      </div>
-   );
-}
-
-export function AvatarPlaceholder({
-   firstChar,
-   image_url,
-}: {
-   firstChar: string;
-   image_url?: string;
-}) {
-   return (
-      <div className={"bg-white"}>
-         {image_url ? (
-            <img src={image_url} className="w-full h-full rounded-full" alt="" />
-         ) : (
-            <div className={"avatar-placeholder"}>
-               <p>{firstChar}</p>
-            </div>
          )}
       </div>
    );

@@ -1,4 +1,4 @@
-import Header from "@/components/Header";
+import Header from "./_components/Header";
 import { ReactNode } from "react";
 
 export default function DefaultLayout({ children }: { children: ReactNode }) {
@@ -11,3 +11,4 @@ export default function DefaultLayout({ children }: { children: ReactNode }) {
       </>
    );
 }
+   

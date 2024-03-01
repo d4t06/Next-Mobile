@@ -23,12 +23,17 @@ export default function SignInPage() {
    const handleSubmit = async (e: FormEvent) => {
       e.preventDefault();
       setFetching(true);
+      setErrorMsg("");
 
-      await signIn("credentials", {
+      const res = await signIn("credentials", {
          username: username,
          password: password,
          redirect: false,
       });
+
+      if (res?.status === 401) {
+         setErrorMsg("Invalid username or password");
+      }
 
       setFetching(false);
    };
@@ -45,6 +50,7 @@ export default function SignInPage() {
       formContainer:
          "p-[20px] border border-black/10 w-[400px] max-w-[100vw] shadow-[4px_4px_0px_rgba(0,0,0,0.1)] bg-white rounded-[16px] space-y-[22px] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]",
       label: "font-[500] ",
+      errMsg: "text-red-500 font-[500] text-center bg-red-500/15 py-[4px] rounded-[6px]",
    };
 
    console.log(">> Login client check ", status);
@@ -52,7 +58,7 @@ export default function SignInPage() {
    return (
       <>
          <form onSubmit={handleSubmit} className={classes.formContainer}>
-            {errMsg && <h2 className={"error-msg"}>{errMsg}</h2>}
+            {errMsg && !fetching && <h2 className={`${classes.errMsg}`}>{errMsg}</h2>}
             <h1 className="text-center text-[24px] font-[500]">Sign In</h1>
             <div className={"space-y-[6px]"}>
                <label className={classes.label} htmlFor="name">
@@ -83,7 +89,7 @@ export default function SignInPage() {
             <Button
                isLoading={fetching}
                variant={"push"}
-               className="leading-[30px]"
+               className="h-[40px]"
                type="submit"
                size={"full"}
             >
