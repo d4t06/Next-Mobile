@@ -1,31 +1,70 @@
 import { publicRequest } from "@/utils/request";
-import NextAuth from "next-auth";
+import NextAuth, { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-const LOGIN_URL = "/auth/login";
+const BACKEND_API_ENDPOINT = "http:///localhost:4000/api/auth/login";
 
-const handler = NextAuth({
-   session: {
-      strategy: "jwt",
-   },
+export const nextAuthOptions: NextAuthOptions = {
    providers: [
       Credentials({
          type: "credentials",
          credentials: {
-            token: {},
+            username: {
+               label: "User name",
+               type: "text",
+            },
+            password: {
+               label: "password",
+               type: "password",
+            },
          },
-         authorize(credentials, req) {
-            // if (!credentials?.token) {
-            //    return null;
-            // }
+         async authorize(credentials, req) {
+            if (!credentials?.username || !credentials?.password) {
+               return null;
+            }
 
-            return { id: "tset", name: 'nguyen huu dat', email: 'aslkasljd' };
+            const { password, username } = credentials;
+
+            const res = await fetch(BACKEND_API_ENDPOINT, {
+               method: "POST",
+               body: JSON.stringify({
+                  username,
+                  password,
+               }),
+               headers: {
+                  "Content-type": "application/json",
+               },
+            });
+
+            if (!res.ok) return null;
+
+            const user = await res.json();
+
+            return user;
          },
       }),
    ],
    pages: {
       signIn: "/signin",
    },
-});
+   callbacks: {
+      async jwt({ token, user }) {
+         // token {iat: '', exp: ''...}
+         // user {token: '', user: {name: ''}}
+         if (user) return { ...token, ...user };
+
+         return token;
+      },
+
+      async session({ token, session }) {
+         session.user.name = token.user.name;
+         session.token = token.token;
+
+         return session;
+      },
+   },
+};
+
+const handler = NextAuth(nextAuthOptions);
 
 export { handler as GET, handler as POST };

@@ -18,21 +18,28 @@ export default function SignInPage() {
 
    // hooks
    const router = useRouter();
-   const {data, status} = useSession() 
+   const { data, status } = useSession();
 
    const handleSubmit = async (e: FormEvent) => {
       e.preventDefault();
-      const res = await signIn("credentials", {
-         token: "hsjkdhfkshd ",
+      setFetching(true);
+
+      await signIn("credentials", {
+         username: username,
+         password: password,
          redirect: false,
       });
 
-      router.push("/");
+      setFetching(false);
    };
 
    useEffect(() => {
       userInputRef.current?.focus();
    }, []);
+
+   useEffect(() => {
+      if (data && data.user) return router.push("/");
+   }, [data]);
 
    const classes = {
       formContainer:
@@ -40,8 +47,7 @@ export default function SignInPage() {
       label: "font-[500] ",
    };
 
-   // console.log(">> Login check ", data, status);
-   
+   console.log(">> Login client check ", status);
 
    return (
       <>

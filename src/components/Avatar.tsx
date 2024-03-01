@@ -1,13 +1,10 @@
 "use client";
 
 import Link from "next/link";
-
-import defaultUser from "@/assets/user-default.png";
 import { useSession } from "next-auth/react";
 import Skeleton from "./Skeleton";
-import Image from "next/image";
 
-export default function Avatar({ revert }: { revert?: boolean }) {
+export default function Avatar() {
    const { data, status } = useSession();
 
    const classes = {
@@ -26,28 +23,15 @@ export default function Avatar({ revert }: { revert?: boolean }) {
          )}
          {status !== "loading" && (
             <>
-               <div className={classes.imageFrame}>
-                  {data?.user ? (
-                     <Link href="/my-account">
-                        <div className={classes.placeHolder}>
-                           <p>{data.user.name?.charAt(0).toUpperCase() || ""}</p>
-                        </div>
-                     </Link>
-                  ) : (
-                     <Image
-                        alt="avatar"
-                        height={44}
-                        width={44}
-                        className="rounded-full w-full"
-                        src={defaultUser}
-                     />
-                  )}
-               </div>
-
-               {data?.user ? (
-                  <h5 className={"user-name"}>{data.user.name}</h5>
+               {data && data.user ? (
+                  <div className="flex">
+                     <p>{data.user.name}</p>
+                     <Link href={'/api/auth/signout'} className={""}>Sign Out</Link>
+                  </div>
                ) : (
-                  <Link href={"/signin"}>Sign In</Link>
+                  <Link className="font-[500] hover:text-[#cd1818]" href={"/signin"}>
+                     Sign In
+                  </Link>
                )}
             </>
          )}
