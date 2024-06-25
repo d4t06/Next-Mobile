@@ -26,7 +26,9 @@ export default function DashBoardHeader() {
 
    return (
       <div className={`${classes.container} ${scroll ? "shadow-md" : ""}`}>
-         <Avatar />
+         <div className="ml-auto">
+            <Avatar />
+         </div>
       </div>
    );
 }

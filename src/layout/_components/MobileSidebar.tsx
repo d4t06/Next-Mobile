@@ -1,13 +1,12 @@
 "use client";
 
-"use client";
-
 import { TagIcon } from "@heroicons/react/24/outline";
-import Link from "next/link";
 import { useState } from "react";
 import Button from "@/components/ui/Button";
 import { Bars3Icon } from "@heroicons/react/16/solid";
 import Modal from "@/components/modal";
+import Avatar from "./Avatar";
+import { useRouter } from "next/navigation";
 
 type Props = {
    categories: Category[];
@@ -16,7 +15,14 @@ type Props = {
 export default function MobileSidebar({ categories }: Props) {
    const [open, setOpen] = useState(false);
 
+   const router = useRouter();
+
    const closeModal = () => setOpen(false);
+
+   const handleNavigate = (href: string) => {
+      setOpen(false);
+      router.push(href);
+   };
 
    const classes = {
       toggleSidebar:
@@ -30,19 +36,21 @@ export default function MobileSidebar({ categories }: Props) {
    return (
       <>
          <div className={`${classes.container} ${open ? classes.open : classes.hide}`}>
-            <ul className="py-[14px] px-[10px]">
-               {categories.map((c, index) => (
-                  <Link
-                     //    onClick={closeSidebar}
-                     key={index}
-                     href={`/${c.category_name_ascii}`}
-                     className="flex items-center space-x-[4px] h-[34px] text-[#333]"
-                  >
-                     <TagIcon className="w-[24px]" />
-                     <span className="text-[16px] font-[500]">{c.category_name}</span>
-                  </Link>
-               ))}
-            </ul>
+            <div className="py-[14px] px-[10px]">
+               <Avatar />
+               <div className="mt-[14px]">
+                  {categories.map((c, index) => (
+                     <button
+                        key={index}
+                        onClick={() => handleNavigate(`/${c.id}`)}
+                        className="flex items-center space-x-[4px] h-[34px] text-[#333]"
+                     >
+                        <TagIcon className="w-[24px]" />
+                        <span className="text-[16px] font-[500]">{c.category_name}</span>
+                     </button>
+                  ))}
+               </div>
+            </div>
          </div>
 
          <div className={`sm:hidden ${classes.toggleSidebar}`}>

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useEffect, useState } from "react";
 import { ChevronUpIcon } from "@heroicons/react/16/solid";
@@ -36,7 +36,7 @@ export default function ScrollTop() {
    return (
       <div className={`${classes.base} ${show ? classes.show : classes.hide}`}>
          <Button
-         colors={'third'}
+            colors={"third"}
             className="p-[6px]"
             size={"clear"}
             onClick={show ? scrollToTop : () => {}}
