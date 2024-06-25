@@ -1,14 +1,15 @@
+import ScrollTop from "@/components/ScrollTop";
+import Footer from "./_components/Footer";
 import Header from "./_components/Header";
 import { ReactNode } from "react";
-
-export default function DefaultLayout({ children }: { children: ReactNode }) {
+ 
+export default async function DefaultLayout({ children }: { children: ReactNode }) {
    return (
       <>
          <Header />
-         <div className="container h-full min-[768px]:w-[800px] mx-auto px-[10px] sm:px-0">
-            {children}
-         </div>
+         <div className="container min-h-screen mt-[30px]">{children}</div>
+         <ScrollTop />
+         <Footer />
       </>
    );
 }
-   

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
-import { getServerSession } from "next-auth";
 import AuthProvider from "@/stores/SessionContext";
 import "./globals.css";
 
@@ -16,12 +15,10 @@ export default async function RootLayout({
 }: Readonly<{
    children: React.ReactNode;
 }>) {
-   const session = await getServerSession();
-
    return (
       <html lang="en">
          <body className={montserrat.className}>
-            <AuthProvider session={session}>
+            <AuthProvider>
                {children}
                <div id="portals"></div>
             </AuthProvider>

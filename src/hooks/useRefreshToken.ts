@@ -1,29 +1,25 @@
-// import jwtDecode from "jwt-decode";
-// import { publicRequest } from "../utils/request";
-// import { useAuth } from "@/store/AuthContext";
+import { useSession } from "next-auth/react";
 
-// const useRefreshToken = () => {
-//   const { setAuth } = useAuth();
+export default function useRefreshToken() {
+   const { data, update } = useSession();
 
-//   const refresh = async () => {
-//     try {
-//       const response = await publicRequest.get("/auth/refresh");
+   const refresh = async () => {
+      try {
+         if (!data || !data.token) return;
+         const res = await fetch(`${process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://nest-mobile.vercel.app/api'}/auth/refresh`, {
+            method: "GET",
+            credentials: "include",
+         });
 
-//       setAuth((prev) => {
-//         const newToken = response.data.token;
+         const payload = await res.json();
 
-//         const decode: { username: string; role: "ADMIN" | "" } = newToken
-//           ? jwtDecode(newToken)
-//           : { username: "", role: "" };
+         const newToken = payload.data.token;
+         update({});
 
-//         return { ...prev, token: newToken, ...decode };
-//       });
-//       return response.data.token;
-//     } catch (error) {
-//       console.log({ message: error });
-//     }
-//   };
-//   return refresh;
-// };
-
-// export default useRefreshToken;
+         return newToken;
+      } catch (error) {
+         console.log({ message: error });
+      }
+   };
+   return refresh;
+}

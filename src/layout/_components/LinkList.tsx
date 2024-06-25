@@ -1,54 +1,29 @@
-"use client";
-
-import { useSession } from "next-auth/react";
-// import { usePathname } from "next/navigation";
+import { Session } from "next-auth";
 import LinkItem from "./LinkItem";
+import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 
 type Props = {
    categories: Category[];
 };
 export default function LinkList({ categories }: Props) {
-   const { data } = useSession();
-   // const pathName = usePathname();
-   // if (pathName.includes("/dashboard"))
-   //    return (
-   //       <>
-   //          <LinkItem
-   //             className="text-[15px]"
-   //             activeClass="font-[500]"
-   //             href={"/dashboard/product-manage"}
-   //          >
-   //             Products
-   //          </LinkItem>
-   //          <LinkItem
-   //             className="text-[15px]"
-   //             activeClass="font-[500]"
-   //             href={"/dashboard/category-manage"}
-   //          >
-   //             Category
-   //          </LinkItem>
-
-   //          <p className="ml-auto">Bello! <span className="font-[500]">Dat</span></p>
-   //       </>
-   //    );
    return (
       <>
-         {categories.map((item, index) => (
-            <LinkItem
-               className="text-[15px]"
-               activeClass="font-[500]"
-               key={index}
-               href={"/" + item.category_ascii}
-            >
-               {item.category_name}
-            </LinkItem>
-         ))}
+         <div className="flex items-center space-x-[14px]">
+            {categories.map((category, index) => (
+               <LinkItem activeClass="font-[500]" key={index} href={"/" + category.id}>
+                  {category.category_name}
+               </LinkItem>
+            ))}
+         </div>
 
-         {data?.user.role === "ADMIN" && (
-            <LinkItem className="text-[15px]" activeClass="font-[500]" href={"/dashboard"}>
-               Dashboard
-            </LinkItem>
-         )}
+         {/* <div className="flex ml-[auto]">
+            {session?.user.role === "ADMIN" && (
+               <LinkItem href={"/dashboard"}>
+                  <ComputerDesktopIcon className="w-[22px]" />
+                  <span>Dashboard</span>
+               </LinkItem>
+            )}
+         </div> */}
       </>
    );
 }

@@ -105,7 +105,7 @@ export default function SignUnPage() {
                >
                   4 - 24 letter <br />
                   Must start with character <br />
-                  Allow uppercase, number, '_'
+                  Allow uppercase, number, &apos;_&apos;
                </div>
             </div>
 
@@ -166,13 +166,7 @@ export default function SignUnPage() {
             </div>
          </div>
 
-         <Button
-            isLoading={fetching}
-            variant={"push"}
-            className="leading-[30px]"
-            type="submit"
-            size={"full"}
-         >
+         <Button loading={fetching} className="leading-[30px] w-full" type="submit">
             Sign In
          </Button>
          <p className="font-[500]">

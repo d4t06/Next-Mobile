@@ -11,7 +11,7 @@ type Props = {
 
 const classes = {
   button:
-    "text-[#333]  hover:text-[#cd1818] hover:scale-[1.1] transition-transform",
+    "text-[#333] bg-[#e1e1e1] p-[5px] rounded-[4px] hover:text-[#cd1818] hover:scale-[1.1] transition-transform",
   hide: "opacity-0 translate-y-[10px]",
   show: "group-hover:!translate-y-[0] group-hover:!opacity-[1]",
 };

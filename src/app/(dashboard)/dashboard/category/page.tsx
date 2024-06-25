@@ -1,47 +1,56 @@
-import { getAllCategories } from "@/libs/getAllCategory";
-import CategoryList from "@/components/CategoryList";
-import CategoryAttributeGroup from "@/components/CategoryAttributeList";
+import CategoryList from "./_components/CategoryList";
+import CategoryAttributeList from "./_components/CategoryAttributeList";
+import BrandList from "./_components/BrandList";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
+
+export const revalidate = 0;
 
 async function Group() {
-  const res = await fetch(
-    `${process.env.NEXT_PUBLIC_API_ENDPOINT}/categories?withAttributes`
-  );
+   const res = await fetch(
+      `${
+         process.env.NEXT_PUBLIC_API_ENDPOINT ||
+         "https://nest-mobile.vercel.app/api" ||
+         "https://nest-mobile.vercel.app/api"
+      }/categories`
+   );
+   if (!res.ok) return <></>;
 
-  if (!res.ok) return undefined;
+   const categories = (await res.json()) as Category[];
 
-  const categories = (await res.json()) as Category[];
+   const classes = {
+      group: "p-[20px] rounded-[12px] bg-[#fff] border",
+      label: "text-[24px]",
+   };
 
-  return (
-    <>
-      <h1 className="text-[22px] mb-[10px]">All categories</h1>
-      <CategoryList categories={categories} />
-      {!!categories.length && (
-        <div className="mt-[20px]">
-          <CategoryAttributeGroup categories={categories} />
-        </div>
-      )}
-    </>
-  );
+   return (
+      <div className="space-y-[30px]">
+         <h1 className={classes.label}>Category</h1>
+         <div className={classes.group}>
+            <CategoryList categories={categories} />
+         </div>
+         <h1 className={classes.label}>Brand</h1>
+         <div className={classes.group}>
+            <BrandList categories={categories} />
+         </div>
+         <h1 className={classes.label}>Attribute</h1>
+         <div className={classes.group}>
+            <CategoryAttributeList categories={categories} />
+         </div>
+      </div>
+   );
 }
 
-// export const revalidate = 0;
-
 export default async function CategoryManagePage() {
-  // unstable_noStore();
-  // const categories = await getAllCategories();
+   const session = await getServerSession(nextAuthOptions);
 
-  return (
-    <>
-      {/* <h1 className="text-[22px] mb-[10px]">All categories</h1>
-         <CategoryList categories={categories} />
-         {!!categories.length && (
-            <div className="mt-[20px]">
-               <CategoryAttributeGroup categories={categories} />
-            </div>
-         )} */}
+   if (!session) return redirect("/signin");
+   if (session.user.role !== "ADMIN") return redirect("/unauthorized");
 
-      {/* Group's behavior is alway show loading state in every hard refresh */}
-      <Group />
-    </>
-  );
+   return (
+      <>
+         <Group />
+      </>
+   );
 }

@@ -1,26 +1,18 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { RefObject, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import Avatar from "./Avatar";
 
-export default function DashBoardHeader({
-   dashboardRef,
-}: {
-   dashboardRef: RefObject<HTMLDivElement>;
-}) {
-   const { data } = useSession();
+export default function DashBoardHeader() {
    const [scroll, setScroll] = useState(false);
 
-   const handleScroll = () => {
-      const dashboardEle = dashboardRef.current;
-      if (!dashboardEle) return;
-
-      if (dashboardEle.scrollTop > 10) setScroll(true);
+   const handleScroll = (e: Event) => {
+      if ((e.target as HTMLDivElement).scrollTop > 10) setScroll(true);
       else setScroll(false);
    };
 
    useEffect(() => {
-      const dashboardEle = dashboardRef.current;
+      const dashboardEle = document.querySelector(".dashboard-content");
       if (!dashboardEle) return;
 
       dashboardEle.addEventListener("scroll", handleScroll);
@@ -28,14 +20,13 @@ export default function DashBoardHeader({
    }, []);
 
    const classes = {
-      container: "absolute flex items-center left-0 w-[100%] h-[60px] px-[20px]",
+      container:
+         "absolute z-[99] bg-[#fff] flex items-center left-0 w-[100%] h-[60px] px-[20px]",
    };
 
    return (
       <div className={`${classes.container} ${scroll ? "shadow-md" : ""}`}>
-         <p className="ml-auto">
-            Hello <span className="font-[500]">{data ? data.user.name : "no persist"}</span>
-         </p>
+         <Avatar />
       </div>
    );
 }

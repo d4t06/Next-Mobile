@@ -7,7 +7,7 @@ export default function MyAccount() {
    const { status, data } = useSession();
 
    const handleSignOut = async () => {
-      await signOut();
+      await signOut({ redirect: false });
    };
 
    return (
@@ -19,9 +19,11 @@ export default function MyAccount() {
             <b>expires:</b> {data?.expires} <br />
          </div>
 
-         {data?.user.name && <Button onClick={handleSignOut} variant={"push"} className="mt-[30px]">
-            Sign Out
-         </Button>}
+         {data?.user.name && (
+            <Button onClick={handleSignOut} className="mt-[30px]">
+               Sign Out
+            </Button>
+         )}
       </div>
    );
 }

@@ -1,7 +1,8 @@
 "use client";
-import { useEffect, useState, useRef, Dispatch, SetStateAction, useMemo } from "react";
 
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState, useRef, useMemo } from "react";
+
+import { ArrowPathIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { useImage } from "@/stores/ImageContext";
 import { publicRequest } from "@/utils/request";
 import Button from "./ui/Button";
@@ -10,8 +11,8 @@ import Skeleton from "./Skeleton";
 import { formatSize } from "@/utils/appHelper";
 
 type Props = {
-   setImageUrl: (image_url: string) => void;
-   setIsOpenModal: Dispatch<SetStateAction<boolean>>;
+   setImageUrl: (images: ImageType[]) => void;
+   closeModal: () => void;
    multiple?: boolean;
 };
 
@@ -24,11 +25,12 @@ type getImagesRes = {
 
 const IMAGE_URL = "/images";
 
-function Gallery({ setImageUrl, setIsOpenModal }: Props) {
+function Gallery({ setImageUrl, closeModal, multiple }: Props) {
+   const [choseList, setChoseList] = useState<ImageType[]>([]);
    const [active, setActive] = useState<ImageType>();
-   const [status, setStatus] = useState<"loadingImages" | "success" | "fetching" | "error">(
-      "loadingImages"
-   );
+   const [status, setStatus] = useState<
+      "loadingImages" | "success" | "fetching" | "error"
+   >("loadingImages");
 
    const ranUseEffect = useRef(false);
 
@@ -43,10 +45,24 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
    const isLoading = status === "fetching" || status === "loadingImages";
    const ableToChosenImage = !!active || !isLoading;
 
+   const handleSelect = (image: ImageType) => {
+      const newChoseList = [...choseList];
+      const index = newChoseList.findIndex((i) => i.id === image.id);
+
+      if (index === -1) newChoseList.push(image);
+      else newChoseList.splice(index, 1);
+
+      setChoseList(newChoseList);
+   };
+
    const handleSubmit = () => {
-      if (!active) return;
-      setImageUrl(active.image_url);
-      setIsOpenModal(false);
+      if (multiple) {
+         if (choseList.length) setImageUrl(choseList);
+      } else {
+         if (active) setImageUrl([active]);
+      }
+
+      closeModal();
    };
 
    const handleDeleteImage = async () => {
@@ -55,9 +71,13 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
          setStatus("fetching");
          const controller = new AbortController();
 
-         await publicRequest.delete(`${IMAGE_URL}/${encodeURIComponent(active.public_id)}`);
+         await publicRequest.delete(
+            `${IMAGE_URL}/${encodeURIComponent(active.public_id)}`
+         );
 
-         const newImages = currentImages.filter((image) => image.public_id !== active.public_id);
+         const newImages = currentImages.filter(
+            (image) => image.public_id !== active.public_id
+         );
          storeImages({ currentImages: newImages });
 
          return () => {
@@ -91,21 +111,19 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
    };
 
    const classes = {
-      container: "w-[90vw] bg-white h-[80vh] overflow-hidden",
+      container: "w-[85vw] bg-white h-[80vh] flex flex-col",
       imageContainer: "relative pt-[100%]",
       imageFrame:
-         "absolute flex  w-full items-center justify-center bg-[#f1f1f1] inset-0 rounded-[8px] border-[2px] border-[#ccc] hover:border-[#cd1818] overflow-hidden",
-      galleryTop:
-         "h-[40px] flex justify-between items-center border-b border-[#ccc] mb-[10px] pb-[10px]",
-      galleryBody: "flex mx-[-10px]",
-      bodyLeft:
-         "h-[calc(80vh-60px)] w-2/3 no-scrollbar px-[10px] overflow-x-hidden overflow-y-auto",
-      bodyRight: "px-[10px] w-1/3 overflow-hidden border-l-[2px] space-y-[14px]",
+         "absolute flex w-full items-center justify-center bg-[#f1f1f1] inset-0 rounded-[8px] border-[2px] border-[#ccc] hover:border-[#cd1818] overflow-hidden",
+      galleryTop: "flex justify-between border-b border-[#ccc] mb-[10px] pb-[10px]",
+      galleryBody: "flex-grow overflow-hidden flex mx-[-10px]",
+      bodyLeft: "w-2/3 overflow-auto px-[10px]",
+      bodyRight: "px-[10px] w-1/3 border-l-[2px] space-y-[14px]",
    };
 
    const imageSkeleton = useMemo(
       () =>
-         [...Array(18).keys()].map((item) => (
+         [...Array(12).keys()].map((item) => (
             <div key={item} className={"w-1/6 px-[4px] mt-[8px]"}>
                <Skeleton className="pt-[100%]" />
             </div>
@@ -116,6 +134,9 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
    const renderImages = useMemo(() => {
       if (currentImages.length)
          return currentImages.map((item, index) => {
+            const indexOf = choseList.findIndex((i) => i.id === item.id);
+            const isInChoseList = indexOf !== -1;
+
             return (
                <div key={index} className={"px-[4px] relative w-1/6 mt-[8px]"}>
                   <div className={classes.imageContainer}>
@@ -132,12 +153,30 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                            alt="img"
                         />
                      </div>
+
+                     {multiple && (
+                        <button
+                           onClick={() => handleSelect(item)}
+                           className={`${
+                              isInChoseList
+                                 ? "bg-[#cd1818] "
+                                 : "bg-[#ccc] hover:bg-[#cd1818]"
+                           } z-10 h-[24px] w-[24px] absolute rounded-[6px] text-[white] left-[10px] bottom-[10px]`}
+                        >
+                           {isInChoseList && (
+                              <span className="text-[18px] font-semibold leading-[1]">
+                                 {indexOf + 1}
+                              </span>
+                           )}
+                        </button>
+                     )}
                   </div>
                </div>
             );
          });
-      else if (!tempImages.length) return <p>No image jet...</p>;
-   }, [active, currentImages]);
+      else if (!tempImages.length && status !== "loadingImages")
+         return <p className="mt-[8px] text-center w-full">...</p>;
+   }, [active, currentImages, choseList]);
 
    const renderTempImages = useMemo(
       () =>
@@ -185,26 +224,26 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
       <div className={classes.container}>
          <div className={classes.galleryTop}>
             <div className={"flex items-center"}>
-               <h1 className="text-[22px] font-[500]">Gallery ({count})</h1>
-               <Button className="ml-[10px] !p-0">
-                  <label
-                     className={`px-[20px] py-[4px] cursor-pointer inline-block ${
-                        isLoading ? "opacity-60 pointer-events-none" : ""
-                     }`}
-                     htmlFor="image_upload"
-                  >
-                     Upload
+               <p className="text-[18px] sm:text-[22px] font-[500]">Gallery</p>
+               <Button colors={"second"} size="clear" className="ml-[10px] h-full">
+                  <label className="flex items-center px-[10px]" htmlFor="image_upload">
+                     <ArrowUpTrayIcon className="w-[20px] mr-[6px]" />
+                     <span className="hidden sm:block">Upload</span>
                   </label>
                </Button>
             </div>
 
-            <Button disabled={!ableToChosenImage} onClick={handleSubmit} variant={"primary"}>
+            <Button
+               disabled={!ableToChosenImage}
+               onClick={handleSubmit}
+               variant={"primary"}
+            >
                Chọn
             </Button>
          </div>
          <div className={classes.galleryBody}>
             <div className={classes.bodyLeft}>
-               <div className="flex flex-wrap mt-[-8px]">
+               <div className="flex flex-wrap mt-[-8px] overflow-x-hidden overflow-y-auto mx-[-4px]">
                   {status === "error" && <p>Some thing went wrong</p>}
                   {status !== "error" && (
                      <>
@@ -218,7 +257,11 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
 
                {!!currentImages.length && isRemaining && (
                   <div className="text-center mt-[14px]">
-                     <Button onClick={() => getImages(page + 1)} variant={"push"}>
+                     <Button
+                        border={"clear"}
+                        colors={"second"}
+                        onClick={() => getImages(page + 1)}
+                     >
                         Thêm
                      </Button>
                   </div>
@@ -231,15 +274,20 @@ function Gallery({ setImageUrl, setIsOpenModal }: Props) {
                      <ul>
                         <li>
                            <h4 className="font-semibold">Image path:</h4>{" "}
-                           <a className="hover:underline" target="blank" href={active.image_url}>
+                           <a
+                              className="hover:underline"
+                              target="blank"
+                              href={active.image_url}
+                           >
                               {active.image_url}
                            </a>
                         </li>
                         <li>
-                           <h4 className="font-semibold">Size:</h4> {formatSize(active.size)}
+                           <h4 className="font-semibold">Size:</h4>{" "}
+                           {formatSize(active.size)}
                         </li>
                      </ul>
-                     <Button variant={"push"} isLoading={isLoading} onClick={handleDeleteImage}>
+                     <Button loading={isLoading} onClick={handleDeleteImage}>
                         Xóa
                      </Button>
                   </>

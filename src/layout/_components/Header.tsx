@@ -2,6 +2,9 @@ import Link from "next/link";
 import Search from "./Search";
 import { getAllCategories } from "@/libs/getAllCategory";
 import LinkList from "./LinkList";
+import MobileSidebar from "./MobileSidebar";
+import { getServerSession } from "next-auth";
+import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
 import Avatar from "./Avatar";
 
 export default async function Header() {
@@ -12,29 +15,29 @@ export default async function Header() {
    return (
       <>
          <div className="h-[80px]  sm:h-auto">
-            <div className="container min-[768px]:w-[800px] px-[10px] mx-auto h-full sm:px-0">
+            <div className="container">
                <div className="sm:h-[60px] flex flex-col sm:flex-row items-start sm:items-center">
                   <Link href={"/"}>
                      <h1 className="text-[22px] font-[500] my-[5px] sm:my-0 leading-[30px]">
-                        Mobile
-                        <span className="text-[#cd1818] ml-[6px]">Wars</span>
+                        <span className="text-[#cd1818]">Next </span>Mobile
                      </h1>
                   </Link>
 
-                  <div className="w-full sm:w-auto ml-auto">
-                     <Search />
-                  </div>
+                  <div className="w-full sm:flex sm:items-center sm:w-auto ml-auto">
+                     <Search variant="home" />
 
-                  <div className="ml-[20px]">
-                     <Avatar />
+                     <div className="hidden sm:block ml-[30px]">
+                        <Avatar />
+                     </div>
                   </div>
                </div>
-               {/* desktop navigation */}
-               <div className="bg-[#cd1818] h-[34px] text-white items-center px-[10px] rounded-[6px] hidden gap-[10px] sm:flex">
+               <div className="bg-[#cd1818] h-[40px] text-white items-center px-[10px] rounded-[6px] hidden gap-[10px] sm:flex">
                   <LinkList categories={categories} />
                </div>
             </div>
          </div>
+
+         <MobileSidebar categories={categories} />
       </>
    );
 }

@@ -17,11 +17,12 @@ export default function SignInPage() {
    const userInputRef = useRef<ElementRef<"input">>(null);
 
    // hooks
-   const router = useRouter();
    const { data, status } = useSession();
+   const router = useRouter();
 
    const handleSubmit = async (e: FormEvent) => {
       e.preventDefault();
+
       setFetching(true);
       setErrorMsg("");
 
@@ -33,9 +34,11 @@ export default function SignInPage() {
 
       if (res?.status === 401) {
          setErrorMsg("Invalid username or password");
+         setFetching(false);
+         return;
       }
 
-      setFetching(false);
+      router.push("/");
    };
 
    useEffect(() => {
@@ -43,7 +46,7 @@ export default function SignInPage() {
    }, []);
 
    useEffect(() => {
-      if (data && data.user) return router.push("/");
+      if (data && data.user) router.push("/");
    }, [data]);
 
    const classes = {
@@ -52,8 +55,6 @@ export default function SignInPage() {
       label: "font-[500] ",
       errMsg: "text-red-500 font-[500] text-center bg-red-500/15 py-[4px] rounded-[6px]",
    };
-
-   console.log(">> Login client check ", status);
 
    return (
       <>
@@ -86,19 +87,16 @@ export default function SignInPage() {
                />
             </div>
 
-            <Button
-               isLoading={fetching}
-               variant={"push"}
-               className="h-[40px]"
-               type="submit"
-               size={"full"}
-            >
+            <Button loading={fetching} className="h-[40px] w-full" type="submit">
                Sign In
             </Button>
             <p className="font-[500]">
                <span className="">
                   No account jet?
-                  <Link href="/signup" className="text-[#cd1818] ml-[4px] hover:underline">
+                  <Link
+                     href="/signup"
+                     className="text-[#cd1818] ml-[4px] hover:underline"
+                  >
                      Sign Up
                   </Link>
                </span>

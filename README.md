@@ -76,13 +76,14 @@
 - Only cached static render route
 - Unlike Date Cache across the deployments, the Full Route Cache will purge in new deploy
 
-#### Revaliate
-- Revalidate the Date Cached
+#### Revalidate
+- Revalidate the Data Cached
 
 #### Opting out
 - use Dynamic Function like 'cookies()' will skip Full Route and still use Data cache
 - use 'revalidate = 0' will skip the Full Route & Data Cached, mean component will rerender on each request
 - Opt-out the Data Cach by make fetch(`https://...`, { cache: 'no-store' })
+- when page set 'revalidate = 0', run every revalidate tag will reload this page
 
 
 ### Router Cache
@@ -113,6 +114,7 @@
 - getServerSession(option) , server
 - useServerSession(), client - context
 - all request handled by api/auth/[...nextauth]/ts
+
 ### use 'callback' for custom session data
 - jwt({toke, user}), take user inputs
 - session({token, session}), store user inputs with custom format

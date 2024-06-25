@@ -5,20 +5,18 @@ interface Props extends InputHTMLAttributes<HTMLInputElement> {
 }
 
 export const inputClasses = {
-   input: "p-[6px] pl-[12px] font-[500] bg-[#f1f1f1] w-full h-full rounded-[12px] placeholder:text-[#808080] outline-none text-[#333] border border-black/10 text-[16px] translate-y-[-4px]",
+   input: "p-[6px] bg-[#f6f6f6] w-full pl-[12px] font-[500] rounded-[8px] placeholder:text-[#808080] outline-none text-[#333] border border-black/15",
 };
 
 function Input({ cb, className, type, ...props }: Props, ref: Ref<any>) {
    return (
-      <div className="bg-[#ccc] rounded-[12px] w-full">
-         <input
-            ref={ref}
-            onChange={(e) => cb(e.target.value)}
-            type={type || "text"}
-            className={`${inputClasses.input} ${className} `}
-            {...props}
-         />
-      </div>
+      <input
+         ref={ref}
+         onChange={(e) => cb(e.target.value)}
+         type={type || "text"}
+         className={`${inputClasses.input} ${className} `}
+         {...props}
+      />
    );
 }
 

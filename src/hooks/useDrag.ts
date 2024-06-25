@@ -14,15 +14,11 @@ type Props = {
 };
 
 const activeStyles: Partial<CSSStyleDeclaration> = {
-  paddingLeft: "10px",
-  marginLeft: "10px",
-  borderLeft: "2px solid #cd1818",
+  border: "1px solid #cd1818",
 };
 
 const inActiveStyles: Partial<CSSStyleDeclaration> = {
-  paddingLeft: "0",
-  marginLeft: "0",
-  borderLeft: "0",
+  borderColor: "rgba(0,0,0,0.15)",
 };
 
 const findDraggableItem = (el: HTMLDivElement) => {
@@ -55,9 +51,9 @@ export default function useDrag({
     const parentEl = findDraggableItem(el);
 
     if (parentEl) {
-      Object.assign(parentEl.style, activeStyles);
+      Object.assign((parentEl.childNodes[0] as HTMLDivElement).style, activeStyles);
       parentEl.classList.add("active");
-    }
+   }
   };
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
@@ -65,9 +61,9 @@ export default function useDrag({
     const parentEl = findDraggableItem(el);
 
     if (parentEl) {
-      Object.assign(parentEl.style, inActiveStyles);
+      Object.assign((parentEl.childNodes[0] as HTMLDivElement).style, inActiveStyles);
       parentEl.classList.remove("active");
-    }
+   }
   };
 
   const endDrag = () => {
@@ -76,9 +72,9 @@ export default function useDrag({
     ) as HTMLDivElement;
 
     if (activeItem) {
-      Object.assign(activeItem.style, inActiveStyles);
+      Object.assign((activeItem.childNodes[0] as HTMLDivElement).style, inActiveStyles);
       activeItem.classList.remove("active");
-    }
+   }
 
     setIsDrag(false);
     handleDragEnd();

@@ -1,14 +1,10 @@
-"use client";
+import Image from "next/image";
+import aImage from '@/assets/search-empty.png'
 
-import { useSession } from "next-auth/react";
-
-export default function HomePage() {
-   const { data, status } = useSession();
-
-
-   console.log('>>> home page check session', data);
-   
-
-
-   return <p>This is home page</p>;
+export default async function HomePage() {
+   return (
+      <>
+      <Image height={120} width={120} alt="" src={aImage} className='m-auto' />
+      </>
+   )
 }

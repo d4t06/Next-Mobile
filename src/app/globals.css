@@ -3,5 +3,10 @@
 @tailwind utilities;
 
 body {
-    /* background-color: #999; */
+    /* background-color: #222; */
+}
+
+button[disabled], .disabled {
+    pointer-events: none;
+    opacity: .6;
 }
