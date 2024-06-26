@@ -117,8 +117,8 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
          "absolute flex w-full items-center justify-center bg-[#f1f1f1] inset-0 rounded-[8px] border-[2px] border-[#ccc] hover:border-[#cd1818] overflow-hidden",
       galleryTop: "flex justify-between border-b border-[#ccc] mb-[10px] pb-[10px]",
       galleryBody: "flex-grow overflow-hidden flex mx-[-10px]",
-      bodyLeft: "w-2/3 overflow-auto px-[10px]",
-      bodyRight: "px-[10px] w-1/3 border-l-[2px] space-y-[14px]",
+      bodyLeft: "w-full sm:w-2/3 overflow-auto px-[10px]",
+      bodyRight: "hidden sm:block px-[10px] w-1/3 border-l-[2px] space-y-[14px]",
    };
 
    const imageSkeleton = useMemo(
@@ -138,7 +138,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
             const isInChoseList = indexOf !== -1;
 
             return (
-               <div key={index} className={"px-[4px] relative w-1/6 mt-[8px]"}>
+               <div key={index} className={"px-[4px] relative w-1/3 sm:w-1/6 mt-[8px]"}>
                   <div className={classes.imageContainer}>
                      <div
                         onClick={() => setActive(item)}
@@ -183,7 +183,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
          !!tempImages.length &&
          tempImages.map((item, index) => {
             return (
-               <div key={index} className={"px-[4px] w-1/6 mt-[8px]"}>
+               <div key={index} className={"px-[4px] w-1/3 sm:w-1/6 mt-[8px]"}>
                   <div className={classes.imageContainer}>
                      <div className={classes.imageFrame}>
                         <Image
@@ -227,8 +227,8 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
                <p className="text-[18px] sm:text-[22px] font-[500]">Gallery</p>
                <Button colors={"second"} size="clear" className="ml-[10px] h-full">
                   <label className="flex items-center px-[10px]" htmlFor="image_upload">
-                     <ArrowUpTrayIcon className="w-[20px] mr-[6px]" />
-                     <span className="hidden sm:block">Upload</span>
+                     <ArrowUpTrayIcon className="w-[20px]" />
+                     <span className="hidden sm:block ml -[6px]">Upload</span>
                   </label>
                </Button>
             </div>

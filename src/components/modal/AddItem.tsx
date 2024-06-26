@@ -1,15 +1,7 @@
-import {
-   Dispatch,
-   FormEvent,
-   SetStateAction,
-   useEffect,
-   useState,
-   useRef,
-   ReactNode,
-} from "react";
+import { FormEvent, useEffect, useState, useRef, ReactNode, RefObject } from "react";
 import Button from "../ui/Button";
 import ModalHeader from "./ModalHeader";
-import MyInput from "@/components/ui/MyInput";
+import MyInput, { inputClasses } from "@/components/ui/MyInput";
 
 type Props = {
    closeModal: () => void;
@@ -18,6 +10,7 @@ type Props = {
    initValue?: string;
    children?: ReactNode;
    loading?: boolean;
+   variant?: "input" | "text-are";
 };
 
 export default function AddItem({
@@ -27,6 +20,7 @@ export default function AddItem({
    initValue,
    loading,
    children,
+   variant = "input",
 }: Props) {
    const [value, setValue] = useState(initValue || "");
    const inputRef = useRef<HTMLInputElement>(null);
@@ -44,13 +38,25 @@ export default function AddItem({
       <div className="w-[300px] bg-[#fff]">
          <ModalHeader closeModal={closeModal} title={title} />
          <form action="" onSubmit={handleSubmit}>
-            <MyInput
-               className="w-full"
-               ref={inputRef}
-               placeholder="name..."
-               value={value}
-               cb={(value) => setValue(value)}
-            />
+            {variant === "input" && (
+               <MyInput
+                  className="w-full"
+                  ref={inputRef}
+                  placeholder="name..."
+                  value={value}
+                  cb={(value) => setValue(value)}
+               />
+            )}
+
+            {variant === "text-are" && (
+               <textarea
+                  className={`w-full ${inputClasses.input}`}
+                  ref={inputRef as RefObject<any>}
+                  placeholder="name..."
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+               />
+            )}
 
             {children}
 

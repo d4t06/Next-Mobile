@@ -2,19 +2,24 @@ import { useEffect } from "react";
 import { useState } from "react";
 
 function useDebounce(value: string, delay: number) {
-  const [debounceValue, setDebounceValue] = useState(value);
+   const [debounceValue, setDebounceValue] = useState(value);
 
-  useEffect(() => {
-    const timeId = setTimeout(() => {
-      setDebounceValue(value);
-    }, delay);
+   useEffect(() => {
+      if (!value.trim()) {
+         setDebounceValue("");
+         return;
+      }
 
-    return () => {
-      clearTimeout(timeId);
-    };
-  }, [value, delay]);
+      const timeId = setTimeout(() => {
+         setDebounceValue(value);
+      }, delay);
 
-  return debounceValue;
+      return () => {
+         clearTimeout(timeId);
+      };
+   }, [value, delay]);
+
+   return debounceValue;
 }
 
 export default useDebounce;

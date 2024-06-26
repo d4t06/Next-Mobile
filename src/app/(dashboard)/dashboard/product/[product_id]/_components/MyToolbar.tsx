@@ -40,23 +40,9 @@ export default function Toolbar({ editor, cb, isChange }: Props) {
    return (
       <>
          <div
-            className={`bg-[#cd1818] text-white flex  justify-between items-center h-[50px] px-[10px] `}
+            className={`bg-[#cd1818] text-white flex  justify-between items-center p-[10px] `}
          >
-            <div className="left flex gap-[8px] [&_button]:px-[6px] [&_button]:font-[500] [&_button]:py-[3px] [&_button.active]:bg-white [&_button.active]:text-[#cd1818] [&_button.active]:rounded-[6px] ">
-               <button
-                  onClick={() => editor.chain().focus().toggleBold().run()}
-                  disabled={!editor.can().chain().focus().toggleBold().run()}
-                  className={editor.isActive("bold") ? "active" : ""}
-               >
-                  bold
-               </button>
-               <button
-                  onClick={() => editor.chain().focus().toggleItalic().run()}
-                  disabled={!editor.can().chain().focus().toggleItalic().run()}
-                  className={editor.isActive("italic") ? "active" : ""}
-               >
-                  italic
-               </button>
+            <div className="left flex mt-[-8px] ml-[-8px] flex-wrap [&_button]:px-[6px] [&_button]:mt-[8px] [&_button]:ml-[8px] [&_button]:font-[500] [&_button]:py-[3px] [&_button.active]:bg-white [&_button.active]:text-[#cd1818] [&_button.active]:rounded-[6px] ">
                <button
                   onClick={() => editor.chain().focus().setParagraph().run()}
                   className={editor.isActive("paragraph") ? "active" : ""}

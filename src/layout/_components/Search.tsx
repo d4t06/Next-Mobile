@@ -1,7 +1,11 @@
 "use client";
 
 import useDebounce from "@/hooks/useDebounce";
-import { ArrowPathIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import {
+   ArrowPathIcon,
+   MagnifyingGlassIcon,
+   XMarkIcon,
+} from "@heroicons/react/24/outline";
 import Image from "next/image";
 import { ElementRef, useEffect, useMemo, useRef, useState } from "react";
 import Modal from "@/components/modal";
@@ -43,6 +47,11 @@ export default function Search({ variant, basePath }: Props) {
       setValue("");
       closeModal();
       router.push(href);
+   };
+
+   const handleClear = () => {
+      setValue("");
+      setSearchResult([]);
    };
 
    const classes = {
@@ -111,9 +120,10 @@ export default function Search({ variant, basePath }: Props) {
             setIsFetching(true);
 
             const res = await fetch(
-               `${process.env.NEXT_PUBLIC_API_ENDPOINT || 'https://nest-mobile.vercel.app/api'}/products/search?q=${generateId(
-                  query
-               )}`
+               `${
+                  process.env.NEXT_PUBLIC_API_ENDPOINT ||
+                  "https://nest-mobile.vercel.app/api"
+               }/products/search?q=${generateId(query)}`
             );
 
             if (res.ok) {
@@ -137,7 +147,7 @@ export default function Search({ variant, basePath }: Props) {
 
    return (
       <>
-         <div className="relative z-[100]">
+         <div className={`relative ${variant === "home" ? "z-[100]" : ""}`}>
             <div className={classes.container}>
                <input
                   ref={inputRef}
@@ -152,10 +162,16 @@ export default function Search({ variant, basePath }: Props) {
                   <MagnifyingGlassIcon className="w-[20px] text-[#333]" />
                </button>
 
-               {isFetching && query && (
-                  <span className="absolute right-[40px] animate-spin">
-                     <ArrowPathIcon className="text-[#808080] w-[18px] " />
-                  </span>
+               {query && (
+                  <div className="absolute right-[40px] flex items-center">
+                     {isFetching ? (
+                        <ArrowPathIcon className="text-[#808080] w-[18px] animate-spin" />
+                     ) : (
+                        <button className="h-full" onClick={handleClear}>
+                           <XMarkIcon className="text-[#808080] w-[18px] " />
+                        </button>
+                     )}
+                  </div>
                )}
             </div>
 
@@ -172,7 +188,7 @@ export default function Search({ variant, basePath }: Props) {
                )}
             </div>
          </div>
-         {focus && <Modal closeModal={closeModal} />}
+         {focus && variant === "home" && <Modal closeModal={closeModal} />}
       </>
    );
 }

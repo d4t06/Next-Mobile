@@ -44,7 +44,7 @@ export default function useSpecAction({ productId }: Props) {
             // break;
          }
 
-         // await runRevalidateTag("product-" + productId);
+         await runRevalidateTag("product-" + productId);
 
          setSuccessToast(`${props.type} Update attribute successful`);
       } catch (error) {

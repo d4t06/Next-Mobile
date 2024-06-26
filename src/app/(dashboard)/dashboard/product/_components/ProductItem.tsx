@@ -24,7 +24,7 @@ export default function ProductItem({ product, categories }: Props) {
    return (
       <>
          <div className={classes.container}>
-            <div className="flex">
+            <div className="flex items-start">
                <Image
                   alt=""
                   className="rounded-[6px]"
@@ -35,10 +35,10 @@ export default function ProductItem({ product, categories }: Props) {
                      "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
                   }
                />
-               <p className="font-[500] ml-[10px]">{product.product_name}</p>
+               <p className="font-[500] ml-[10px] line-clamp-2">{product.product_name}</p>
             </div>
 
-            <div className="ml-auto space-x-[10px]">
+            <div className="ml-auto pl-[10px] space-x-[6px] flex-shrink-0">
                <Button
                   size={"clear"}
                   className="py-[4px] px-[12px]"
@@ -60,7 +60,7 @@ export default function ProductItem({ product, categories }: Props) {
          </div>
 
          {openModal && (
-            <Modal closeModal={closeModal}>
+            <Modal className="z-[199]" closeModal={closeModal}>
                <AddProductForm
                   type="Edit"
                   categories={categories}

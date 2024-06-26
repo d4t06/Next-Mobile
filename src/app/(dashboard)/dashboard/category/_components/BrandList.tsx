@@ -9,6 +9,7 @@ import useBrandAction from "../_hooks/useBrandAction";
 import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { generateId } from "@/utils/appHelper";
 import ConfirmModal from "@/components/modal/Confirm";
+import { PlusIcon } from "@heroicons/react/16/solid";
 
 type Props = {
    categories: Category[];
@@ -19,7 +20,7 @@ type Modal = "add" | "edit" | "delete";
 const classes = {
    label: "font-[500] text-[#333]",
    attrItem:
-      "flex items-center bg-[#f6f6f6] px-[18px] py-[8px] border border-[#ccc] rounded-[8px]",
+      "flex items-center bg-[#f6f6f6] mt-[10px] ml-[10px] px-[18px] py-[8px] border border-[#ccc] rounded-[8px]",
    cta: "ml-[10px] pl-[10px] border-[#ccc] border-l-[1px] flex items-center space-x-[4px] text-[#333]",
 };
 
@@ -182,40 +183,49 @@ export default function BrandList({ categories }: Props) {
                disabled={!currentCategory}
                onClick={() => setOpenModal("add")}
             >
-               Add brand
+               <PlusIcon className="w-[22px]" />
+               <span className="hidden sm:block">Add brand</span>
             </Button>
          </div>
 
          <div
-            className={`mt-[14px] flex flex-wrap items-start gap-[10px] ${
+            className={`mt-[4px] flex flex-wrap items-start ml-[-10px] ${
                false ? "disable" : ""
             }`}
          >
-            {brandByCategory.length ? brandByCategory.map((brand, index) => (
-               <div key={index} className={classes.attrItem}>
-                  <span className="text-[14px]">{brand.brand_name}</span>
-                  <div className={classes.cta}>
-                     <button
-                        className="hover:text-[#cd1818]"
-                        onClick={() => {
-                           setCurrentBrandIndex(index);
-                           setOpenModal("delete");
-                        }}
-                     >
-                        <TrashIcon className="w-[22px]" />
-                     </button>
-                     <button
-                        className="hover:text-[#cd1818]"
-                        onClick={() => {
-                           setCurrentBrandIndex(index);
-                           setOpenModal("delete");
-                        }}
-                     >
-                        <PencilSquareIcon className="w-[22px]" />
-                     </button>
-                  </div>
-               </div>
-            )) : <p className="text-center w-full">¯\_(ツ)_/¯</p>}
+            {currentCategory && (
+               <>
+                  {brandByCategory.length ? (
+                     brandByCategory.map((brand, index) => (
+                        <div key={index} className={classes.attrItem}>
+                           <span className="text-[14px]">{brand.brand_name}</span>
+                           <div className={classes.cta}>
+                              <button
+                                 className="hover:text-[#cd1818]"
+                                 onClick={() => {
+                                    setCurrentBrandIndex(index);
+                                    setOpenModal("delete");
+                                 }}
+                              >
+                                 <TrashIcon className="w-[22px]" />
+                              </button>
+                              <button
+                                 className="hover:text-[#cd1818]"
+                                 onClick={() => {
+                                    setCurrentBrandIndex(index);
+                                    setOpenModal("delete");
+                                 }}
+                              >
+                                 <PencilSquareIcon className="w-[22px]" />
+                              </button>
+                           </div>
+                        </div>
+                     ))
+                  ) : (
+                     <p className="text-center w-full mt-[10px]">¯\_(ツ)_/¯</p>
+                  )}
+               </>
+            )}
          </div>
 
          {!!openModal && <Modal closeModal={closeModal}>{renderModal()}</Modal>}

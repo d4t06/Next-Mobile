@@ -126,12 +126,12 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
 
    return (
       <>
-         <div className="w-[800px] max-w-[80vw]">
+         <div className="w-[800px] max-h-[80vh] max-w-[80vw]">
             <ModalHeader closeModal={closeModal} title={title} />
-            <div className="sm:flex mx-[-8px] mt-[14px]">
+            <div className="sm:flex-row mx-[-8px] mt-[14px]">
                <div className="w-full sm:w-1/3 px-[8px]">
                   {!productData.image_url ? (
-                     <Box onClick={() => setIsOpenModal(true)} />
+                     <Box className="pt-[50%] sm:pt-[100%]" onClick={() => setIsOpenModal(true)} />
                   ) : (
                      <Box>
                         <Image

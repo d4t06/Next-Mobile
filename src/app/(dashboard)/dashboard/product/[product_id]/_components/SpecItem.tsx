@@ -72,15 +72,18 @@ export default function SpecItem({ id, product, productCategory }: Props) {
 
    return (
       <>
-         <tr className="border-b last:border-none hover:bg-[#f1f1f1]">
-            <td className="py-[8px] px-[16px] font-[500]">
-               {foundedCatAttribute.attribute_name}
-            </td>
-            <td className="py-[8px] px-[16px]">{foundedAttribute?.value || "..."}</td>
-            <td className="text-right py-[8px] px-[16px]">
-               <Button onClick={() => setOpenModal(true)} colors={"second"}>
-                  <PencilSquareIcon className="w-[22px] mr-[6px]" />
-                  Change
+         <tr className="border-b last:border-none hover:bg-[#f1f1f1] [&_td]:py-[4px] [&_td]:px-[8px] sm:[&_td]:py-[8px] sm:[&_td]:px-[16px]">
+            <td className=" font-[500]">{foundedCatAttribute.attribute_name}</td>
+            <td>{foundedAttribute?.value || "..."}</td>
+            <td className="text-right ">
+               <Button
+                  className="p-[4px] sm:py-[4] sm:px-[12px]"
+                  size={"clear"}
+                  onClick={() => setOpenModal(true)}
+                  colors={"second"}
+               >
+                  <PencilSquareIcon className="w-[20px]" />
+                  <span className="hidden sm:inline ml-[6px]">Change</span>
                </Button>
             </td>
          </tr>
@@ -88,6 +91,7 @@ export default function SpecItem({ id, product, productCategory }: Props) {
          {openModal && (
             <Modal closeModal={closeModal}>
                <AddItem
+                  variant="text-are"
                   loading={isFetching}
                   cbWhenSubmit={(value) => handleUpdateAttribute(value)}
                   closeModal={closeModal}

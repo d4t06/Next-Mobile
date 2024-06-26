@@ -1,4 +1,3 @@
-import Button from "@/components/ui/Button";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 import ProductItem from "./_components/ProductItem";
@@ -33,10 +32,12 @@ export default async function ProductManage() {
 
    return (
       <>
-         <h1 className="text-2xl">All products</h1>
-         <div className="flex justify-between mt-[20px]">
-            <Search variant="dashboard" />
+         <div className="flex justify-between">
+            <h1 className="text-2xl">All products</h1>
             <AddProductButton categories={categories} />
+         </div>
+         <div className="mt-[20px] inline-block">
+            <Search variant="dashboard" />
          </div>
 
          {!!data.products.length && (

@@ -19,7 +19,7 @@ export default async function EditProduct({ params: { product_id } }: Props) {
 
    const classes = {
       group: "p-[20px] rounded-[12px] bg-[#fff] border",
-      label: "text-[22px] font-[500]",
+      label: "text-lg sm:text-xl font-[500]",
    };
 
    if (!categories || !productDetail) return;

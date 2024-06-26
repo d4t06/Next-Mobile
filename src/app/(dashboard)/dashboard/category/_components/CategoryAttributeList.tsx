@@ -11,6 +11,7 @@ import { useToast } from "@/stores/ToastContext";
 import { inputClasses } from "@/components/ui/MyInput";
 import DragAbleItem from "@/components/DragAbleItem";
 import useAttributeAction from "../_hooks/useAttributeAction";
+import { PlusIcon } from "@heroicons/react/16/solid";
 
 type Props = {
    categories: Category[];
@@ -157,7 +158,7 @@ export default function CategoryAttributeList({ categories }: Props) {
    const classes = {
       label: "font-[500] text-[#333]",
       attrItem:
-         " bg-[#f1f1f1] px-[18px] py-[8px] border-[2px] border-[#ccc] rounded-[8px]",
+         " bg-[#f1f1f1] mt-[10px] ml-[10px] px-[18px] py-[8px] border-[2px] border-[#ccc] rounded-[8px]",
       cta: "ml-[10px] pl-[10px] border-[#ccc] border-l-[1px] flex items-center space-x-[4px] text-[#333]",
    };
 
@@ -189,12 +190,14 @@ export default function CategoryAttributeList({ categories }: Props) {
                disabled={!currentCategory}
                onClick={() => setIsOpenModal("add")}
             >
-               Add attribute
+                <PlusIcon className="w-[22px]" />
+               <span className="hidden sm:block"> Add attribute</span>
+              
             </Button>
          </div>
 
          <div
-            className={`mt-[14px] flex flex-wrap items-start gap-[10px] ${
+            className={`mt-[4px] flex flex-wrap items-start ml-[-10px] ${
                false ? "disable" : ""
             }`}
          >
@@ -244,7 +247,7 @@ export default function CategoryAttributeList({ categories }: Props) {
                         );
                      })
                   ) : (
-                     <p className="text-center w-full">¯\_(ツ)_/¯ </p>
+                     <p className="text-center w-full mt-[10px]">¯\_(ツ)_/¯ </p>
                   )}
                </>
             )}
