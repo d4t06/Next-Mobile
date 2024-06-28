@@ -8,7 +8,8 @@ import { publicRequest } from "@/utils/request";
 import Button from "./ui/Button";
 import Image from "next/image";
 import Skeleton from "./Skeleton";
-import { formatSize } from "@/utils/appHelper";
+import { formatSize, sleep } from "@/utils/appHelper";
+import usePrivateRequest from "@/hooks/usePrivateRequest";
 
 type Props = {
    setImageUrl: (images: ImageType[]) => void;
@@ -39,6 +40,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
       imageStore: { currentImages, tempImages, page, count, pageSize },
       storeImages,
    } = useImage();
+   const privateRequest = usePrivateRequest();
 
    const isRemaining = useMemo(() => count - page * pageSize > 0, [currentImages]);
 
@@ -71,7 +73,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
          setStatus("fetching");
          const controller = new AbortController();
 
-         await publicRequest.delete(
+         await privateRequest.delete(
             `${IMAGE_URL}/${encodeURIComponent(active.public_id)}`
          );
 
@@ -92,6 +94,9 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
 
    const getImages = async (page: number = 1) => {
       try {
+         setStatus("loadingImages");
+         if (process.env.NODE_ENV === 'development') await sleep(500);
+
          const res = await publicRequest.get(`${IMAGE_URL}?page=${page}`);
          const data = res.data as getImagesRes;
 
@@ -124,7 +129,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
    const imageSkeleton = useMemo(
       () =>
          [...Array(12).keys()].map((item) => (
-            <div key={item} className={"w-1/6 px-[4px] mt-[8px]"}>
+            <div key={item} className={"w-1/3 sm:w-1/6 px-[4px] mt-[8px]"}>
                <Skeleton className="pt-[100%]" />
             </div>
          )),
@@ -258,7 +263,6 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
                {!!currentImages.length && isRemaining && (
                   <div className="text-center mt-[14px]">
                      <Button
-                        border={"clear"}
                         colors={"second"}
                         onClick={() => getImages(page + 1)}
                      >

@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import { getProductDetail } from "@/libs/getProductDetail";
-import { getAllProducts } from "@/libs/getAllProducts";
+// import { getAllProducts } from "@/libs/getAllProducts";
 import { getAllCategories } from "@/libs/getAllCategory";
 import HTMLReactParser from "html-react-parser/lib/index";
 import SpecificationSection from "./_components/SpecificationSection";
@@ -15,28 +15,25 @@ type Params = {
    };
 };
 
-async function getStaticParams() {
-   const categories = await getAllCategories();
+// export async function generateStaticParams() {
+//    const categories = await getAllCategories();
 
-   if (!categories?.length) return [];
-   const params: Params["params"][] = [];
+//    if (!categories?.length) return [];
+//    const params: Params["params"][] = [];
 
-   for await (const c of categories) {
-      const data = await getAllProducts(1, c.id);
+//    for await (const c of categories) {
+//       const data = await getAllProducts(1, c.id);
 
-      const payload = data.products.map((p) => ({
-         productId: p.id + "",
-         // categoryId: c.id + "",
-      })) as Params["params"][];
+//       const payload = data.products.map((p) => ({
+//          productId: p.id + "",
+//          // categoryId: c.id + "",
+//       })) as Params["params"][];
 
-      params.push(...payload);
-   }
+//       params.push(...payload);
+//    }
 
-   return params;
-}
-
-export const generateStaticParams =
-   process.env.NODE_ENV === "production" ? getStaticParams : undefined;
+//    return params;
+// }
 
 export async function generateMetadata({
    params: { productId },
@@ -61,7 +58,7 @@ export default async function ProductDetailPage({ params: { productId } }: Param
 
    const classes = {
       detailBody: "sm:flex items-start mx-[-10px]",
-      detailLeft: "sm:w-1/3 px-[10px] flex-shrink-0",
+      detailLeft: "sm:w-1/3 px-[10px] flex-shrink-0 sm:sticky top-[10px]",
       detailRight: "mt-[30px] sm:mt-0 sm:flex-grow px-[10px]",
    };
 

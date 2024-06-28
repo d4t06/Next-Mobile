@@ -36,7 +36,7 @@ export default function MyEditor({ extensions, className, cb, ...props }: Props)
          <Toolbar isChange={isChange} cb={handleSubmit} editor={editor} />
          <div className={classes.editContainer}>
             <EditorContent
-               className="pt-[30px] px-[20px] sm:px-[50px] pb-[50vh] [&_div]:space-y-[14px] [&_p]:text-[#495057] [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px]"
+               className="pt-[30px] px-[20px] sm:px-[50px] pb-[50vh] [&_div]:space-y-[14px] [&_p]:text-[#495057] [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:max-h-[300px] [&_img]:border-[2px] [&_img]:border-transparent [&_.ProseMirror-selectednode]:border-red-500"
                editor={editor}
             />
          </div>

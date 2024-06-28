@@ -74,7 +74,7 @@ export default function SpecItem({ id, product, productCategory }: Props) {
       <>
          <tr className="border-b last:border-none hover:bg-[#f1f1f1] [&_td]:py-[4px] [&_td]:px-[8px] sm:[&_td]:py-[8px] sm:[&_td]:px-[16px]">
             <td className=" font-[500]">{foundedCatAttribute.attribute_name}</td>
-            <td>{foundedAttribute?.value || "..."}</td>
+            <td className="whitespace-break-spaces">{foundedAttribute?.value || "..."}</td>
             <td className="text-right ">
                <Button
                   className="p-[4px] sm:py-[4] sm:px-[12px]"
