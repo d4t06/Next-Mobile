@@ -14,6 +14,6 @@ const config: Config = {
       },
    },
    plugins: [],
-   purge: ['./src/**/*.{js,ts,jsx,tsx}']
+   // purge: ['./src/**/*.{js,ts,jsx,tsx}']
 };
 export default config;

@@ -138,7 +138,7 @@ export default function CategoryList({ categories }: Props) {
       <>
          <div className="flex flex-wrap -mx-[8px] -mt-[8px]">
             {categories.map((c, index) => (
-               <div key={index} className="w-1/2 sm:w-1/6 px-[8px] mt-[16px]">
+               <div key={index} className="w-[50%] sm:w-1/6 px-[8px] mt-[16px]">
                   <Box className="font-[500]">
                      {c.category_name}
                      <OverlayCTA
@@ -163,7 +163,7 @@ export default function CategoryList({ categories }: Props) {
                </div>
             ))}
 
-            <div className="w-1/2 sm:w-1/6 mt-[16px] px-[8px]">
+            <div className="w-[50%] sm:w-1/6 mt-[16px] px-[8px]">
                <Box
                   onClick={() => {
                      setCurrentCategoryIndex(undefined);
