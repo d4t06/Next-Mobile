@@ -1,5 +1,6 @@
 import Frame from "@/components/ui/Frame";
 import Image from "next/image";
+import AddToCompareButton from "./AddToCompareButton";
 
 type Props = {
    product: Product;
@@ -20,6 +21,7 @@ export default function SpecificationSection({ product, productCategory }: Props
    return (
       <>
          <Frame>
+            <AddToCompareButton product={product} />
             <Image
                src={
                   product.image_url ||
@@ -45,9 +47,7 @@ export default function SpecificationSection({ product, productCategory }: Props
 
                      return (
                         <tr className="group" key={index}>
-                           <td
-                              className={`${classes.td} text-[#666] font-[500] `}
-                           >
+                           <td className={`${classes.td} text-[#666] font-[500] `}>
                               {categoryAttribute.attribute_name}
                            </td>
                            <td

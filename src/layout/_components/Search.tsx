@@ -13,6 +13,7 @@ import { generateId } from "@/utils/appHelper";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import NoProduct from "@/components/NoProduct";
+import useSearchProduct from "@/hooks/useSearchProduct";
 
 type Props = {
    variant: "home" | "dashboard";
@@ -22,15 +23,16 @@ type Props = {
 export default function Search({ variant, basePath }: Props) {
    // states
    const [value, setValue] = useState("");
-   const [searchResult, setSearchResult] = useState<Product[]>([]);
+   // const [searchResult, setSearchResult] = useState<Product[]>([]);
    const [focus, setFocus] = useState(false);
-   const [isFetching, setIsFetching] = useState(false);
+   // const [isFetching, setIsFetching] = useState(false);
 
    const inputRef = useRef<ElementRef<"input">>(null);
 
    // hooks
-   const query = useDebounce(value, 700);
    const router = useRouter();
+   const query = useDebounce(value, 700);
+   const { isFetching, searchResult, setSearchResult } = useSearchProduct({ query });
 
    // computed
    const isShowSearchResult = focus && !!searchResult.length && query;
@@ -66,7 +68,7 @@ export default function Search({ variant, basePath }: Props) {
    };
 
    const renderSearchResult = useMemo(() => {
-      return setSearchResult.length ? (
+      return searchResult.length ? (
          searchResult.map((p, index) => {
             const content = (
                <>
@@ -110,40 +112,6 @@ export default function Search({ variant, basePath }: Props) {
          <NoProduct />
       );
    }, [searchResult]);
-
-   useEffect(() => {
-      if (!query.trim()) return;
-      const controller = new AbortController();
-
-      const fetchApi = async () => {
-         try {
-            setIsFetching(true);
-
-            const res = await fetch(
-               `${
-                  process.env.NEXT_PUBLIC_API_ENDPOINT ||
-                  "https://nest-mobile.vercel.app/api"
-               }/products/search?q=${generateId(query)}`
-            );
-
-            if (res.ok) {
-               const data = (await res.json()) as Product[];
-               setSearchResult(data);
-            } else setSearchResult([]);
-         } catch (error) {
-            console.log(error);
-         } finally {
-            setIsFetching(false);
-         }
-      };
-
-      fetchApi();
-
-      return () => {
-         console.log("abort");
-         controller.abort();
-      };
-   }, [query]);
 
    return (
       <>

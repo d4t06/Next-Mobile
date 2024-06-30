@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Montserrat } from "next/font/google";
 import AuthProvider from "@/stores/SessionContext";
 import "./globals.css";
+import CompareProvider from "@/stores/CompareContext";
 
 const montserrat = Montserrat({ subsets: ["latin"] });
 
@@ -19,8 +20,10 @@ export default async function RootLayout({
       <html lang="en">
          <body className={montserrat.className}>
             <AuthProvider>
-               {children}
-               <div id="portals"></div>
+               <CompareProvider>
+                  {children}
+                  <div id="portals"></div>
+               </CompareProvider>
             </AuthProvider>
          </body>
       </html>

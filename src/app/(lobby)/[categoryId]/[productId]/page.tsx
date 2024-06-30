@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { getProductDetail } from "@/libs/getProductDetail";
-// import { getAllProducts } from "@/libs/getAllProducts";
 import { getAllCategories } from "@/libs/getAllCategory";
 import HTMLReactParser from "html-react-parser/lib/index";
 import SpecificationSection from "./_components/SpecificationSection";
 import NoProduct from "@/components/NoProduct";
+import { getAllProducts } from "@/libs/getAllProducts";
 
 export const revalidate = 86400;
 
@@ -15,25 +15,25 @@ type Params = {
    };
 };
 
-// export async function generateStaticParams() {
-//    const categories = await getAllCategories();
+export async function generateStaticParams() {
+   const categories = await getAllCategories();
 
-//    if (!categories?.length) return [];
-//    const params: Params["params"][] = [];
+   if (!categories?.length) return [];
+   const params: Params["params"][] = [];
 
-//    for await (const c of categories) {
-//       const data = await getAllProducts(1, c.id);
+   for await (const c of categories) {
+      const data = await getAllProducts(1, c.id);
 
-//       const payload = data.products.map((p) => ({
-//          productId: p.id + "",
-//          // categoryId: c.id + "",
-//       })) as Params["params"][];
+      const payload = data.products.map((p) => ({
+         productId: p.id + "",
+         // categoryId: c.id + "",
+      })) as Params["params"][];
 
-//       params.push(...payload);
-//    }
+      params.push(...payload);
+   }
 
-//    return params;
-// }
+   return params;
+}
 
 export async function generateMetadata({
    params: { productId },

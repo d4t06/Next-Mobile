@@ -5,7 +5,6 @@ type Props = {
    onClick?: () => void;
    children?: ReactNode;
    className?: string;
-   pushAble?: boolean;
 };
 export default function Box({ onClick, children, className }: Props) {
    const classes = {
