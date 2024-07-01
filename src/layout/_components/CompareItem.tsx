@@ -14,9 +14,9 @@ export default function CompareItem({ product }: Props) {
    const isInChoseList = useMemo(() => selectIdList.includes(product.id), [selectIdList]);
 
    return (
-      <div key={product.id} className="w-1/3 sm:w-1/5 border-[2px] rounded-[6px]">
-         <div className="p-[6px] relative">
-            <Link href={`/${product.category_id}/${product.id}`}>
+      <div key={product.id} className="w-1/3 sm:w-1/5 border-[2px] rounded-[8px]">
+         <div className="p-[6px] h-full relative">
+            <Link className="flex flex-col justify-between h-full" href={`/${product.category_id}/${product.id}`}>
                <Image
                   src={product.image_url}
                   className="mx-auto"
@@ -24,7 +24,7 @@ export default function CompareItem({ product }: Props) {
                   height={70}
                   width={70}
                />
-               <p className="text-[14px] text-center line-clamp-1">
+               <p className="text-[14px] mt-[4px] font-[500] text-center line-clamp-1">
                   {product.product_name}
                </p>
             </Link>

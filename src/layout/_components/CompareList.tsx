@@ -3,8 +3,7 @@
 import Button from "@/components/ui/Button";
 import Frame from "@/components/ui/Frame";
 import { useCompare } from "@/stores/CompareContext";
-import { ArrowRightIcon } from "@heroicons/react/16/solid";
-import { ArrowsRightLeftIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
+import { ArrowsRightLeftIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
 import { useState } from "react";
 import CompareItem from "./CompareItem";
 import { useRouter } from "next/navigation";
@@ -17,7 +16,7 @@ export default function CompareList() {
    const router = useRouter();
 
    const handleCompare = () => {
-      if (selectIdList.length == 2) {
+      if (selectIdList.length >= 2) {
          setIsOpen(false);
          router.push(`/compare?q=${selectIdList.join(",")}`);
       }
@@ -52,19 +51,17 @@ export default function CompareList() {
                         size={"clear"}
                         className="p-[4px] sm:py-[4px] sm:px-[12px]"
                      >
-                        <ArrowRightIcon className="w-[20px]" />
+                        <ArrowsRightLeftIcon className="w-[20px]" />
                         <span className="hidden sm:block ml-[6px]">Compare</span>
                      </Button>
                   </div>
                </div>
-               <Button
+               <button
                   onClick={() => setIsOpen(false)}
-                  variant={"clear"}
-                  colors={"clear"}
-                  className="w-full mt-[6px]"
+                  className="flex w-full justify-center py-[6px]"
                >
                   <ChevronDownIcon className="w-[20px]" />
-               </Button>
+               </button>
             </Frame>
          </div>
 

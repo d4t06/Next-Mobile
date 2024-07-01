@@ -34,7 +34,7 @@ export default function SpecSection({ category, products }: Props) {
                               key={index}
                               className={`flex-1 leading-[2] whitespace-break-spaces`}
                            >
-                              {foundedAttr?.value || ""}
+                              {foundedAttr?.value || "..."}
                            </td>
                         );
                      })}
