@@ -1,10 +1,10 @@
 import { Metadata } from "next";
 import { getProductDetail } from "@/libs/getProductDetail";
 import { getAllCategories } from "@/libs/getAllCategory";
-import HTMLReactParser from "html-react-parser/lib/index";
 import SpecificationSection from "./_components/SpecificationSection";
 import NoProduct from "@/components/NoProduct";
 import { getAllProducts } from "@/libs/getAllProducts";
+import DescriptionSection from "./_components/DesctiptionSection";
 
 export const revalidate = 86400;
 
@@ -75,9 +75,7 @@ export default async function ProductDetailPage({ params: { productId } }: Param
             </div>
 
             <div className={classes.detailRight}>
-               <div className="space-y-[14px] [&>p]:text-[#495057] [&>h5]:font-[500] [&>h5]:text-xl [&>img]:rounded-[8px] [&>img]:max-h-[350px] [&>img]:mx-auto">
-                  {HTMLReactParser(product.description.content || "")}
-               </div>
+               <DescriptionSection product={product} />
             </div>
          </div>
       </>

@@ -46,6 +46,7 @@ type ProductResponse = {
    products: Product[];
    page: number;
    count: number;
+   page_size: number;
    category_id: number | null;
    brand_id: number[] | null;
 };

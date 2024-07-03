@@ -1,6 +1,5 @@
 "use client";
 
-import Skeleton from "@/components/Skeleton";
 import Frame from "@/components/ui/Frame";
 import MyImage from "@/components/ui/MyImage";
 import { useEffect, useRef, useState } from "react";
@@ -48,34 +47,36 @@ export default function ImageSection({ products }: Props) {
    return (
       <>
          <div
-            className={`container px-0 ${isSmall ? "fixed z-[199] top-0" : ""}`}
+            className={`${isSmall ? "fixed z-[199] top-0 left-0 right-0" : ""}`}
             ref={sectionRef}
          >
-            <Frame>
-               <div className={`flex`}>
-                  <div className="w-1/5 sm:w-1/6"></div>
-                  {products.map((p, index) => (
-                     <div key={index} className="flex-1 flex flex-col">
-                        <MyImage
-                           src={p?.image_url || ""}
-                           className={`max-h-[200px] mx-auto my-auto ${
-                              isSmall ? "w-[60px]" : "w-auto"
-                           }`}
-                           width={200}
-                           height={200}
-                           alt=""
-                        />
-                        <h1
-                           className={`${classes.proName} ${
-                              isSmall ? "!text-sm !pt-0" : ""
-                           }`}
-                        >
-                           {p?.product_name}
-                        </h1>
-                     </div>
-                  ))}
-               </div>
-            </Frame>
+            <div className="container">
+               <Frame>
+                  <div className={`flex`}>
+                     <div className="w-1/5 sm:w-1/6"></div>
+                     {products.map((p, index) => (
+                        <div key={index} className="flex-1 flex flex-col">
+                           <MyImage
+                              src={p?.image_url || ""}
+                              className={`max-h-[200px] mx-auto my-auto ${
+                                 isSmall ? "w-[60px]" : "w-auto"
+                              }`}
+                              width={200}
+                              height={200}
+                              alt=""
+                           />
+                           <h1
+                              className={`${classes.proName} ${
+                                 isSmall ? "!text-sm !pt-0" : ""
+                              }`}
+                           >
+                              {p?.product_name}
+                           </h1>
+                        </div>
+                     ))}
+                  </div>
+               </Frame>
+            </div>
          </div>
 
          <div className={`${isSmall ? "" : "hidden"}`} ref={spacingRef}></div>

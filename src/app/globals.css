@@ -6,7 +6,7 @@ body {
     /* background-color: #222; */
 }
 
-button[disabled], .disabled {
+button[disabled], a[aria-disabled="true"], .disabled {
     pointer-events: none;
     opacity: .6;
 }

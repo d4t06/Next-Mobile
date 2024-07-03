@@ -41,7 +41,9 @@ export const initProductObject = (data: Partial<ProductSchema>) => {
 };
 
 export const findCurCategory = (categories: Category[], curCategoryAscii: string) => {
-   const curCategory = categories.find((cat) => cat.category_name_ascii === curCategoryAscii);
+   const curCategory = categories.find(
+      (cat) => cat.category_name_ascii === curCategoryAscii
+   );
    return curCategory;
 };
 
@@ -60,7 +62,5 @@ export const formatSize = (size: number) => {
 
 export const sleep = (time: number) =>
    new Promise<void>((rs) => {
-      setTimeout(() => {
-         rs();
-      }, time);
+      setTimeout(rs, time);
    });

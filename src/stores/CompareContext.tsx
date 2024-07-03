@@ -1,10 +1,33 @@
 "use client";
 
-import { ReactNode, createContext, useCallback, useContext, useReducer } from "react";
+import {
+   ReactNode,
+   createContext,
+   useCallback,
+   useContext,
+   useEffect,
+   useReducer,
+} from "react";
 
 type StateType = {
    products: Product[];
    selectIdList: number[];
+};
+
+const getLocalStorage = () =>
+   typeof window !== "undefined"
+      ? (JSON.parse(window.localStorage.getItem("next-mobile") || "{}") as Record<
+           string,
+           any
+        >)
+      : {};
+
+const setLocalStorage = (key: string, value: any) => {
+   const storage = getLocalStorage();
+   storage[key] = value;
+
+   if (typeof window !== "undefined")
+      window.localStorage.setItem("next-mobile", JSON.stringify(storage));
 };
 
 const initState: StateType = {
@@ -13,6 +36,7 @@ const initState: StateType = {
 };
 
 const enum REDUCER_ACTION_TYPE {
+   INIT,
    TOGGLE_PRODUCT,
    SELECT,
    RESET,
@@ -21,6 +45,11 @@ const enum REDUCER_ACTION_TYPE {
 type Toggle = {
    type: REDUCER_ACTION_TYPE.TOGGLE_PRODUCT;
    payload: Product;
+};
+
+type Init = {
+   type: REDUCER_ACTION_TYPE.INIT;
+   payload: Partial<StateType>;
 };
 
 type Select = {
@@ -32,7 +61,7 @@ type Reset = {
    type: REDUCER_ACTION_TYPE.RESET;
 };
 
-const reducer = (state: StateType, action: Toggle | Reset | Select): StateType => {
+const reducer = (state: StateType, action: Init | Toggle | Reset | Select): StateType => {
    switch (action.type) {
       case REDUCER_ACTION_TYPE.TOGGLE_PRODUCT: {
          const product = action.payload;
@@ -41,6 +70,8 @@ const reducer = (state: StateType, action: Toggle | Reset | Select): StateType =
          const index = state.products.findIndex((p) => p.id === product.id);
          if (index === -1) newProducts.push(product);
          else newProducts.splice(index, 1);
+
+         setLocalStorage("products", newProducts);
 
          return {
             ...state,
@@ -55,6 +86,8 @@ const reducer = (state: StateType, action: Toggle | Reset | Select): StateType =
          if (index === -1) newIds.push(product.id);
          else newIds.splice(index, 1);
 
+         setLocalStorage("selectIdList", newIds);
+
          return {
             ...state,
             selectIdList: newIds,
@@ -62,6 +95,11 @@ const reducer = (state: StateType, action: Toggle | Reset | Select): StateType =
       }
       case REDUCER_ACTION_TYPE.RESET:
          return initState;
+      case REDUCER_ACTION_TYPE.INIT:
+         return {
+            ...state,
+            ...action.payload,
+         };
 
       default:
          return state;
@@ -70,6 +108,13 @@ const reducer = (state: StateType, action: Toggle | Reset | Select): StateType =
 
 const useCompareListContext = () => {
    const [state, dispatch] = useReducer(reducer, initState);
+
+   const initCompareStore = useCallback((payload: Init["payload"]) => {
+      dispatch({
+         type: REDUCER_ACTION_TYPE.INIT,
+         payload,
+      });
+   }, []);
 
    const toggleProduct = useCallback((payload: Product) => {
       dispatch({
@@ -91,7 +136,7 @@ const useCompareListContext = () => {
       });
    }, []);
 
-   return { state, toggleProduct, resetCompareList, selectProduct };
+   return { state, toggleProduct, resetCompareList, selectProduct, initCompareStore };
 };
 
 type ContextType = ReturnType<typeof useCompareListContext>;
@@ -100,14 +145,24 @@ const initContextState: ContextType = {
    state: initState,
    resetCompareList: () => {},
    toggleProduct: () => {},
+   initCompareStore: () => {},
    selectProduct: () => {},
 };
 
 const CompareContext = createContext<ContextType>(initContextState);
 
 export default function CompareProvider({ children }: { children: ReactNode }) {
+   const { initCompareStore, ...rest } = useCompareListContext();
+
+   useEffect(() => {
+      const storage = getLocalStorage();
+      initCompareStore({
+         products: storage["products"] || [],
+         selectIdList: storage["selectIdList"] || [],
+      });
+   }, []);
    return (
-      <CompareContext.Provider value={useCompareListContext()}>
+      <CompareContext.Provider value={{ ...rest, initCompareStore }}>
          {children}
       </CompareContext.Provider>
    );

@@ -3,7 +3,11 @@
 import Button from "@/components/ui/Button";
 import Frame from "@/components/ui/Frame";
 import { useCompare } from "@/stores/CompareContext";
-import { ArrowsRightLeftIcon, ChevronDownIcon } from "@heroicons/react/16/solid";
+import {
+   ArrowsRightLeftIcon,
+   ChevronDownIcon,
+   XMarkIcon,
+} from "@heroicons/react/16/solid";
 import { useState } from "react";
 import CompareItem from "./CompareItem";
 import { useRouter } from "next/navigation";
@@ -12,7 +16,7 @@ export default function CompareList() {
    const [isOpen, setIsOpen] = useState(false);
 
    //    hooks
-   const { products, selectIdList } = useCompare();
+   const { products, selectIdList, resetCompareList } = useCompare();
    const router = useRouter();
 
    const handleCompare = () => {
@@ -27,7 +31,7 @@ export default function CompareList() {
          "fixed z-[99] bottom-[30px] transition-[padding,opacity,transform] left-[16px]",
       wrapper:
          "fixed z-[99] bottom-[30px] transition-[padding,opacity,transform] left-[16px] right-[70px]  rounded-[12px]",
-      container: "flex items-center",
+      container: "px-[10px] pt-[10px] flex items-center",
       productList: "flex-grow flex space-x-[6px] mr-[10px]",
       hide: "opacity-0 translate-y-[30px] pointer-events-none",
       show: "translate-y-[0] opacity-[1]",
@@ -36,7 +40,7 @@ export default function CompareList() {
    return (
       <>
          <div className={`${classes.wrapper} ${isOpen ? classes.show : classes.hide} `}>
-            <Frame className="pb-0">
+            <Frame className="!p-0">
                <div className={classes.container}>
                   <div className="flex items-center w-full">
                      <div className={classes.productList}>
@@ -45,20 +49,33 @@ export default function CompareList() {
                         ))}
                      </div>
 
-                     <Button
-                        onClick={handleCompare}
-                        disabled={selectIdList.length < 2}
-                        size={"clear"}
-                        className="p-[4px] sm:py-[4px] sm:px-[12px]"
-                     >
-                        <ArrowsRightLeftIcon className="w-[20px]" />
-                        <span className="hidden sm:block ml-[6px]">Compare</span>
-                     </Button>
+                     <div className="flex flex-col flex-shrink-0">
+                        <Button
+                           onClick={handleCompare}
+                           disabled={selectIdList.length < 2}
+                           size={"clear"}
+                           className="p-[4px] sm:py-[4px] sm:px-[12px]"
+                        >
+                           <ArrowsRightLeftIcon className="w-[20px]" />
+                           <span className="hidden sm:block ml-[6px]">Compare</span>
+                        </Button>
+
+                        <Button
+                           colors={"second"}
+                           onClick={resetCompareList}
+                           disabled={!products.length}
+                           size={"clear"}
+                           className="p-[4px] sm:py-[4px] sm:px-[12px] mt-[6px]"
+                        >
+                           <XMarkIcon className="w-[20px]" />
+                           <span className="hidden sm:block ml-[6px]">Clear</span>
+                        </Button>
+                     </div>
                   </div>
                </div>
                <button
                   onClick={() => setIsOpen(false)}
-                  className="flex w-full justify-center py-[6px]"
+                  className="flex w-full justify-center py-[6px] mt-[14px] hover:bg-[#f1f1f1]"
                >
                   <ChevronDownIcon className="w-[20px]" />
                </button>

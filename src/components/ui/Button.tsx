@@ -55,6 +55,7 @@ interface Props extends VariantProps<typeof ButtonVariant> {
    type?: HTMLButtonElement["type"];
    href?: string;
    active?: boolean;
+   blank?: boolean;
 }
 export default function Button({
    onClick,
@@ -68,6 +69,7 @@ export default function Button({
    colors,
    href,
    active,
+   blank,
    fontWeight,
    border,
 }: Props) {
@@ -83,6 +85,8 @@ export default function Button({
          {href ? (
             <Link
                href={href}
+               aria-disabled={disabled}
+               target={blank ? "_blank" : ""}
                className={`${ButtonVariant({
                   variant,
                   size,
