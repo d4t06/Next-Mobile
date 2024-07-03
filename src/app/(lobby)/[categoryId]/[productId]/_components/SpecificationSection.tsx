@@ -1,9 +1,6 @@
 import Frame from "@/components/ui/Frame";
 import Image from "next/image";
 import AddToCompareButton from "./AddToCompareButton";
-import { getServerSession } from "next-auth";
-import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
-import Button from "@/components/ui/Button";
 
 type Props = {
    product: Product;
@@ -11,8 +8,6 @@ type Props = {
 };
 
 export default async function SpecificationSection({ product, productCategory }: Props) {
-   const session = await getServerSession(nextAuthOptions);
-
    const attributeOrderArray = productCategory
       ? productCategory.attribute_order.split("_")
       : [];
@@ -26,7 +21,7 @@ export default async function SpecificationSection({ product, productCategory }:
    return (
       <>
          <Frame>
-            <AddToCompareButton session={session} product={product} />
+            <AddToCompareButton product={product} />
             <Image
                src={
                   product.image_url ||

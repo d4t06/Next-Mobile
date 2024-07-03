@@ -3,14 +3,15 @@
 import Button from "@/components/ui/Button";
 import { useCompare } from "@/stores/CompareContext";
 import { PencilSquareIcon, PlusIcon, XMarkIcon } from "@heroicons/react/16/solid";
-import { Session } from "next-auth";
+import { useSession } from "next-auth/react";
 import { useMemo } from "react";
 
 type Props = {
    product: Product;
-   session: Session | null;
 };
-export default function AddToCompareButton({ product, session }: Props) {
+export default function AddToCompareButton({ product }: Props) {
+   const { data: session } = useSession();
+
    const { toggleProduct, products } = useCompare();
 
    const isAdded = useMemo(() => products.find((p) => p.id === product.id), [products]);

@@ -25,8 +25,8 @@ function Modal({ children, closeModal, className = "z-[99]", childClassName }: P
                   >
                      <div
                         className={`${
-                           childClassName || "py-[12px] px-[16px]"
-                        }rounded-[8px] bg-white`}
+                           childClassName || " py-[12px] px-[16px]"
+                        } rounded-[8px] bg-white`}
                      >
                         {children}
                      </div>

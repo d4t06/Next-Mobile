@@ -20,7 +20,7 @@ type Props = {
 type getImagesRes = {
    page: number;
    images: ImageType[];
-   pageSize: number;
+   page_size: number;
    count: number;
 };
 
@@ -95,7 +95,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
    const getImages = async (page: number = 1) => {
       try {
          setStatus("loadingImages");
-         if (process.env.NODE_ENV === 'development') await sleep(500);
+         if (process.env.NODE_ENV === "development") await sleep(500);
 
          const res = await publicRequest.get(`${IMAGE_URL}?page=${page}`);
          const data = res.data as getImagesRes;
@@ -103,7 +103,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
          const newImages = [...currentImages, ...data.images];
          storeImages({
             count: data.count,
-            pageSize: data.pageSize,
+            pageSize: data.page_size,
             page: data.page,
             currentImages: newImages,
          });
@@ -243,7 +243,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
                onClick={handleSubmit}
                variant={"primary"}
             >
-               Chọn
+               Select
             </Button>
          </div>
          <div className={classes.galleryBody}>
@@ -262,11 +262,8 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
 
                {!!currentImages.length && isRemaining && (
                   <div className="text-center mt-[14px]">
-                     <Button
-                        colors={"second"}
-                        onClick={() => getImages(page + 1)}
-                     >
-                        Thêm
+                     <Button colors={"second"} onClick={() => getImages(page + 1)}>
+                        More
                      </Button>
                   </div>
                )}
@@ -292,7 +289,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
                         </li>
                      </ul>
                      <Button loading={isLoading} onClick={handleDeleteImage}>
-                        Xóa
+                        Delete
                      </Button>
                   </>
                )}
