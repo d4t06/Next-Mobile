@@ -1,8 +1,8 @@
 "use client";
 
-import Modal from "@/components/modal";
+import ImageModal from "@/components/modal/ImageModal";
 import HTMLReactParser from "html-react-parser/lib/index";
-import { HTMLAttributes, useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 type Props = {
    product: Product;
@@ -11,10 +11,22 @@ type Props = {
 export default function DescriptionSection({ product }: Props) {
    const [isOpenModal, setIsOpenModal] = useState("");
 
-   const closeModal = () => setIsOpenModal("");
+   const closeModal = () => {
+      const body = document.querySelector("body");
+
+      if (body) {
+         body.style.overflow = "auto";
+      }
+      setIsOpenModal("");
+   };
 
    const handleImageClick = (e: Event) => {
       const imageEle = e.target as HTMLImageElement;
+      const body = document.querySelector("body");
+
+      if (body) {
+         body.style.overflow = "hidden";
+      }
 
       setIsOpenModal(imageEle.src);
    };
@@ -31,15 +43,7 @@ export default function DescriptionSection({ product }: Props) {
             {HTMLReactParser(product.description.content || "")}
          </div>
 
-         {!!isOpenModal && (
-            <Modal className="z-[199]" childClassName="p-0 " closeModal={closeModal}>
-               <img
-                  className="max-w-[95vw] h-auto sm:max-h-[80vh] sm:max-w-[80vw]"
-                  src={isOpenModal}
-                  alt=""
-               />
-            </Modal>
-         )}
+         {!!isOpenModal && <ImageModal src={isOpenModal} closeModal={closeModal} />}
       </>
    );
 }

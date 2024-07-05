@@ -50,16 +50,19 @@ async function ProductList({ categoryId, page }: { categoryId: string; page: num
             <div className="space-y-[10px] mt-[20px]">
                {data.products.map((p, index) => (
                   <div key={index} className={classes.item}>
-                     <Image
-                        alt=""
-                        width={70}
-                        height={70}
-                        className="rounded-[6px]"
-                        src={
-                           p.image_url ||
-                           "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
-                        }
-                     />
+                     <div className="h-[70px] w-[70px]">
+                        <Image
+                           alt=""
+                           width={70}
+                           height={70}
+                           className="rounded-[6px]"
+                           src={
+                              p.image_url ||
+                              "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
+                           }
+                        />
+                     </div>
+
                      <Link
                         className={classes.aItem}
                         key={index}
