@@ -2,6 +2,7 @@
 
 import Frame from "@/components/ui/Frame";
 import MyImage from "@/components/ui/MyImage";
+import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -16,7 +17,18 @@ export default function ImageSection({ products }: Props) {
    const triggerPoint = useRef<number>();
 
    const handleShow = () => {
-      if (!triggerPoint.current) return;
+      if (triggerPoint.current === undefined) return;
+
+      if (triggerPoint.current < 0) {
+         if (window.scrollY === 0) {
+            const sectionEle = sectionRef.current;
+            if (sectionEle) {
+               triggerPoint.current = sectionEle.getBoundingClientRect().bottom;
+            }
+         }
+
+         return;
+      }
 
       if (window.scrollY > triggerPoint.current - 100) setIsSmall(true);
       else setIsSmall(false);
@@ -24,7 +36,6 @@ export default function ImageSection({ products }: Props) {
 
    useEffect(() => {
       window.addEventListener("scroll", handleShow);
-
       return () => window.removeEventListener("scroll", handleShow);
    }, []);
 
@@ -55,7 +66,7 @@ export default function ImageSection({ products }: Props) {
                   <div className={`flex`}>
                      <div className="w-1/5 sm:w-1/6"></div>
                      {products.map((p, index) => (
-                        <div key={index} className="flex-1 flex flex-col">
+                        <Link href={`${p.category_id}/${p.id}`} key={index} className="flex-1 flex flex-col">
                            <MyImage
                               src={p?.image_url || ""}
                               className={`max-h-[200px] mx-auto my-auto ${
@@ -72,7 +83,7 @@ export default function ImageSection({ products }: Props) {
                            >
                               {p?.product_name}
                            </h1>
-                        </div>
+                        </Link>
                      ))}
                   </div>
                </Frame>

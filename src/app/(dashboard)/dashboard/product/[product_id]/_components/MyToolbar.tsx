@@ -3,17 +3,21 @@
 import Gallery from "@/components/Gallery";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/Button";
+import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/16/solid";
 import { Content, Editor } from "@tiptap/react";
 import { useState } from "react";
 
 type Props = {
    editor: Editor | null;
    isChange: boolean;
+   isLock: boolean;
+   toggleLock: () => void;
    cb: (value: string) => Promise<void>;
 };
 
-export default function Toolbar({ editor, cb, isChange }: Props) {
+export default function Toolbar({ editor, cb, isChange, isLock, toggleLock }: Props) {
    const [isOpenModal, setIsOpenModal] = useState(false);
+
    const closeModal = () => setIsOpenModal(false);
 
    const handleAddImage = (imageList: ImageType[]) => {
@@ -37,12 +41,17 @@ export default function Toolbar({ editor, cb, isChange }: Props) {
 
    if (!editor) return <></>;
 
+   const classes = {
+      left: "flex mt-[-8px] ml-[-8px] flex-wrap [&_button]:px-[6px] [&_button]:mt-[8px] [&_button]:ml-[8px] [&_button]:font-[500] [&_button]:py-[3px] [&_button.active]:bg-white [&_button.active]:text-[#cd1818] [&_button.active]:rounded-[6px] ",
+      right: "right flex flex-col space-y-[8px] sm:space-x-[8px] sm:space-y-0 sm:flex-row items-center",
+   };
+
    return (
       <>
          <div
             className={`bg-[#cd1818] text-white flex  justify-between items-center p-[10px] `}
          >
-            <div className="left flex mt-[-8px] ml-[-8px] flex-wrap [&_button]:px-[6px] [&_button]:mt-[8px] [&_button]:ml-[8px] [&_button]:font-[500] [&_button]:py-[3px] [&_button.active]:bg-white [&_button.active]:text-[#cd1818] [&_button.active]:rounded-[6px] ">
+            <div className={`${classes.left} ${isLock ? "disabled" : ""}`}>
                <button
                   onClick={() => editor.chain().focus().setParagraph().run()}
                   className={editor.isActive("paragraph") ? "active" : ""}
@@ -69,7 +78,7 @@ export default function Toolbar({ editor, cb, isChange }: Props) {
                   redo
                </button>
             </div>
-            <div className="right flex gap-[8px]">
+            <div className={classes.right}>
                <Button
                   size={"clear"}
                   colors={"second"}
@@ -79,6 +88,14 @@ export default function Toolbar({ editor, cb, isChange }: Props) {
                >
                   save
                </Button>
+
+               <button onClick={toggleLock}>
+                  {isLock ? (
+                     <LockClosedIcon className="w-[20px]" />
+                  ) : (
+                     <LockOpenIcon className="w-[20px]" />
+                  )}
+               </button>
             </div>
          </div>
 

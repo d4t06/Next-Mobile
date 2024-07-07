@@ -7,7 +7,7 @@ export default function SpecSection({ category, products }: Props) {
    const attributeOrderArray = category.attribute_order.split("_") || [];
 
    const classes = {
-      table: "w-full mt-[14px] [&_td]:text-[12px] [&_td]:px-[4px] sm:[&_td]:px-[6px] [&_td]:py-[8px] sm:[&_td]:py-[12px]  sm:[&_td]:text-[14px] ",
+      table: "w-full table-fixed mt-[14px] [&_td]:text-[12px] [&_td]:px-[4px] sm:[&_td]:px-[6px] [&_td]:py-[8px] sm:[&_td]:py-[12px]  sm:[&_td]:text-[14px] ",
    };
 
    return (
@@ -21,7 +21,7 @@ export default function SpecSection({ category, products }: Props) {
 
                return (
                   <tr className="even:bg-[#f1f1f1]" key={index}>
-                     <td className={`w-1/5 sm:w-1/6 text-[#666] font-[500] `}>
+                     <td className={`w-1/5 sm:w-1/6 text-[#333] font-[500] `}>
                         {categoryAttribute.attribute_name}
                      </td>
                      {products.map((p, index) => {
@@ -32,7 +32,7 @@ export default function SpecSection({ category, products }: Props) {
                         return (
                            <td
                               key={index}
-                              className={`flex-1 leading-[2] whitespace-break-spaces`}
+                              className={`leading-[2] whitespace-break-spaces`}
                            >
                               {foundedAttr?.value || "..."}
                            </td>
