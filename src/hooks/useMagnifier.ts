@@ -6,7 +6,6 @@ type Props = {
    magnifierRef: RefObject<HTMLDivElement>;
 };
 
-const ZOOM_FACTOR = 1.8;
 const MAG_HEIGHT = 1 / 3;
 const MAG_WIDTH = 1 / 2;
 const SPACER = 20;
@@ -16,6 +15,8 @@ const MAG_IMAGE_PADDING = {
 };
 
 export default function useMagnifier({ magnifierRef }: Props) {
+   const ZOOM_FACTOR = useRef(3);
+
    const bgPos = useRef({
       x: 0,
       y: 0,
@@ -39,15 +40,15 @@ export default function useMagnifier({ magnifierRef }: Props) {
       mousePosInImage.y = e.clientY - imageRect.top;
 
       newBgPos.x =
-         mousePosInImage.x * ZOOM_FACTOR -
+         mousePosInImage.x * ZOOM_FACTOR.current -
          magnifierEle.clientWidth * MAG_IMAGE_PADDING.left;
       newBgPos.y =
-         mousePosInImage.y * ZOOM_FACTOR -
+         mousePosInImage.y * ZOOM_FACTOR.current -
          magnifierEle.clientHeight * MAG_IMAGE_PADDING.top;
 
       const imageSizeInMag = {
-         width: +(magnifierEle.clientWidth / ZOOM_FACTOR).toFixed(0),
-         height: +(magnifierEle.clientHeight / ZOOM_FACTOR).toFixed(0),
+         width: +(magnifierEle.clientWidth / ZOOM_FACTOR.current).toFixed(0),
+         height: +(magnifierEle.clientHeight / ZOOM_FACTOR.current).toFixed(0),
       };
 
       if (newBgPos.x < 0) newBgPos.x = 0; // near left
@@ -97,12 +98,18 @@ export default function useMagnifier({ magnifierRef }: Props) {
          height: +(imageEle.clientHeight * MAG_HEIGHT).toFixed(0),
       };
 
+      if (imageEle.width < 200) ZOOM_FACTOR.current = 3.5;
+      else if (imageEle.width < 350) ZOOM_FACTOR.current = 2.5;
+      else ZOOM_FACTOR.current = 1.8;
+
       magnifierEle.style.width = (magSize.width > 300 ? magSize.width : 300) + "px";
       magnifierEle.style.height = (magSize.height > 150 ? magSize.height : 150) + "px";
       magnifierEle.style.display = "block";
       magnifierEle.style.backgroundImage = `url(${imageEle.src})`;
       magnifierEle.style.backgroundSize = `
-      ${imageEle.width * ZOOM_FACTOR}px ${imageEle.clientHeight * ZOOM_FACTOR}px`;
+      ${imageEle.width * ZOOM_FACTOR.current}px ${
+         imageEle.clientHeight * ZOOM_FACTOR.current
+      }px`;
 
       update(e);
    };

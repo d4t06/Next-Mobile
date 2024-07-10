@@ -35,14 +35,18 @@ export default async function ComparePage({ searchParams: { q } }: Props) {
    if (!productCategory) return <NoProduct />;
 
    // check products are same category
-   products.forEach((p) => {
+   let title = 'Compare '
+   products.forEach((p, index) => {
+      
+      title += `${p.product_name}`
+      if (index < products.length - 1) title += ' vs '
       if (p.category_id !== productCategory.id) return <NoProduct />;
    });
 
    return (
       <>
-         <h1 className="text-lg sm:text-2xl font-[500] mb-[20px]">
-            Compare {products[0].product_name} vs {products[1].product_name}
+         <h1 className="text-lg sm:text-xl font-[500] mb-[20px]">
+            {title}
          </h1>
          <ImageSection products={products} />
 

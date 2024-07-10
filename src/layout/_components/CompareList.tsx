@@ -32,7 +32,7 @@ export default function CompareList() {
       wrapper:
          "fixed z-[99] bottom-[30px] transition-[padding,opacity,transform] left-[16px] right-[70px]  rounded-[12px]",
       container: "px-[10px] pt-[10px] flex items-center",
-      productList: "flex-grow flex space-x-[6px] mr-[10px]",
+      productList: "flex flex-grow overflow-x-auto overflow-y-hidden pb-[10px] space-x-[10px] mr-[10px]",
       hide: "opacity-0 translate-y-[30px] pointer-events-none",
       show: "translate-y-[0] opacity-[1]",
    };

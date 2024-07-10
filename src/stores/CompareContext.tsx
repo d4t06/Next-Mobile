@@ -66,23 +66,31 @@ const reducer = (state: StateType, action: Init | Toggle | Reset | Select): Stat
       case REDUCER_ACTION_TYPE.TOGGLE_PRODUCT: {
          const product = action.payload;
          const newProducts = [...state.products];
+         const newIds = [...state.selectIdList];
 
-         const index = state.products.findIndex((p) => p.id === product.id);
+         const index = newProducts.findIndex((p) => p.id === product.id);
          if (index === -1) newProducts.push(product);
          else newProducts.splice(index, 1);
+
+         const indexInSelect = newIds.findIndex((id) => id === product.id);
+         if (indexInSelect !== -1) {
+            newIds.splice(index, 1);
+            setLocalStorage("selectIdList", newIds);
+         }
 
          setLocalStorage("products", newProducts);
 
          return {
             ...state,
             products: newProducts,
+            selectIdList: newIds,
          };
       }
       case REDUCER_ACTION_TYPE.SELECT: {
          const product = action.payload;
          const newIds = [...state.selectIdList];
 
-         const index = state.selectIdList.findIndex((id) => id === product.id);
+         const index = newIds.findIndex((id) => id === product.id);
          if (index === -1) newIds.push(product.id);
          else newIds.splice(index, 1);
 
@@ -94,6 +102,9 @@ const reducer = (state: StateType, action: Init | Toggle | Reset | Select): Stat
          };
       }
       case REDUCER_ACTION_TYPE.RESET:
+         setLocalStorage("selectIdList", []);
+         setLocalStorage("products", []);
+
          return initState;
       case REDUCER_ACTION_TYPE.INIT:
          return {
@@ -117,6 +128,8 @@ const useCompareListContext = () => {
    }, []);
 
    const toggleProduct = useCallback((payload: Product) => {
+      console.log("toggle product");
+
       dispatch({
          type: REDUCER_ACTION_TYPE.TOGGLE_PRODUCT,
          payload,

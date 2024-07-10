@@ -6,7 +6,7 @@ type Props = {
    src: string;
    width: number;
    height: number;
-   alt: string;
+   alt?: string;
    className?: string;
 };
 
@@ -14,7 +14,7 @@ export default function MyImage({ alt, height, src, width, className }: Props) {
    return (
       <Image
          className={className || ""}
-         alt={alt}
+         alt={alt || ""}
          src={src || simonCat}
          height={height}
          width={width}
