@@ -27,7 +27,7 @@ export default async function SpecificationSection({ product, productCategory }:
                   product.image_url ||
                   "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
                }
-               className="max-h-[200px] w-auto mx-auto"
+               className="max-h-[200px] w-auto mx-auto mt-3"
                width={200}
                height={200}
                alt=""

@@ -32,7 +32,7 @@ export default function WriteCommentButton({ product }: Props) {
          </Button>
 
          {isOpenModal && (
-            <Modal closeModal={closeModal}>
+            <Modal className="z-[999]" closeModal={closeModal}>
                <AddComment closeModal={closeModal} product={product} session={session} />
             </Modal>
          )}

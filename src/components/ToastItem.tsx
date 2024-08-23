@@ -8,15 +8,15 @@ type Props = {
 
 export default function ToastItem({ toast, onClick }: Props) {
   const classes = {
-    container: "flex items-center font-[500] px-[12px] py-[6px] rounded-[8px]",
+    container: "flex items-center py-1 px-2 space-x-1 rounded-md text-white",
   };
 
   return (
     <div
       onClick={() => (onClick ? onClick(toast.id) : undefined)}
-      className={` ${classes.container} ${
-        toast.title === "error" && "bg-red-500 text-white"
-      } ${toast.title === "success" && "bg-emerald-500 text-white"} `}
+      className={` ${classes.container} ${toast.title === "error" && "bg-red-500"} ${
+        toast.title === "success" && "bg-emerald-500"
+      } `}
     >
       {toast.title && (
         <>
@@ -24,7 +24,7 @@ export default function ToastItem({ toast, onClick }: Props) {
           {toast.title === "error" && <XMarkIcon className="w-[24px]" />}
         </>
       )}
-      <p className="text-[16px] ml-[8px]">{toast.desc}</p>
+      <p className="font-medium">{toast.desc}</p>
     </div>
   );
 }

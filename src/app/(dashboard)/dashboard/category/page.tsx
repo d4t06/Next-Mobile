@@ -21,7 +21,7 @@ async function Group() {
 
    const classes = {
       group: "p-[20px] rounded-[12px] bg-[#fff] border",
-      label: "text-[24px]",
+      label: "text-2xl",
    };
 
    return (

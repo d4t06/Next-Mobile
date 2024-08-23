@@ -40,7 +40,7 @@ const ToastPortal = ({ time = 6000, autoClose }: Props) => {
   }, [toasts, autoClose, time]);
 
   const classes = {
-    wrapper: "fixed bottom-[30px] right-[30px]",
+    wrapper: "fixed z-[9999] bottom-[30px] right-[60px]",
     container: "flex space-y-[10px] flex-col",
   };
 

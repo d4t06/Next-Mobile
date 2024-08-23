@@ -33,7 +33,7 @@ export default function Avatar() {
                </button>
             </>
          ) : (
-            <Link className="font-[500] hover:text-[#cd1818]" href={"/api/auth/signin"}>
+            <Link className="font-[500] hover:text-[#cd1818] p-1" href={"/api/auth/signin"}>
                Sign In
             </Link>
          )}

@@ -10,7 +10,7 @@ export default function Footer() {
             </h1>
          </Frame>
 
-         <p className="mt-[30px] sm:mt-[60px]">
+         <p className="text-sm font-medium mt-[30px] sm:mt-[60px]">
             Make with ❤️ by d4t06 <br />© All rights no reserved ¯\_(ツ)_/¯{" "}
          </p>
       </div>

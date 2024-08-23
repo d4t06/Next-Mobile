@@ -13,7 +13,7 @@ export default async function CategoryLabel({ categoryId, children }: Props) {
    if (!currentCategory) return <></>;
 
    return (
-      <h2 className="text-[20px] font-[500]">
+      <h2 className="text-xl font-[500]">
          {currentCategory.category_name}
          {children}
       </h2>

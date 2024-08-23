@@ -8,139 +8,139 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 type Props = {
-   currentCategory: Category | undefined;
+  currentCategory: Category | undefined;
 };
 
 const ATTRIBUTE_URL = "/category-attributes";
 const CATEGORY_URL = "/categories";
 
 export default function useAttributeAction({ currentCategory }: Props) {
-   const [isFetching, setIsFetching] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
-   //   hooks
-   const router = useRouter();
-   const { setSuccessToast, setErrorToast } = useToast();
-   const privateRequest = usePrivateRequest();
+  //   hooks
+  const router = useRouter();
+  const { setSuccessToast, setErrorToast } = useToast();
+  const privateRequest = usePrivateRequest();
 
-   type Add = {
-      type: "Add";
-      attribute: CategoryAttributeSchema;
-   };
+  type Add = {
+    type: "Add";
+    attribute: CategoryAttributeSchema;
+  };
 
-   type Edit = {
-      type: "Edit";
-      attribute: CategoryAttributeSchema;
-      id: number;
-   };
+  type Edit = {
+    type: "Edit";
+    attribute: CategoryAttributeSchema;
+    id: number;
+  };
 
-   type Delete = {
-      type: "Delete";
-      id: number;
-   };
+  type Delete = {
+    type: "Delete";
+    id: number;
+  };
 
-   type Props = Add | Edit | Delete;
+  type Props = Add | Edit | Delete;
 
-   const actions = async ({ ...props }: Props) => {
-      if (!currentCategory) return;
+  const actions = async ({ ...props }: Props) => {
+    if (!currentCategory) return;
 
-      try {
-         setIsFetching(true);
+    try {
+      setIsFetching(true);
 
-         if (process.env.NODE_ENV === "development") sleep(500);
-         switch (props.type) {
-            case "Add": {
-               const { attribute } = props;
-               const curAttributeOrder = currentCategory.attribute_order;
+      if (process.env.NODE_ENV === "development") sleep(500);
+      switch (props.type) {
+        case "Add": {
+          const { attribute } = props;
+          const curAttributeOrder = currentCategory.attribute_order;
 
-               const res = await privateRequest.post(ATTRIBUTE_URL, attribute);
+          const res = await privateRequest.post(ATTRIBUTE_URL, attribute);
 
-               const newAttribute = res.data;
+          const newAttribute = res.data;
 
-               // case fist time create category
-               const newAttributeOrder = !!curAttributeOrder
-                  ? curAttributeOrder + `_${newAttribute.id}`
-                  : `${newAttribute.id}`;
+          // case fist time create category
+          const newAttributeOrder = !!curAttributeOrder
+            ? curAttributeOrder + `_${newAttribute.id}`
+            : `${newAttribute.id}`;
 
-               const newCategory: Partial<CategorySchema> = {
-                  attribute_order: newAttributeOrder,
-               };
+          const newCategory: Partial<CategorySchema> = {
+            attribute_order: newAttributeOrder,
+          };
 
-               await privateRequest.put(`/categories/${currentCategory.id}`, newCategory);
+          await privateRequest.put(`/categories/${currentCategory.id}`, newCategory);
 
-               break;
-            }
+          break;
+        }
 
-            case "Edit": {
-               const { attribute, id } = props;
-               await privateRequest.put(`${ATTRIBUTE_URL}/${id}`, attribute);
+        case "Edit": {
+          const { attribute, id } = props;
+          await privateRequest.put(`${ATTRIBUTE_URL}/${id}`, attribute);
 
-               break;
-            }
+          break;
+        }
 
-            case "Delete": {
-               const { id } = props;
-               const curAttributeOrder = currentCategory.attribute_order;
-               let newAttributeOrder = "";
+        case "Delete": {
+          const { id } = props;
+          const curAttributeOrder = currentCategory.attribute_order;
+          let newAttributeOrder = "";
 
-               // if last index
-               if (curAttributeOrder.includes(`_${id}`)) {
-                  newAttributeOrder = curAttributeOrder.replace(`_${id}`, "");
-               } else newAttributeOrder = curAttributeOrder.replace(`${id}_`, "");
+          // if last index
+          if (curAttributeOrder.includes(`_${id}`)) {
+            newAttributeOrder = curAttributeOrder.replace(`_${id}`, "");
+          } else newAttributeOrder = curAttributeOrder.replace(`${id}_`, "");
 
-               await privateRequest.delete(`${ATTRIBUTE_URL}/${id}`);
+          await privateRequest.delete(`${ATTRIBUTE_URL}/${id}`);
 
-               const newCategory: Partial<CategorySchema> = {
-                  attribute_order: newAttributeOrder,
-               };
+          const newCategory: Partial<CategorySchema> = {
+            attribute_order: newAttributeOrder,
+          };
 
-               await privateRequest.put(
-                  `${ATTRIBUTE_URL}/${currentCategory.id}`,
-                  newCategory
-               );
+          await privateRequest.put(`${ATTRIBUTE_URL}/${currentCategory.id}`, newCategory);
 
-               break;
-            }
-         }
-         await runRevalidateTag(`categories`);
-         router.refresh();
-
-         setSuccessToast(`${props.type} attribute successful`);
-      } catch (error) {
-         console.log({ message: error });
-         setErrorToast(`${props.type} attribute fail`);
-      } finally {
-         setIsFetching(false);
+          break;
+        }
       }
-   };
+      await runRevalidateTag(`categories`);
+      router.refresh();
 
-   const sortAttribute = async (startIndex: number, endIndex: number) => {
-      try {
-         if (startIndex === endIndex || !currentCategory) return;
-         if (process.env.NODE_ENV === "development") sleep(500);
+      setSuccessToast(`${props.type} attribute successful`);
+    } catch (error: any) {
+      console.log({ message: error });
 
-         setIsFetching(true);
-         const newOrderArray = currentCategory.attribute_order.split("_");
+      if (error.response.status === 409) {
+        setErrorToast("Attribute name had taken");
+      } else setErrorToast();
+    } finally {
+      setIsFetching(false);
+    }
+  };
 
-         let temp = newOrderArray[startIndex];
-         newOrderArray[startIndex] = newOrderArray[endIndex];
-         newOrderArray[endIndex] = temp;
+  const sortAttribute = async (startIndex: number, endIndex: number) => {
+    try {
+      if (startIndex === endIndex || !currentCategory) return;
+      if (process.env.NODE_ENV === "development") sleep(500);
 
-         const newOrder = newOrderArray.join("_");
-         const newCategory: Partial<CategorySchema> = {
-            attribute_order: newOrder,
-         };
+      setIsFetching(true);
+      const newOrderArray = currentCategory.attribute_order.split("_");
 
-         await privateRequest.put(`${CATEGORY_URL}/${currentCategory.id}`, newCategory);
+      let temp = newOrderArray[startIndex];
+      newOrderArray[startIndex] = newOrderArray[endIndex];
+      newOrderArray[endIndex] = temp;
 
-         await runRevalidateTag(`categories`);
-         router.refresh();
-      } catch (error) {
-         console.log({ message: error });
-         setErrorToast("");
-      } finally {
-         setIsFetching(false);
-      }
-   };
+      const newOrder = newOrderArray.join("_");
+      const newCategory: Partial<CategorySchema> = {
+        attribute_order: newOrder,
+      };
 
-   return { isFetching, actions, sortAttribute };
+      await privateRequest.put(`${CATEGORY_URL}/${currentCategory.id}`, newCategory);
+
+      await runRevalidateTag(`categories`);
+      router.refresh();
+    } catch (error) {
+      console.log({ message: error });
+      setErrorToast("");
+    } finally {
+      setIsFetching(false);
+    }
+  };
+
+  return { isFetching, actions, sortAttribute };
 }
