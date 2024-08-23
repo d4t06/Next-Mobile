@@ -6,8 +6,8 @@ type Props = {
    magnifierRef: RefObject<HTMLDivElement>;
 };
 
-const MAG_HEIGHT = 1 / 3;
-const MAG_WIDTH = 1 / 2;
+const MAG_HEIGHT = 2 / 3;
+const MAG_WIDTH = 2 / 3;
 const SPACER = 20;
 const MAG_IMAGE_PADDING = {
    left: 1 / 2,

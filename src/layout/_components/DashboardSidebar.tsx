@@ -5,6 +5,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import {
    BookmarkSquareIcon,
    BuildingStorefrontIcon,
+   ChatBubbleLeftRightIcon,
    DevicePhoneMobileIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
@@ -64,6 +65,16 @@ export default function DashBoardSidebar() {
             >
                <BookmarkSquareIcon className={classes.icon} />
                {expand && <span>Asset</span>}
+            </Link>
+
+            <Link
+               className={`${classes.item} ${expand ? "!justify-start" : ""}
+               ${pathName === "/dashboard/comment" ? classes.itemActive : ""}
+               `}
+               href="/dashboard/comment"
+            >
+               <ChatBubbleLeftRightIcon className={classes.icon} />
+               {expand && <span className="whitespace-nowrap">Comment</span>}
             </Link>
 
             <Link

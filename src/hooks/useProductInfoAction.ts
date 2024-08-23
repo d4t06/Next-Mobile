@@ -1,7 +1,7 @@
 import { runRevalidateTag } from "@/app/actions";
 import usePrivateRequest from "@/hooks/usePrivateRequest";
 import { useToast } from "@/stores/ToastContext";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import {  useState } from "react";
 
 const PRODUCT_URL = "/products";
 

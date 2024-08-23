@@ -73,7 +73,7 @@ export default function DescriptionSection({ product }: Props) {
             createPortal(
                <div
                   ref={magnifierRef}
-                  className="top-[200px] left-[300px] pointer-events-none fixed bg-no-repeat"
+                  className="top-[200px] rounded-lg overflow-hidden left-[300px] pointer-events-none fixed bg-no-repeat"
                ></div>,
                document.querySelector("#portals")!
             )}

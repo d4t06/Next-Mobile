@@ -47,11 +47,13 @@ export default async function SpecificationSection({ product, productCategory }:
 
                      return (
                         <tr className="group" key={index}>
-                           <td className={`${classes.td} text-[#333] font-[500] `}>
+                           <td
+                              className={`${classes.td} text-[#3f3f3f] font-[500]  group-even:bg-[#f3f4f5] rounded-[6px_0_0_6px]`}
+                           >
                               {categoryAttribute.attribute_name}
                            </td>
                            <td
-                              className={`${classes.td} leading-[2] whitespace-break-spaces`}
+                              className={`${classes.td} leading-[2] whitespace-break-spaces text-[#3f3f3f] font-[500] group-even:bg-[#f3f4f5] rounded-[0_6px_6px_0]`}
                            >
                               {foundedValue?.value || "..."}
                            </td>

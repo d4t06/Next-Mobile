@@ -5,6 +5,7 @@ import SpecificationSection from "./_components/SpecificationSection";
 import NoProduct from "@/components/NoProduct";
 import { getAllProducts } from "@/libs/getAllProducts";
 import DescriptionSection from "./_components/DesctiptionSection";
+import RatingSection from "./_components/RatingSection";
 
 export const revalidate = 86400;
 
@@ -50,7 +51,10 @@ export async function generateMetadata({
    };
 }
 
-export default async function ProductDetailPage({ params: { productId } }: Params) {
+export default async function ProductDetailPage({
+   params: { productId },
+}: Params) {
+
    const product = await getProductDetail(productId);
    const categories = await getAllCategories();
 
@@ -62,7 +66,7 @@ export default async function ProductDetailPage({ params: { productId } }: Param
       detailRight: "mt-[30px] sm:mt-0 sm:flex-grow px-[10px]",
    };
 
-   if (!product || !productCategory) return NoProduct();
+   if (!product || !productCategory) return NoProduct({});
 
    return (
       <>
@@ -78,6 +82,8 @@ export default async function ProductDetailPage({ params: { productId } }: Param
                <DescriptionSection product={product} />
             </div>
          </div>
+
+         <RatingSection product={product} />
       </>
    );
 }

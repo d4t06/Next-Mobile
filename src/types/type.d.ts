@@ -82,3 +82,22 @@ type ImageType = {
    size: number;
    link_to: string;
 };
+
+type ProductComment = {
+   id: number;
+   product_id: number;
+   username: string;
+   content: string;
+   approve: number;
+   date_convert: string;
+};
+
+type ProductCommentSchema = Omit<ProductComment, "id" | "approve" | "date_convert">;
+
+type ProductCommentResponse = {
+   comments: ProductComment[];
+   page: number;
+   product_id: number;
+   size: number;
+   count: number;
+};
