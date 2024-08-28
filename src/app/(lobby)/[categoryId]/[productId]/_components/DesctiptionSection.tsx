@@ -17,12 +17,15 @@ export default function DescriptionSection({ product }: Props) {
    const magnifierRef = useRef<HTMLDivElement>(null);
 
    // hooks
-   const { handleMouseEnter, handleMouseLeave, handleMouseMove } = useMagnifier({
-      magnifierRef: magnifierRef,
-   });
+   const { handleMouseEnter, handleMouseLeave, handleMouseMove } = useMagnifier(
+      {
+         magnifierRef: magnifierRef,
+      }
+   );
 
    const closeModal = () => {
-      const body = typeof document !== "undefined" && document.querySelector("body");
+      const body =
+         typeof document !== "undefined" && document.querySelector("body");
 
       if (body) {
          body.style.overflow = "auto";
@@ -30,15 +33,28 @@ export default function DescriptionSection({ product }: Props) {
       setIsOpenModal("");
    };
 
-   const handleImageClick = (e: Event) => {
-      const imageEle = e.target as HTMLImageElement;
-      const body = typeof document !== "undefined" && document.querySelector("body");
+   const handleOpenImageModal = (src: string) => {
+      const body =
+         typeof document !== "undefined" && document.querySelector("body");
 
       if (body) {
          body.style.overflow = "hidden";
       }
 
-      setIsOpenModal(imageEle.src);
+      setIsOpenModal(src);
+   };
+
+   const handleImageClick = (e: Event) => {
+      const imageEle = e.target as HTMLImageElement;
+
+      handleOpenImageModal(imageEle.src);
+   };
+
+   const handleTouchEnd = (e: Event) => {
+      const imageEle = e.target as HTMLImageElement;
+
+      handleOpenImageModal(imageEle.src);
+      e.preventDefault(); //important
    };
 
    useEffect(() => {
@@ -55,6 +71,7 @@ export default function DescriptionSection({ product }: Props) {
       if (images)
          images.forEach((image) => {
             image.addEventListener("click", handleImageClick);
+            image.addEventListener("touchend", handleTouchEnd);
             image.addEventListener("mouseenter", handleMouseEnter);
             image.addEventListener("mousemove", handleMouseMove);
             image.addEventListener("mouseleave", handleMouseLeave);
@@ -67,7 +84,9 @@ export default function DescriptionSection({ product }: Props) {
             {HTMLReactParser(product.description.content || "")}
          </div>
 
-         {!!isOpenModal && <ImageModal src={isOpenModal} closeModal={closeModal} />}
+         {!!isOpenModal && (
+            <ImageModal src={isOpenModal} closeModal={closeModal} />
+         )}
 
          {isMounted &&
             createPortal(

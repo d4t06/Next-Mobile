@@ -86,6 +86,7 @@ export default function useMagnifier({ magnifierRef }: Props) {
       bgPos.current.y = newBgPos.y;
    };
 
+
    const handleMouseEnter = (e: MouseEvent) => {
       const magnifierEle = magnifierRef.current;
       if (!magnifierEle) return;
@@ -102,8 +103,10 @@ export default function useMagnifier({ magnifierRef }: Props) {
       else if (imageEle.width < 350) ZOOM_FACTOR.current = 2.5;
       else ZOOM_FACTOR.current = 1.8;
 
-      magnifierEle.style.width = (magSize.width > 300 ? magSize.width : 300) + "px";
-      magnifierEle.style.height = (magSize.height > 150 ? magSize.height : 150) + "px";
+      magnifierEle.style.width =
+         (magSize.width > 300 ? magSize.width : 300) + "px";
+      magnifierEle.style.height =
+         (magSize.height > 150 ? magSize.height : 150) + "px";
       magnifierEle.style.display = "block";
       magnifierEle.style.backgroundImage = `url(${imageEle.src})`;
       magnifierEle.style.backgroundSize = `

@@ -26,6 +26,7 @@ export default function AddToCompareButton({ product }: Props) {
       <Button
         onClick={() => toggleProduct(product)}
         size={"clear"}
+        colors={'second'}
         className={`p-1 lg:px-2 space-x-1`}
       >
         {isAdded ? <XMarkIcon className="w-[24px]" /> : <PlusIcon className="w-[24px]" />}
