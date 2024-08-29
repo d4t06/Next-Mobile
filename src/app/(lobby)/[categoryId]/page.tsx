@@ -42,7 +42,11 @@ async function ProductList({
    brandId: string;
    page: number;
 }) {
-   const data = await getAllProducts({ page, category_id: categoryId });
+   const data = await getAllProducts({
+      page,
+      category_id: categoryId,
+      brand_id: brandId,
+   });
 
    if (!data) return <NoProduct />;
 
@@ -129,6 +133,15 @@ async function BrandListServerSide({
 
    return (
       <div className="flex flex-wrap -ml-2">
+         <Button
+            href={`/${categoryId}`}
+            colors={"second"}
+            size={"clear"}
+            active={!brandId}
+            className="mt-2 ml-2 py-1 px-3"
+         >
+            All
+         </Button>
          {curCategory?.brands.map((b, index) => (
             <Button
                key={index}

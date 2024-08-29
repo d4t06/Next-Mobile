@@ -15,7 +15,7 @@ export default function DescriptionSection({ product }: Props) {
    const [isOpenModal, setIsOpenModal] = useState("");
 
    const magnifierRef = useRef<HTMLDivElement>(null);
-
+   const isTouchMove = useRef(false);
    // hooks
    const { handleMouseEnter, handleMouseLeave, handleMouseMove } = useMagnifier(
       {
@@ -50,11 +50,17 @@ export default function DescriptionSection({ product }: Props) {
       handleOpenImageModal(imageEle.src);
    };
 
+   const handleTouchMove = () => {
+      isTouchMove.current = true;
+   };
+
    const handleTouchEnd = (e: Event) => {
       const imageEle = e.target as HTMLImageElement;
 
-      handleOpenImageModal(imageEle.src);
-      e.preventDefault(); //important
+      if (isTouchMove.current) isTouchMove.current = false;
+      else setIsOpenModal(imageEle.src);
+
+      e.preventDefault();
    };
 
    useEffect(() => {
@@ -72,6 +78,7 @@ export default function DescriptionSection({ product }: Props) {
          images.forEach((image) => {
             image.addEventListener("click", handleImageClick);
             image.addEventListener("touchend", handleTouchEnd);
+            image.addEventListener("touchmove", handleTouchMove);
             image.addEventListener("mouseenter", handleMouseEnter);
             image.addEventListener("mousemove", handleMouseMove);
             image.addEventListener("mouseleave", handleMouseLeave);
