@@ -5,7 +5,6 @@ import useDescriptionSection from "@/hooks/useDescriptionSection";
 import useMagnifier from "@/hooks/useMagnifier";
 import { useMagnifierContext } from "@/stores/MagnifierContext";
 import HTMLReactParser from "html-react-parser/lib/index";
-import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 type Props = {

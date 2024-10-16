@@ -52,7 +52,7 @@ export default function ImageSection({ products }: Props) {
 
    const classes = {
       proName:
-         "text-sm sm:text-base text-center mt-auto pt-[14px] font-[500] text-[#333] leading-[1]",
+         "text-sm sm:text-medium text-center mt-auto pt-[14px] font-[500] text-[#333] leading-[1]",
    };
 
    return (
@@ -64,7 +64,7 @@ export default function ImageSection({ products }: Props) {
             <div className="container">
                <Frame>
                   <div className={`flex`}>
-                     <div className="w-1/5 sm:w-1/6"></div>
+                     <div className={`w-1/5 sm:w-1/6`}></div>
                      {products.map((p, index) => (
                         <Link href={`${p.category_id}/${p.id}`} key={index} className="flex-1 flex flex-col px-[6px]">
                            <MyImage

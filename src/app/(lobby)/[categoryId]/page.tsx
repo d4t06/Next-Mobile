@@ -44,7 +44,11 @@ async function ProductList({
    brandId: string;
    page: number;
 }) {
-   const data = await getAllProducts({ page, category_id: categoryId });
+   const data = await getAllProducts({
+      page,
+      category_id: categoryId,
+      brand_id: brandId,
+   });
 
    if (!data) return <NoProduct />;
 
@@ -130,40 +134,29 @@ async function BrandListServerSide({
    const curCategory = categories?.find((c) => c.id === +categoryId);
 
    return (
-      <>
-         <div className="flex flex-wrap -ml-2">
-            {curCategory?.brands.map((b, index) => (
-               <Button
-                  key={index}
-                  href={`/${categoryId}${`?brand_id=${b.id}`}`}
-                  colors={"second"}
-                  size={"clear"}
-                  active={+brandId === b.id}
-                  className="mt-2 ml-2 py-1 px-3"
-               >
-                  {b.brand_name}
-               </Button>
-            ))}
-         </div>
-
-         <p className="text-[#333] font-[500] mt-3">Tags</p>
-         <div className="flex flex-wrap -ml-1">
+      <div className="flex flex-wrap -ml-2">
+         <Button
+            href={`/${categoryId}`}
+            colors={"second"}
+            size={"clear"}
+            active={!brandId}
+            className="mt-2 ml-2 py-1 px-3"
+         >
+            All
+         </Button>
+         {curCategory?.brands.map((b, index) => (
             <Button
+               key={index}
+               href={`/${categoryId}${`?brand_id=${b.id}`}`}
                colors={"second"}
                size={"clear"}
-               className="text-sm mt-1 ml-1 py-[3px] px-2"
+               active={+brandId === b.id}
+               className="mt-2 ml-2 py-1 px-3"
             >
-               Ram upgradeable
+               {b.brand_name}
             </Button>
-            <Button
-               colors={"second"}
-               size={"clear"}
-               className="text-sm mt-1 ml-1 py-[3px] px-2"
-            >
-               Metal case
-            </Button>
-         </div>
-      </>
+         ))}
+      </div>
    );
 }
 

@@ -4,23 +4,18 @@ import { RefObject, useRef } from "react";
 
 type Props = {
    magnifierRef: RefObject<HTMLDivElement>;
+   preChangePosition?: boolean;
 };
 
 const MAG_HEIGHT = 2 / 3;
 const MAG_WIDTH = 2 / 3;
 const SPACER = 20;
-const MAG_IMAGE_PADDING = {
-   left: 1 / 2,
-   top: 1 / 2,
-};
 
-export default function useMagnifier({ magnifierRef }: Props) {
+export default function useMagnifier({
+   magnifierRef,
+   preChangePosition,
+}: Props) {
    const ZOOM_FACTOR = useRef(3);
-
-   const bgPos = useRef({
-      x: 0,
-      y: 0,
-   });
 
    const update = (e: MouseEvent) => {
       const magnifierEle = magnifierRef.current;
@@ -30,49 +25,59 @@ export default function useMagnifier({ magnifierRef }: Props) {
 
       const imageRect = imageEle.getBoundingClientRect();
       const mousePosInImage = { x: 0, y: 0 };
-      const newBgPos = { x: 0, y: 0 };
+      const newBgPosCssProp = { x: "0px", y: "0px" };
       const newMagPos = {
-         x: e.clientX + SPACER,
+         x: e.clientX - (magnifierEle.clientWidth + SPACER),
          y: e.clientY + SPACER,
       };
 
       mousePosInImage.x = e.clientX - imageRect.left;
       mousePosInImage.y = e.clientY - imageRect.top;
 
-      newBgPos.x =
-         mousePosInImage.x * ZOOM_FACTOR.current -
-         magnifierEle.clientWidth * MAG_IMAGE_PADDING.left;
-      newBgPos.y =
+      // because the image in mag bigger ZOOM_FACTOR times
+      // magnifierEle.clientWidth / 2 -> move the zoom area center the pointer
+      const newBgPosX =
+         mousePosInImage.x * ZOOM_FACTOR.current - magnifierEle.clientWidth / 2;
+
+      const newBgPosY =
          mousePosInImage.y * ZOOM_FACTOR.current -
-         magnifierEle.clientHeight * MAG_IMAGE_PADDING.top;
+         magnifierEle.clientHeight / 2;
 
-      const imageSizeInMag = {
-         width: +(magnifierEle.clientWidth / ZOOM_FACTOR.current).toFixed(0),
-         height: +(magnifierEle.clientHeight / ZOOM_FACTOR.current).toFixed(0),
-      };
+      newBgPosCssProp.x = `-${newBgPosX}px`;
+      newBgPosCssProp.y = `-${newBgPosY}px`;
 
-      if (newBgPos.x < 0) newBgPos.x = 0; // near left
-      if (newBgPos.y < 0) newBgPos.y = 0; // near top
+      if (newBgPosX < 0) newBgPosCssProp.x = "0px"; // near left
+      if (newBgPosY < 0) newBgPosCssProp.y = "0px"; // near top
 
+      // near right
+      // imageWidthRest * ZOOM_FACTOR.current -> actually size
+      // magnifierEle.clientWidth / 2
+      // -> because we had move the zoom area to the center of pointer
+      const imageWidthRest = imageEle.clientWidth - mousePosInImage.x;
       if (
-         imageEle.clientWidth -
-            mousePosInImage.x +
-            imageSizeInMag.width * MAG_IMAGE_PADDING.left <
-         imageSizeInMag.width
-      )
-         // near right
-         newBgPos.x = bgPos.current.x;
-      if (
-         imageEle.clientHeight -
-            mousePosInImage.y +
-            imageSizeInMag.height * MAG_IMAGE_PADDING.top <
-         imageSizeInMag.height
-      )
-         // near bottom
-         newBgPos.y = bgPos.current.y;
+         imageWidthRest * ZOOM_FACTOR.current + magnifierEle.clientWidth / 2 <
+         magnifierEle.clientWidth
+      ) {
+         newBgPosCssProp.x = "100%";
+      }
 
-      if (e.clientX + magnifierEle.clientWidth + SPACER > window.innerWidth)
-         newMagPos.x = newMagPos.x - (magnifierEle.clientWidth + 2 * SPACER);
+      // near bottom
+      const imageHeightRest = imageEle.clientHeight - mousePosInImage.y;
+      if (
+         imageHeightRest * ZOOM_FACTOR.current + magnifierEle.clientHeight / 2 <
+         magnifierEle.clientHeight
+      ) {
+         newBgPosCssProp.y = "100%";
+      }
+
+      // if (magnifierEle.clientWidth + SPACER > e.clientX)
+      //    newMagPos.x = newMagPos.x + (magnifierEle.clientWidth + 2 * SPACER);
+      if (
+         (preChangePosition && imageRect.left < magnifierEle.clientWidth) ||
+         magnifierEle.clientWidth + SPACER > e.clientX
+      ) {
+         newMagPos.x = newMagPos.x + (magnifierEle.clientWidth + 2 * SPACER);
+      }
 
       if (e.clientY + magnifierEle.clientHeight + SPACER > window.innerHeight)
          newMagPos.y = newMagPos.y - (magnifierEle.clientHeight + 2 * SPACER);
@@ -80,10 +85,7 @@ export default function useMagnifier({ magnifierRef }: Props) {
       magnifierEle.style.left = newMagPos.x + "px";
       magnifierEle.style.top = newMagPos.y + "px";
 
-      magnifierEle.style.backgroundPosition = `${-newBgPos.x}px ${-newBgPos.y}px`;
-
-      bgPos.current.x = newBgPos.x;
-      bgPos.current.y = newBgPos.y;
+      magnifierEle.style.backgroundPosition = `${newBgPosCssProp.x} ${newBgPosCssProp.y}`;
    };
 
    const handleMouseEnter = (e: MouseEvent) => {
@@ -102,13 +104,21 @@ export default function useMagnifier({ magnifierRef }: Props) {
          magSize.height = window.innerHeight / 2;
 
       if (imageEle.width < 200) ZOOM_FACTOR.current = 3.5;
-      else if (imageEle.width < 350) ZOOM_FACTOR.current = 2.5;
-      else ZOOM_FACTOR.current = 1.8;
+      else if (imageEle.width < 350) ZOOM_FACTOR.current = 3;
+      else ZOOM_FACTOR.current = 2;
 
       magnifierEle.style.width =
-         (magSize.width > 300 ? magSize.width : 300) + "px";
+         imageEle.width * ZOOM_FACTOR.current >= 0.4 * window.innerWidth
+            ? "40vw"
+            : // (imageEle.clientWidth * MAG_WIDTH).toFixed(0) + "px";
+              imageEle.width * ZOOM_FACTOR.current + "px";
+
       magnifierEle.style.height =
-         (magSize.height > 150 ? magSize.height : 150) + "px";
+         imageEle.height * ZOOM_FACTOR.current >= 0.4 * window.innerHeight
+            ? "40vh"
+            : // (imageEle.clientHeight * MAG_HEIGHT).toFixed(0) + "px";
+              imageEle.height * ZOOM_FACTOR.current + "px";
+
       magnifierEle.style.display = "block";
       magnifierEle.style.backgroundImage = `url(${imageEle.src})`;
       magnifierEle.style.backgroundSize = `
