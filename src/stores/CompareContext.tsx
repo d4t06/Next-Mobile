@@ -16,10 +16,9 @@ type StateType = {
 
 const getLocalStorage = () =>
    typeof window !== "undefined"
-      ? (JSON.parse(window.localStorage.getItem("next-mobile") || "{}") as Record<
-           string,
-           any
-        >)
+      ? (JSON.parse(
+           window.localStorage.getItem("next-mobile") || "{}"
+        ) as Record<string, any>)
       : {};
 
 const setLocalStorage = (key: string, value: any) => {
@@ -61,7 +60,10 @@ type Reset = {
    type: REDUCER_ACTION_TYPE.RESET;
 };
 
-const reducer = (state: StateType, action: Init | Toggle | Reset | Select): StateType => {
+const reducer = (
+   state: StateType,
+   action: Init | Toggle | Reset | Select
+): StateType => {
    switch (action.type) {
       case REDUCER_ACTION_TYPE.TOGGLE_PRODUCT: {
          const product = action.payload;
@@ -128,8 +130,6 @@ const useCompareListContext = () => {
    }, []);
 
    const toggleProduct = useCallback((payload: Product) => {
-      console.log("toggle product");
-
       dispatch({
          type: REDUCER_ACTION_TYPE.TOGGLE_PRODUCT,
          payload,
@@ -149,7 +149,13 @@ const useCompareListContext = () => {
       });
    }, []);
 
-   return { state, toggleProduct, resetCompareList, selectProduct, initCompareStore };
+   return {
+      state,
+      toggleProduct,
+      resetCompareList,
+      selectProduct,
+      initCompareStore,
+   };
 };
 
 type ContextType = ReturnType<typeof useCompareListContext>;

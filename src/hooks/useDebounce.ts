@@ -8,7 +8,7 @@ function useDebounce(value: string, delay: number) {
       if (!value.trim()) {
          setDebounceValue("");
          return;
-      }
+      }      
 
       const timeId = setTimeout(() => {
          setDebounceValue(value);

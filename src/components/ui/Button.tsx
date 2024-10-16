@@ -5,14 +5,13 @@ import { ReactNode } from "react";
 
 const classes = {
    active: "before:shadow-none font-[500] translate-y-[2px] text-[#cd1818]",
-   button: "inline-flex relative  items-center justify-center z-0",
+   button__children: " flex items-center justify-center",
 };
 
-const ButtonVariant = cva(classes.button, {
+const ButtonVariant = cva("button relative z-0", {
    variants: {
       variant: {
-         primary:
-            "before:content-[''] before:absolute before:z-[-1] before:inset-0 before:rounded-[8px] rounded-[8px]  active:translate-y-[2px] active:before:shadow-none",
+         primary: "variant--primary",
          clear: "",
       },
       size: {
@@ -20,11 +19,9 @@ const ButtonVariant = cva(classes.button, {
          primary: "px-[15px] py-[5px]",
       },
       colors: {
-         primary:
-            "before:border-[#a00000] text-[#fff] bg-[#cd1818] before:shadow-[0_2px_0_#a00000]",
-         second:
-            "before:border-[#ccc] text-[#333] bg-[#f6f6f6] before:shadow-[0_2px_0_#ccc]",
-         third: "before:border-[#a00000] bg-[#fff] text-[#000] before:shadow-[0_2px_0_#a00000]",
+         primary: "color--primary bg-[#cd1818] text-white",
+         second: "color--second bg-white text-[#333]",
+         third: "color--third bg-white text-[#333]",
          clear: "",
       },
       border: {
@@ -44,6 +41,15 @@ const ButtonVariant = cva(classes.button, {
       border: "primary",
       fontWeight: "primary",
    },
+
+   compoundVariants: [
+      {
+         className: "clear",
+         border: "clear",
+         colors: "clear",
+         variant: "clear",
+      },
+   ],
 });
 
 interface Props extends VariantProps<typeof ButtonVariant> {
@@ -87,7 +93,7 @@ export default function Button({
                href={href}
                aria-disabled={disabled}
                target={blank ? "_blank" : ""}
-               className={`${ButtonVariant({
+               className={`inline-block ${ButtonVariant({
                   variant,
                   size,
                   colors,
@@ -96,7 +102,7 @@ export default function Button({
                   className,
                })} ${active ? classes.active : ""}`}
             >
-               {content}
+               <span className={classes.button__children}>{content}</span>
             </Link>
          ) : (
             <button
@@ -112,7 +118,10 @@ export default function Button({
                   className,
                })} ${active ? classes.active : ""}`}
             >
-               {content}
+
+               {/* need to wrapped children into span
+               cause' on old browser display:flex property doesn't work on button element */}
+               <span className={classes.button__children}>{content}</span>
             </button>
          )}
       </>

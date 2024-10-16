@@ -10,8 +10,8 @@ export default function Footer() {
             </h1>
          </Frame>
 
-         <p className="text-sm font-medium mt-[30px] sm:mt-[60px]">
-            Make with ❤️ by d4t06 <br />© All rights no reserved ¯\_(ツ)_/¯{" "}
+         <p className="text-sm mt-[30px] sm:mt-[60px]">
+            Make with <b className="text-[#cd1818]">❤️</b> by d4t06 <br />© All rights no reserve ¯\_(ツ)_/¯{" "}
          </p>
       </div>
    );

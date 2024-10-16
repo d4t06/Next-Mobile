@@ -56,7 +56,7 @@ export default function MyEditor({ extensions, className, cb, ...props }: Props)
             className={`${classes.editContainer} ${isLock ? "pointer-events-none" : ""}`}
          >
             <EditorContent
-               className="pt-[30px] px-[20px] sm:px-[50px] pb-[50vh] [&_div]:space-y-[14px] [&_p]:text-[#495057] [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:max-h-[300px] [&_img]:border-[2px] [&_img]:border-transparent [&_.ProseMirror-selectednode]:border-red-500"
+               className="pt-[30px] sm:w-[70%] sm:mx-auto px-[20px] sm:px-[50px] pb-[50vh] [&_*]:mt-5 [&_p]:text-[#495057] [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:border-[2px] [&_img]:border-transparent [&_.ProseMirror-selectednode]:border-red-500"
                editor={editor}
             />
          </div>

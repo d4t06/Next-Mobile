@@ -7,6 +7,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import Loading from "./loading";
 import MyImage from "@/components/ui/MyImage";
+import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
+// import { ChevronRightIcon } from "@heroicons/react/24/outline";
 
 type Params = {
    params: {
@@ -49,41 +51,39 @@ async function ProductList({
    const isRemaining = data.page_size * data.page < data.count;
 
    const classes = {
-      item: "flex",
-      aItem: "text-[#333] font-[500] ml-[10px] hover:text-[#cd1818]",
+      item: "flex mt-[10px] group",
+      aItem: "text-[#333] font-[500] ml-[10px] group-hover:text-[#cd1818]",
       button: "",
    };
 
    return (
       <>
          {!!data.products.length && (
-            <div className="space-y-[10px] mt-[20px]">
+            <div className="mt-[20px]">
                {data.products.map((p, index) => (
-                  <div key={index} className={classes.item}>
+                  <Link
+                     href={`/${categoryId}/${p.id}`}
+                     key={index}
+                     className={classes.item}
+                  >
                      <div className="h-[70px] w-[70px]">
                         <MyImage
                            alt=""
                            width={70}
                            height={70}
-                           className="rounded-[6px]"
+                           className="rounded-[6px] h-full object-contain"
                            src={p.image_url}
                         />
                      </div>
 
-                     <Link
-                        className={classes.aItem}
-                        key={index}
-                        href={`/${categoryId}/${p.id}`}
-                     >
-                        {p.product_name}
-                     </Link>
-                  </div>
+                     <span className={classes.aItem}>{p.product_name}</span>
+                  </Link>
                ))}
             </div>
          )}
          {!data.products.length && <NoProduct />}
          {!!data.products.length && (
-            <div className="flex mt-[30px] justify-center space-x-[10px]">
+            <div className="flex mt-[30px] justify-center">
                <Button
                   disabled={page === 1}
                   href={`/${categoryId}${
@@ -95,6 +95,7 @@ async function ProductList({
                   className="px-[12px] py-[3px]"
                   colors={"second"}
                >
+                  <ChevronLeftIcon className="w-6" />
                   Previous
                </Button>
                <Button
@@ -104,11 +105,12 @@ async function ProductList({
                         : `?page=${page + 1}`
                   }`}
                   size={"clear"}
-                  className="px-[12px] py-[3px]"
+                  className="px-[12px] py-[3px] ml-3"
                   colors={"second"}
                   disabled={!isRemaining}
                >
                   Next
+                  <ChevronRightIcon className="w-6" />
                </Button>
             </div>
          )}
@@ -128,20 +130,40 @@ async function BrandListServerSide({
    const curCategory = categories?.find((c) => c.id === +categoryId);
 
    return (
-      <div className="flex flex-wrap -ml-2">
-         {curCategory?.brands.map((b, index) => (
+      <>
+         <div className="flex flex-wrap -ml-2">
+            {curCategory?.brands.map((b, index) => (
+               <Button
+                  key={index}
+                  href={`/${categoryId}${`?brand_id=${b.id}`}`}
+                  colors={"second"}
+                  size={"clear"}
+                  active={+brandId === b.id}
+                  className="mt-2 ml-2 py-1 px-3"
+               >
+                  {b.brand_name}
+               </Button>
+            ))}
+         </div>
+
+         <p className="text-[#333] font-[500] mt-3">Tags</p>
+         <div className="flex flex-wrap -ml-1">
             <Button
-               key={index}
-               href={`/${categoryId}${`?brand_id=${b.id}`}`}
                colors={"second"}
                size={"clear"}
-               active={+brandId === b.id}
-               className="mt-2 ml-2 py-1 px-3"
+               className="text-sm mt-1 ml-1 py-[3px] px-2"
             >
-               {b.brand_name}
+               Ram upgradeable
             </Button>
-         ))}
-      </div>
+            <Button
+               colors={"second"}
+               size={"clear"}
+               className="text-sm mt-1 ml-1 py-[3px] px-2"
+            >
+               Metal case
+            </Button>
+         </div>
+      </>
    );
 }
 

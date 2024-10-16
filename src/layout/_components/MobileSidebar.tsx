@@ -29,8 +29,8 @@ export default function MobileSidebar({ categories }: Props) {
   };
 
   const classes = {
-    toggleSidebar: "!absolute left-[10px] block sm:hidden",
-    container: `fixed z-[200] top-0 left-0 bottom-0 w-[260px] max-w-[60vw] bg-[#fff] hidden max-[768px]:block transition-[transform, opacity] duration-[.3s] `,
+    toggleSidebar: "menu-btn !absolute left-0 block sm:hidden top-1/2",
+    container: `fixed z-[200] top-0 left-0 bottom-0 w-[260px] max-w-[60vw] bg-white hidden max-[768px]:block transition-[transform, opacity] duration-[.3s] `,
     open: "translate-x-0 opacity-[1]",
     hide: "translate-x-[-100%] opacity-[0.5] pointer-events-none",
     closeBtn: "absolute right-[10px] top-[10px]",
@@ -39,7 +39,7 @@ export default function MobileSidebar({ categories }: Props) {
   return (
     <>
       <div className={`${classes.container} ${open ? classes.open : classes.hide}`}>
-        <div className="px-[10px] bg-[#f3f4f5] border-b h-[56px] flex items-center">
+        <div className="px-[10px] border-b bg-[#f1f1f1] border-[rgba(0,0,0,.15)] h-[56px] flex items-center">
           <Avatar />
         </div>
         <div className="px-[10px]">

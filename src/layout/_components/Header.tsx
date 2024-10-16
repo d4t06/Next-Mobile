@@ -15,7 +15,7 @@ export default async function Header() {
          <div className="h-[80px]  sm:h-auto">
             <div className="container">
                <div className="sm:h-[60px] flex flex-col sm:flex-row items-start sm:items-center">
-                  <div className="flex items-center justify-center w-full h-[50px] sm:h-auto sm:w-auto">
+                  <div className="flex relative items-center justify-center w-full h-[50px] sm:h-auto sm:w-auto">
                      <MobileSidebar categories={categories} />
 
                      <Link href={"/"}>

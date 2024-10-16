@@ -1,6 +1,11 @@
 import type { Config } from "tailwindcss";
 
 const config: Config = {
+   corePlugins: {
+      backgroundOpacity: false,
+      textOpacity: false,
+      borderOpacity: false,
+   },
    content: [
       "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
       "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -10,10 +15,9 @@ const config: Config = {
    theme: {
       container: {
          center: true,
-         padding: '10px'
+         padding: "10px",
       },
    },
    plugins: [],
-   // purge: ['./src/**/*.{js,ts,jsx,tsx}']
 };
 export default config;

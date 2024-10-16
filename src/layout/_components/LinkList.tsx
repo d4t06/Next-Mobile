@@ -1,4 +1,5 @@
 "use client";
+import Button from "@/components/ui/Button";
 import LinkItem from "./LinkItem";
 import { ComputerDesktopIcon } from "@heroicons/react/24/outline";
 import { useSession } from "next-auth/react";
@@ -11,9 +12,9 @@ export default function LinkList({ categories }: Props) {
 
    return (
       <>
-         <div className="flex items-center space-x-[14px]">
+         <div className="flex items-center -ml-3">
             {categories.map((category, index) => (
-               <LinkItem activeClass="font-[500]" key={index} href={"/" + category.id}>
+               <LinkItem className="pl-3 font-[500]" key={index} href={"/" + category.id}>
                   {category.category_name}
                </LinkItem>
             ))}
@@ -21,10 +22,10 @@ export default function LinkList({ categories }: Props) {
 
          <div className="flex ml-[auto]">
             {session?.user.role === "ADMIN" && (
-               <LinkItem href={"/dashboard"}>
+               <Button border={'clear'} colors={'clear'} variant={'clear'} size={'clear'} href={"/dashboard"}>
                   <ComputerDesktopIcon className="w-[22px]" />
-                  <span>Dashboard</span>
-               </LinkItem>
+                  <span className="ml-1">Dashboard</span>
+               </Button>
             )}
          </div>
       </>

@@ -14,14 +14,12 @@ export default function LinkItem({ children, href, activeClass, className }: Pro
    const pathName = usePathname();
 
    const classes = {
-      linkItem: "inline-flex items-center space-x-[6px] font-[500] hover:text-yellow-500",
+      linkItem: "hover:text-yellow-500",
    };
 
    return (
       <Link
-         className={`${classes.linkItem} ${className} ${
-            pathName === href ? activeClass || "text-[#9e0d1d]" : ""
-         }`}
+         className={`${classes.linkItem} ${className} `}
          href={href}
       >
          {children}

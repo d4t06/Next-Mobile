@@ -2,11 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    /* background-color: #222; */
+/* html {
+   font-family: "__Montserrat_b1da2a', '__Montserrat_Fallback_b1da2a", system-ui, -apple-system, BlinkMacSystemFont,
+      "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
+      "Helvetica Neue", sans-serif;
+   font-weight: normal;
+} */
+
+button[disabled],
+a[aria-disabled="true"],
+.disabled {
+   pointer-events: none;
+   opacity: 0.6;
 }
 
-button[disabled], a[aria-disabled="true"], .disabled {
-    pointer-events: none;
-    opacity: .6;
+.before::before {
+   content: "";
 }

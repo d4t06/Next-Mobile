@@ -1,10 +1,15 @@
 import type { Metadata } from "next";
-import { Montserrat } from "next/font/google";
+import localFont from "next/font/local";
 import AuthProvider from "@/stores/SessionContext";
 import "./globals.css";
+import "./styles.scss";
 import CompareProvider from "@/stores/CompareContext";
+import defaultTheme from "tailwindcss/defaultTheme";
 
-const montserrat = Montserrat({ subsets: ["latin"] });
+const _font = localFont({
+   src: "./Montserrat-VariableFont.ttf",
+   weight: "400 700"
+});
 
 export const metadata: Metadata = {
    title: "Tech Wars",
@@ -18,7 +23,7 @@ export default async function RootLayout({
 }>) {
    return (
       <html lang="en">
-         <body className={montserrat.className}>
+         <body style={{ fontFamily: _font.style.fontFamily +','+ defaultTheme.fontFamily.sans.join(",") }}>
             <AuthProvider>
                <CompareProvider>
                   {children}

@@ -1,16 +1,4 @@
-### update friday 23/2/2024
 
-- revalidate path and router.refresh
-- loading.tsx will be combine with layout and automatic wrap the page.tsx in Suspense
-- unstable_noStore() to indicate a particular component should not be cached, run dynamically
-- useOptimistic can update the ui before server action finish
-- revalidatePath('/') will purge client side cached
-- revalidate = Incremental Static Regeneration
-
-### update friday 1/3/2024
-- use Next auth with credential
-- use group route for multi layout
-- use next middleware to protected route
 
 ## Server Side Rendering
 1. All data for the page are fetching on server
@@ -118,3 +106,25 @@
 ### use 'callback' for custom session data
 - jwt({toke, user}), take user inputs
 - session({token, session}), store user inputs with custom format
+
+
+# Update
+
+### update friday 23/2/2024
+
+- revalidate path and router.refresh
+- loading.tsx will be combine with layout and automatic wrap the page.tsx in Suspense
+- unstable_noStore() to indicate a particular component should not be cached, run dynamically
+- useOptimistic can update the ui before server action finish
+- revalidatePath('/') will purge client side cached
+- revalidate = Incremental Static Regeneration
+
+### update friday 1/3/2024
+- use Next auth with credential
+- use group route for multi layout
+- use next middleware to protected route
+
+### update wednesday 16/10/2024
+- config tailwind css for old browser
+- switchable magnifier
+- add scss

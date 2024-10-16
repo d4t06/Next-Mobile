@@ -86,7 +86,6 @@ export default function useMagnifier({ magnifierRef }: Props) {
       bgPos.current.y = newBgPos.y;
    };
 
-
    const handleMouseEnter = (e: MouseEvent) => {
       const magnifierEle = magnifierRef.current;
       if (!magnifierEle) return;
@@ -98,6 +97,9 @@ export default function useMagnifier({ magnifierRef }: Props) {
          width: +(imageEle.clientWidth * MAG_WIDTH).toFixed(0),
          height: +(imageEle.clientHeight * MAG_HEIGHT).toFixed(0),
       };
+
+      if (magSize.height > window.innerHeight / 2)
+         magSize.height = window.innerHeight / 2;
 
       if (imageEle.width < 200) ZOOM_FACTOR.current = 3.5;
       else if (imageEle.width < 350) ZOOM_FACTOR.current = 2.5;

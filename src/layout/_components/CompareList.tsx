@@ -8,14 +8,22 @@ import {
    ChevronDownIcon,
    XMarkIcon,
 } from "@heroicons/react/16/solid";
-import { useState } from "react";
+import { ElementRef, useRef, useState } from "react";
 import CompareItem from "./CompareItem";
 import { useRouter } from "next/navigation";
+import useClickOutside from "@/hooks/useClickOutside";
 
 export default function CompareList() {
    const [isOpen, setIsOpen] = useState(false);
 
+   const containerRef = useRef<ElementRef<"div">>(null);
+
    //    hooks
+   useClickOutside({
+      containerRef,
+      cb: () => setIsOpen(false),
+      trigger: isOpen,
+   });
    const { products, selectIdList, resetCompareList } = useCompare();
    const router = useRouter();
 
@@ -32,14 +40,20 @@ export default function CompareList() {
       wrapper:
          "fixed z-[99] bottom-[30px] transition-[padding,opacity,transform] left-[16px] right-[70px]  rounded-[12px]",
       container: "px-[10px] pt-[10px] flex items-center",
-      productList: "flex flex-grow overflow-x-auto overflow-y-hidden pb-[10px] space-x-[10px] mr-[10px]",
+      productList:
+         "flex flex-grow overflow-x-auto overflow-y-hidden pb-[10px] space-x-[10px] mr-[10px]",
       hide: "opacity-0 translate-y-[30px] pointer-events-none",
       show: "translate-y-[0] opacity-[1]",
    };
 
    return (
       <>
-         <div className={`${classes.wrapper} ${isOpen ? classes.show : classes.hide} `}>
+         <div
+            ref={containerRef}
+            className={`${classes.wrapper} ${
+               isOpen ? classes.show : classes.hide
+            } `}
+         >
             <Frame className="!p-0">
                <div className={classes.container}>
                   <div className="flex items-center w-full">
@@ -57,7 +71,9 @@ export default function CompareList() {
                            className="p-[4px] sm:py-[4px] sm:px-[12px]"
                         >
                            <ArrowsRightLeftIcon className="w-[20px]" />
-                           <span className="hidden sm:block ml-[6px]">Compare</span>
+                           <span className="hidden sm:block ml-[6px]">
+                              Compare
+                           </span>
                         </Button>
 
                         <Button
@@ -68,7 +84,9 @@ export default function CompareList() {
                            className="p-[4px] sm:py-[4px] sm:px-[12px] mt-[6px]"
                         >
                            <XMarkIcon className="w-[20px]" />
-                           <span className="hidden sm:block ml-[6px]">Clear</span>
+                           <span className="hidden sm:block ml-[6px]">
+                              Clear
+                           </span>
                         </Button>
                      </div>
                   </div>
@@ -82,7 +100,11 @@ export default function CompareList() {
             </Frame>
          </div>
 
-         <div className={`${classes.trigger} ${isOpen ? classes.hide : classes.show}`}>
+         <div
+            className={`${classes.trigger} ${
+               isOpen ? classes.hide : classes.show
+            }`}
+         >
             <Button
                colors={"third"}
                size={"clear"}

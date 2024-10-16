@@ -60,7 +60,7 @@ export default function Search({ variant, basePath }: Props) {
    const classes = {
       container:
          "border bg-white border-black/15 flex items-center rounded-[10px] px-[10px]",
-      input: "placeholder:text-[#808080] py-[5px] px-[10pox] w-full font-[500] outline-none text-[#333]",
+      input: "placeholder:text-[#80880] bg-white py-[5px] px-[10pox] w-full font-[500] outline-none text-[#333]",
       searchItem:
          "flex cursor-pointer border-l-[2px] border-transparent px-[4px] transition-[border_padding] hover:border-[#cd1818] hover:pl-[10px] ",
       searchResultWrapper:
