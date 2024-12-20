@@ -70,13 +70,16 @@ const reducer = (
          const newProducts = [...state.products];
          const newIds = [...state.selectIdList];
 
-         const index = newProducts.findIndex((p) => p.id === product.id);
-         if (index === -1) newProducts.push(product);
-         else newProducts.splice(index, 1);
+         const productIndex = newProducts.findIndex((p) => p.id === product.id);
+         if (productIndex === -1) newProducts.push(product);
+         else newProducts.splice(productIndex, 1);
 
          const indexInSelect = newIds.findIndex((id) => id === product.id);
+
+         console.log(indexInSelect, newIds);
+
          if (indexInSelect !== -1) {
-            newIds.splice(index, 1);
+            newIds.splice(indexInSelect, 1);
             setLocalStorage("selectIdList", newIds);
          }
 

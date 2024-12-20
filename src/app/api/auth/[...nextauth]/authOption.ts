@@ -1,6 +1,8 @@
 import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
+const CLIENT_TOKEN_EXPIRE = 60 * 60; //1h
+
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
     Credentials({
@@ -30,10 +32,10 @@ export const nextAuthOptions: NextAuthOptions = {
             headers: {
               "Content-type": "application/json",
             },
-          }
+          },
         );
 
-        if (!res.ok) return null;
+        if (!res.ok) throw new Error("");
 
         const user = await res.json();
 
@@ -52,15 +54,28 @@ export const nextAuthOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
-      if (user) return { ...token, ...user };
-      return token;
+      if (user)
+        return {
+          user: {
+            name: user.user.name,
+            role: user.user.role,
+          },
+          token: user.token,
+          error: "",
+          tokenExpired: Date.now() + CLIENT_TOKEN_EXPIRE * 1000,
+        };
+
+      if (token.tokenExpired > Date.now()) return { ...token, error: "" };
+
+      return { ...token, error: "Token Expired" };
     },
 
     // if use role in client component
-    async session({ token, session, user }) {
+    async session({ token, session }) {
       session.user.name = token.user.name;
       session.user.role = token.user.role;
       session.token = token.token;
+      session.error = token.error;
 
       return session;
     },
