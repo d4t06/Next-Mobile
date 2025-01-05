@@ -1,7 +1,16 @@
-import { FormEvent, useEffect, useState, useRef, ReactNode, RefObject } from "react";
+import {
+   FormEvent,
+   useEffect,
+   useState,
+   useRef,
+   ReactNode,
+   RefObject,
+   useMemo,
+} from "react";
 import Button from "../ui/Button";
 import ModalHeader from "./ModalHeader";
 import MyInput, { inputClasses } from "@/components/ui/MyInput";
+import { retry } from "@reduxjs/toolkit/query";
 
 type Props = {
    closeModal: () => void;
@@ -23,7 +32,10 @@ export default function AddItem({
    variant = "input",
 }: Props) {
    const [value, setValue] = useState(initValue || "");
+
    const inputRef = useRef<HTMLInputElement>(null);
+
+   const isChanged = useMemo(() => value !== initValue, [value]);
 
    useEffect(() => {
       inputRef.current?.focus();
@@ -31,6 +43,8 @@ export default function AddItem({
 
    const handleSubmit = (e: FormEvent) => {
       e.preventDefault();
+      if (!isChanged) return;
+      
       cbWhenSubmit(value);
    };
 
@@ -61,7 +75,12 @@ export default function AddItem({
             {children}
 
             <p className="text-right mt-[20px]">
-               <Button className="min-w-[70px]" loading={loading} type="submit">
+               <Button
+                  disabled={!isChanged}
+                  className="min-w-[70px]"
+                  loading={loading}
+                  type="submit"
+               >
                   Save
                </Button>
             </p>

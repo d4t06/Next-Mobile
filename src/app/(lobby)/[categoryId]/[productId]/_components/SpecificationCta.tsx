@@ -46,7 +46,7 @@ export default function AddToCompareButton({ product }: Props) {
                colors={"second"}
                className={`mag-btn p-1 lg:px-2 ml-2 hidden md:block`}
             >
-               <MagnifyingGlassIcon className={`w-5 ${isOpen ? '' : 'opacity-[.6]'}`} />
+               <MagnifyingGlassIcon className={`w-5 ${isOpen ? 'text-[#cd1818]' : 'opacity-[.4]'}`} />
             </Button>
          </div>
 

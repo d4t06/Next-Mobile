@@ -25,7 +25,7 @@ export default function Description({ product }: Props) {
          <div className="overflow-hidden">
             <MyEditor
                className={`${isFetching ? "disabled" : ""} `}
-               cb={(value, restChange) => handleUpdateDescription(value, restChange)}
+               callback={(value, restChange) => handleUpdateDescription(value, restChange)}
                content={product?.description ? product.description.content : ""}
             />
          </div>

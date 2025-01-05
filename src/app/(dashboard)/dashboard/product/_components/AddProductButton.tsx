@@ -21,7 +21,7 @@ export default function AddProductButton({ categories }: Props) {
             <span className="hidden ml-[6px] sm:block">Add new</span>
          </Button>
          {openModal && (
-            <Modal className="z-[100]" closeModal={closeModal}>
+            <Modal overlayClosable={false} className="z-[100]" closeModal={closeModal}>
                <AddProductForm
                   closeModal={closeModal}
                   type="Add"

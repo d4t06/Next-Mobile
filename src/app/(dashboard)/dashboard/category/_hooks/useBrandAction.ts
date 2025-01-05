@@ -48,7 +48,7 @@ export default function useBrandAction() {
         case "Edit": {
           const { brand, id } = props;
 
-          await privateRequest.post(`${URL}/${id}`, brand);
+          await privateRequest.put(`${URL}/${id}`, brand);
 
           break;
         }

@@ -82,7 +82,7 @@ export default function Search({ variant, basePath }: Props) {
                         alt=""
                      />
                   </div>
-                  <h5 className="ml-[10px] text-[15px] font-[500] line-clamp-1">{p.product_name}</h5>
+                  <h5 className="ml-[10px] text-[15px] font-[500]">{p.product_name}</h5>
                </div>
             );
 

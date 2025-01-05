@@ -89,7 +89,7 @@ export default function SpecItem({ id, product, productCategory }: Props) {
          </tr>
 
          {openModal && (
-            <Modal closeModal={closeModal}>
+            <Modal overlayClosable={false} closeModal={closeModal}>
                <AddItem
                   variant="text-are"
                   loading={isFetching}

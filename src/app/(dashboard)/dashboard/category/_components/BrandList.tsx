@@ -10,43 +10,49 @@ import { PencilSquareIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { generateId } from "@/utils/appHelper";
 import ConfirmModal from "@/components/modal/Confirm";
 import { PlusIcon } from "@heroicons/react/16/solid";
+import simonCat from "@/assets/search-empty.png";
+import BrandListItem from "./BrandListItem";
+import Gallery from "@/components/Gallery";
 
 type Props = {
   categories: Category[];
 };
 
-type Modal = "add" | "edit" | "delete";
+export type BrandListModal = "add" | "edit-name" | "image" | "delete";
 
 const classes = {
   label: "font-[500] text-[#333]",
-  attrItem:
-    "flex items-center bg-[#f6f6f6] mt-[10px] ml-[10px] px-[18px] py-[8px] border border-[#ccc] rounded-[8px]",
-  cta: "ml-[10px] pl-[10px] border-[#ccc] border-l-[1px] flex items-center space-x-[4px] text-[#333]",
 };
 
 export default function BrandList({ categories }: Props) {
   const [curCategoryIndex, setCurCategoryIndex] = useState<number>();
   const [currentBrandIndex, setCurrentBrandIndex] = useState<number>();
-  const [openModal, setOpenModal] = useState<Modal | "">("");
+  const [openModal, setOpenModal] = useState<BrandListModal | "">("");
 
   const { isFetching, actions } = useBrandAction();
 
   const currentCategory = useMemo(
     () => (curCategoryIndex != undefined ? categories[curCategoryIndex] : undefined),
-    [categories, curCategoryIndex]
+    [categories, curCategoryIndex],
   );
 
   const brandByCategory = useMemo(
     () => (currentCategory ? currentCategory.brands : []),
-    [curCategoryIndex, categories]
+    [curCategoryIndex, categories],
   );
 
   const currentBrand = useMemo(
-    () => (currentBrandIndex ? brandByCategory[currentBrandIndex] : undefined),
-    [categories, curCategoryIndex, currentBrandIndex]
+    () =>
+      currentBrandIndex !== undefined ? brandByCategory[currentBrandIndex] : undefined,
+    [categories, curCategoryIndex, currentBrandIndex],
   );
 
   const closeModal = () => setOpenModal("");
+
+  const handleOpenModal = (i: number, modal: BrandListModal) => {
+    setCurrentBrandIndex(i);
+    setOpenModal(modal);
+  };
 
   type Add = {
     type: "Add";
@@ -58,11 +64,16 @@ export default function BrandList({ categories }: Props) {
     value: string;
   };
 
+  type ChangeImage = {
+    type: "Edit-image";
+    value: string;
+  };
+
   type Delete = {
     type: "Delete";
   };
 
-  const handleBrandActions = async (props: Add | Edit | Delete) => {
+  const handleBrandActions = async (props: Add | Edit | ChangeImage | Delete) => {
     switch (props.type) {
       case "Add": {
         if (!currentCategory) return;
@@ -87,6 +98,22 @@ export default function BrandList({ categories }: Props) {
           ...currentBrand,
           brand_name: props.value,
           brand_name_ascii: generateId(props.value),
+        };
+
+        await actions({
+          type: "Edit",
+          brand: brandSchema,
+          id: currentBrand.id,
+        });
+
+        break;
+      }
+
+      case "Edit-image": {
+        if (!currentBrand) return;
+        const brandSchema: BrandSchema = {
+          ...currentBrand,
+          image_url: props.value,
         };
 
         await actions({
@@ -127,7 +154,7 @@ export default function BrandList({ categories }: Props) {
           />
         );
 
-      case "edit":
+      case "edit-name":
         if (!currentBrand) return;
         return (
           <AddItem
@@ -135,6 +162,17 @@ export default function BrandList({ categories }: Props) {
             initValue={currentBrand.brand_name}
             title={`Edit brand '${currentBrand.brand_name}'`}
             cbWhenSubmit={(value) => handleBrandActions({ type: "Edit", value })}
+            closeModal={closeModal}
+          />
+        );
+
+      case "image":
+        if (!currentBrand) return;
+        return (
+          <Gallery
+            setImageUrl={(images) =>
+              handleBrandActions({ type: "Edit-image", value: images[0].image_url })
+            }
             closeModal={closeModal}
           />
         );
@@ -198,29 +236,11 @@ export default function BrandList({ categories }: Props) {
           <>
             {brandByCategory.length ? (
               brandByCategory.map((brand, index) => (
-                <div key={index} className={classes.attrItem}>
-                  <span className="text-[14px]">{brand.brand_name}</span>
-                  <div className={classes.cta}>
-                    <button
-                      className="hover:text-[#cd1818]"
-                      onClick={() => {
-                        setCurrentBrandIndex(index);
-                        setOpenModal("delete");
-                      }}
-                    >
-                      <TrashIcon className="w-[22px]" />
-                    </button>
-                    <button
-                      className="hover:text-[#cd1818]"
-                      onClick={() => {
-                        setCurrentBrandIndex(index);
-                        setOpenModal("delete");
-                      }}
-                    >
-                      <PencilSquareIcon className="w-[22px]" />
-                    </button>
-                  </div>
-                </div>
+                <BrandListItem
+                  brand={brand}
+                  openModal={(m) => handleOpenModal(index, m)}
+                  key={index}
+                />
               ))
             ) : (
               <p className="text-center w-full mt-[10px]">¯\_(ツ)_/¯</p>
