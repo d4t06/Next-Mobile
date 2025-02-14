@@ -226,12 +226,12 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
       <div className={classes.galleryTop}>
         <div className={"flex items-center"}>
           <p className="text-[18px] sm:text-[22px] font-[500]">Gallery</p>
-          <label className="ml-[10px] h-full" htmlFor="image_upload">
-            <Button colors={"second"} size="clear" className="py-1 px-3">
+          <Button colors={"second"} className="ml-[10px]" size="clear">
+            <label className="py-1 px-3 flex items-center" htmlFor="image_upload">
               <ArrowUpTrayIcon className="w-5" />
               <span className="hidden sm:block ml-[6px]">Upload</span>
-            </Button>
-          </label>
+            </label>
+          </Button>
         </div>
 
         <Button disabled={!ableToChosenImage} onClick={handleSubmit} variant={"primary"}>
