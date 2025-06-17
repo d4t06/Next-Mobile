@@ -12,6 +12,7 @@ import Image from "next/image";
 import OverlayCTA from "./ui/OverlayCta";
 import useProductInfoAction from "@/hooks/useProductInfoAction";
 import ModalHeader from "./modal/ModalHeader";
+import { ModalWrapper } from "./modal/AnimateModal";
 
 type AddProduct = {
   type: "Add";
@@ -57,12 +58,12 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
   const currentCategory = useMemo(
     () =>
       productData ? categories.find((c) => c.id === productData.category_id) : undefined,
-    [categories, productData?.category_id]
+    [categories, productData?.category_id],
   );
 
   const brandByCategory = useMemo(
     () => (currentCategory ? currentCategory.brands : []),
-    [productData?.category_id]
+    [productData?.category_id],
   );
 
   const ableToSubmit = useMemo(
@@ -72,7 +73,7 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
       !!productData.product_name &&
       productData.category_id !== undefined &&
       productData.brand_id !== undefined,
-    [productData, isChange]
+    [productData, isChange],
   );
 
   const localCloseModal = () => setIsOpenModal(false);
@@ -124,7 +125,7 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
 
   return (
     <>
-      <div className="w-[800px] max-h-[80vh] max-w-[80vw] flex flex-col">
+      <ModalWrapper className="w-[800px] h-[500px]">
         <ModalHeader closeModal={closeModal} title={title} />
         <div className="flex-grow overflow-x-hidden">
           <div className="sm:flex sm:flex-row mx-[-8px] mt-[14px] pb-[30px]">
@@ -219,7 +220,7 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
             Save
           </Button>
         </div>
-      </div>
+      </ModalWrapper>
 
       {isOpenModal && (
         <Modal className="z-[199]" closeModal={localCloseModal}>

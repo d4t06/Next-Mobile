@@ -1,9 +1,7 @@
 "use client";
 
 import { Session } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import { signOut, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { useEffect } from "react";
 
 /** need force props because
@@ -14,25 +12,12 @@ type Props = {
 };
 export default function CheckAuth({ session: serverSession }: Props) {
   const { data: clientSession, status, update } = useSession();
-  const router = useRouter();
 
   const targetSession = serverSession || clientSession;
 
   const handleLogout = async () => {
-
-   console.log("check sesson", targetSession)
-
-    if (targetSession?.error) {
-      await signOut({ redirect: false });
-      return router.push(`/signin?url=${location.pathname}`);
-    }
+    console.log("check client sesson", targetSession);
   };
-
-  // // Polling the session every 1 hour
-  // useEffect(() => {
-  //    const interval = setInterval(() => update(), 1000 * 10);
-  //    return () => clearInterval(interval);
-  // }, [update]);
 
   useEffect(() => {
     if (status === "loading") return;

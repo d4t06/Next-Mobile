@@ -2,7 +2,7 @@
 
 import Button from "@/components/ui/Button";
 import { sleep } from "@/utils/appHelper";
-import { publicRequest } from "@/utils/request";
+import { request } from "@/utils/request";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 export default function Init() {
@@ -20,7 +20,7 @@ export default function Init() {
          setIsFetching(true);
          if (process.env.NODE_ENV === "development") await sleep(500);
 
-         await publicRequest.post("/init", {
+         await request.post("/init", {
             password: password,
          });
 

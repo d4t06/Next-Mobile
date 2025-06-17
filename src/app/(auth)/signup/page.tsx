@@ -2,7 +2,7 @@
 
 import Button from "@/components/ui/Button";
 import MyInput from "@/components/ui/MyInput";
-import { publicRequest } from "@/utils/request";
+import { request } from "@/utils/request";
 import { CheckIcon, XMarkIcon } from "@heroicons/react/16/solid";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -47,7 +47,7 @@ export default function SignUnPage() {
 
       setIsFetching(true);
 
-      await publicRequest.post(REGISTER_URL, {
+      await request.post(REGISTER_URL, {
         username,
         password,
       });
@@ -209,10 +209,7 @@ export default function SignUnPage() {
       <p className="font-[500]">
         <span className="">
           Already have an account?
-          <Link
-            href="/signin"
-            className="text-[#cd1818] ml-[4px] hover:underline"
-          >
+          <Link href="/signin" className="text-[#cd1818] ml-[4px] hover:underline">
             Sign In
           </Link>
         </span>

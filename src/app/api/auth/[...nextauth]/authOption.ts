@@ -1,7 +1,7 @@
 import { NextAuthOptions } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
-const CLIENT_TOKEN_EXPIRE = 60 * 60; //1h
+// const CLIENT_TOKEN_EXPIRE = 60 * 60; //1h
 
 export const nextAuthOptions: NextAuthOptions = {
   providers: [
@@ -20,8 +20,7 @@ export const nextAuthOptions: NextAuthOptions = {
 
         const res = await fetch(
           `${
-            process.env.NEXT_PUBLIC_API_ENDPOINT ||
-            "https://nest-mobile.vercel.app/api"
+            process.env.NEXT_PUBLIC_API_ENDPOINT || "https://nest-mobile.vercel.app/api"
           }/auth/login`,
           {
             method: "POST",
@@ -37,45 +36,46 @@ export const nextAuthOptions: NextAuthOptions = {
 
         if (!res.ok) throw new Error("");
 
-        const user = await res.json();
+        const payload = await res.json();
 
-        return user;
+        return payload;
       },
     }),
   ],
   session: {
     // default
     strategy: "jwt",
-    maxAge: 86400 * 2, //2day
+    maxAge: 60 * 60 * 24 * 28
   },
 
   pages: {
     signIn: "/signin",
   },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user)
+    async jwt({ token, user: loginPayload }) {
+      if (loginPayload) {
+        // console.log("jwt, check login payload", loginPayload);
         return {
           user: {
-            name: user.user.name,
-            role: user.user.role,
+            name: loginPayload.user.name,
+            role: loginPayload.user.role,
           },
-          token: user.token,
-          error: "",
-          tokenExpired: Date.now() + CLIENT_TOKEN_EXPIRE * 1000,
+          refreshToken: loginPayload.refresh_token,
+          token: loginPayload.token,
         };
+      }
 
-      if (token.tokenExpired > Date.now()) return { ...token, error: "" };
+      // console.log("jwt, check token", token);
 
-      return { ...token, error: "Token Expired" };
+      return token;
     },
 
-    // if use role in client component
+    // for client side
     async session({ token, session }) {
-      session.user.name = token.user.name;
+      session.user.name = "asfsadfadsf";
       session.user.role = token.user.role;
       session.token = token.token;
-      session.error = token.error;
+      session.refreshToken = token.refreshToken;
 
       return session;
     },

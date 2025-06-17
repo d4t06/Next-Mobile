@@ -1,5 +1,5 @@
 import { runRevalidateTag } from "@/app/actions";
-import usePrivateRequest from "@/hooks/usePrivateRequest";
+import useFetch from "@/hooks/useFetch";
 import { useToast } from "@/stores/ToastContext";
 import { useState } from "react";
 
@@ -9,7 +9,7 @@ export default function useProductInfoAction() {
   const [isFetching, setIsFetching] = useState(false);
 
   //    hooks
-  const privateRequest = usePrivateRequest();
+  const privateRequest = useFetch();
   const { setErrorToast, setSuccessToast } = useToast();
 
   type Add = {

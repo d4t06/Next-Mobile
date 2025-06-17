@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import usePrivateRequest from "./usePrivateRequest";
-import { publicRequest } from "@/utils/request";
+import useFetch from "./useFetch";
+import { request } from "@/utils/request";
 import { runRevalidateTag } from "@/app/actions";
 import { useToast } from "@/stores/ToastContext";
 
@@ -11,7 +11,7 @@ const COMMENT_URL = "/comments";
 export default function useCommentAction() {
   const [isFetching, setIsFetching] = useState(false);
 
-  const privateRequest = usePrivateRequest();
+  const privateRequest = useFetch();
   const { setErrorToast, setSuccessToast } = useToast();
 
   type Add = {

@@ -3,19 +3,17 @@
 import Gallery from "@/components/Gallery";
 import Modal from "@/components/modal";
 import Button from "@/components/ui/Button";
-import { LockClosedIcon, LockOpenIcon } from "@heroicons/react/16/solid";
 import { Content, Editor } from "@tiptap/react";
 import { useState } from "react";
 
 type Props = {
   editor: Editor | null;
   isChange: boolean;
-  isLock: boolean;
-  toggleLock: () => void;
-  callback: (value: string) => Promise<void>;
+  submit: (value: string) => void;
+  isLoading?: boolean;
 };
 
-export default function Toolbar({ editor, isChange, isLock, ...props }: Props) {
+export default function EditToolbar({ editor, isLoading, isChange, ...props }: Props) {
   const [isOpenModal, setIsOpenModal] = useState(false);
 
   const closeModal = () => setIsOpenModal(false);
@@ -32,29 +30,25 @@ export default function Toolbar({ editor, isChange, isLock, ...props }: Props) {
     editor.chain().focus().insertContent(imageContents).run();
   };
 
-  const handeToggleClock = () => props.toggleLock();
-
   const handleSubmit = async () => {
     if (!editor) return;
     const content = editor.getHTML();
 
-    await props.callback(content);
+    props.submit(content);
   };
 
   if (!editor) return <></>;
 
   const classes = {
     left: "flex mt-[-8px] ml-[-8px] flex-wrap [&_button]:px-[6px] [&_button]:mt-[8px] [&_button]:ml-[8px] [&_button]:font-[500] [&_button]:py-[3px] [&_button.active]:bg-white [&_button.active]:text-[#cd1818] [&_button.active]:rounded-[6px] ",
-    right:
-      "right flex flex-col space-y-[8px] sm:space-x-[8px] sm:space-y-0 sm:flex-row items-center",
   };
 
   return (
     <>
       <div
-        className={`bg-[#cd1818] text-white flex  justify-between items-center p-[10px] `}
+        className={`${isLoading ? "disabled" : ""} bg-[#cd1818] text-white flex  justify-between items-center p-[10px] `}
       >
-        <div className={`${classes.left} ${isLock ? "disabled" : ""}`}>
+        <div className={`${classes.left}`}>
           <button
             onClick={() => editor.chain().focus().setParagraph().run()}
             className={editor.isActive("paragraph") ? "active" : ""}
@@ -62,9 +56,7 @@ export default function Toolbar({ editor, isChange, isLock, ...props }: Props) {
             paragraph
           </button>
           <button
-            onClick={() =>
-              editor.chain().focus().toggleHeading({ level: 5 }).run()
-            }
+            onClick={() => editor.chain().focus().toggleHeading({ level: 5 }).run()}
             className={editor.isActive("heading", { level: 5 }) ? "active" : ""}
           >
             h5
@@ -83,7 +75,7 @@ export default function Toolbar({ editor, isChange, isLock, ...props }: Props) {
             redo
           </button>
         </div>
-        <div className={classes.right}>
+        <div className="ml-auto">
           <Button
             size={"clear"}
             colors={"second"}
@@ -93,14 +85,6 @@ export default function Toolbar({ editor, isChange, isLock, ...props }: Props) {
           >
             save
           </Button>
-
-          <button onClick={handeToggleClock}>
-            {isLock ? (
-              <LockClosedIcon className="w-[20px]" />
-            ) : (
-              <LockOpenIcon className="w-[20px]" />
-            )}
-          </button>
         </div>
       </div>
 

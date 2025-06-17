@@ -3,7 +3,7 @@ import { runRevalidateTag } from "@/app/actions";
 import Modal from "@/components/modal";
 import ConfirmModal from "@/components/modal/Confirm";
 import Button from "@/components/ui/Button";
-import usePrivateRequest from "@/hooks/usePrivateRequest";
+import useFetch from "@/hooks/useFetch";
 import { sleep } from "@/utils/appHelper";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export default function DangerZone({ product }: Props) {
    const closeModal = () => setOpenModal(false);
 
    //    hooks
-   const privateRequest = usePrivateRequest();
+   const privateRequest = useFetch();
    const router = useRouter();
 
    const handleDeleteProduct = async () => {

@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 
 const classes = {
    active: "before:shadow-none font-[500] translate-y-[2px] text-[#cd1818]",
-   button__children: " flex items-center justify-center",
+   button__children: " flex space-x-1 items-center justify-center",
 };
 
 const ButtonVariant = cva("button relative z-0", {

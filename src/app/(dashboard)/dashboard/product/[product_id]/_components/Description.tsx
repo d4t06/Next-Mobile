@@ -1,34 +1,19 @@
 "use client";
 
-import useDescriptionAction from "../_hooks/useDescriptionAction";
-import MyEditor from "./MyEditor";
+import HTMLReactParser from "html-react-parser/lib/index";
 
 type Props = {
-   product: Product;
+  product: Product;
 };
 
 export default function Description({ product }: Props) {
-   const { isFetching, update } = useDescriptionAction();
-
-   const handleUpdateDescription = async (value: string, restChange: () => void) => {
-      if (!product) return;
-
-      const newDescription: Partial<DescriptionSchema> = {
-         content: value,
-      };
-
-      await update(newDescription, product.id, restChange);
-   };
-
-   return (
-      <>
-         <div className="overflow-hidden">
-            <MyEditor
-               className={`${isFetching ? "disabled" : ""} `}
-               callback={(value, restChange) => handleUpdateDescription(value, restChange)}
-               content={product?.description ? product.description.content : ""}
-            />
-         </div>
-      </>
-   );
+  return (
+    <>
+      <div className={`overflow-hidden`}>
+        <div className="content [&>*]:mt-5 [&>p]:text-[#495057] [&>h5]:font-[500] [&>h5]:text-xl [&>img]:rounded-[8px] sm:[&>img]:max-w-[80%] [&>img]:mx-auto">
+          {HTMLReactParser(product.description.content || "")}
+        </div>
+      </div>
+    </>
+  );
 }

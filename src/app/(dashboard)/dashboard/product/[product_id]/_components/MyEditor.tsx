@@ -4,72 +4,41 @@ import { EditorContent, EditorOptions, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { ElementRef, useRef, useState } from "react";
-import Toolbar from "./MyToolbar";
+import EditToolbar from "./EditorToolbar";
 
-interface Props extends Partial<EditorOptions> {
-  callback: (value: string, resetChange: () => void) => Promise<void>;
-  className: string;
-}
+type Props = {
+  submit: (value: string) => void;
+  isLoading?: boolean
+  className?: string;
+  content: string;
+};
+
 // destructuring callback will show warning
-export default function MyEditor({ extensions, className, ...props }: Props) {
+export default function MyEditor({ submit, isLoading, className = "", content }: Props) {
   const [isChange, setIsChange] = useState(false);
-  const [isLock, setIsLock] = useState(true);
 
   const myEditorRef = useRef<ElementRef<"div">>(null);
 
   const editor = useEditor({
     extensions: [StarterKit, Image],
     onUpdate: () => setIsChange(true),
-    ...props,
+    content,
   });
 
-  const toggleLock = (v?: boolean) => {
-    const content =
-      document.querySelector<HTMLDivElement>(".dashboard-content");
-    const newLock = v ?? !isLock;
-
-    console.log(newLock)
-
-    if (content) {
-      if (newLock) content.style.overflow = "auto";
-      else {
-        content.style.overflow = "hidden";
-
-        myEditorRef?.current?.scrollIntoView({
-          block: "center",
-        });
-      }
-    }
-
-    setIsLock(newLock);
-  };
-  const restChangeState = () => {
-    setIsChange(false);
-    toggleLock(true);
-  };
-
-  const handleSubmit = async (value: string) => {
-    await props.callback(value, restChangeState);
-  };
-
   const classes = {
-    wrapper:
-      "my-editor border border-black/10 bg-white rounded-[12px] overflow-hidden",
-    editContainer: "max-h-[65vh] overflow-auto editor-container",
+    wrapper: "my-editor border border-black/10 bg-white rounded-[12px] overflow-hidden",
+    editContainer: "max-h-[65vh] overflow-auto",
   };
 
   return (
     <div ref={myEditorRef} className={`${classes.wrapper} ${className || ""}`}>
-      <Toolbar
-        isLock={isLock}
-        toggleLock={toggleLock}
+      <EditToolbar
+        isLoading={isLoading}
         isChange={isChange}
-        callback={handleSubmit}
+        submit={() => submit(editor?.getHTML() || "")}
         editor={editor}
       />
-      <div
-        className={`${classes.editContainer} ${isLock ? "pointer-events-none" : ""}`}
-      >
+      <div className={`${classes.editContainer}`}>
         <EditorContent
           className="pt-[30px] sm:w-[70%] sm:mx-auto px-[20px] sm:px-[50px] pb-[50vh] [&_*]:mt-5 [&_p]:text-[#495057] [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:border-[2px] [&_img]:border-transparent [&_.ProseMirror-selectednode]:border-red-500"
           editor={editor}

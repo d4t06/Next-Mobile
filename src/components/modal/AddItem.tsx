@@ -11,6 +11,7 @@ import Button from "../ui/Button";
 import ModalHeader from "./ModalHeader";
 import MyInput, { inputClasses } from "@/components/ui/MyInput";
 import { retry } from "@reduxjs/toolkit/query";
+import { ModalWrapper } from "./AnimateModal";
 
 type Props = {
    closeModal: () => void;
@@ -49,7 +50,7 @@ export default function AddItem({
    };
 
    return (
-      <div className="w-[300px] bg-[#fff]">
+      <ModalWrapper>
          <ModalHeader closeModal={closeModal} title={title} />
          <form action="" onSubmit={handleSubmit}>
             {variant === "input" && (
@@ -85,6 +86,6 @@ export default function AddItem({
                </Button>
             </p>
          </form>
-      </div>
+      </ModalWrapper>
    );
 }

@@ -7,6 +7,7 @@ import Button from "../ui/Button";
 import useCommentAction from "@/hooks/useCommentAction";
 import { useEffect, useRef, useState } from "react";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
+import { ModalWrapper } from "./AnimateModal";
 
 type Props = {
   closeModal: () => void;
@@ -42,7 +43,7 @@ export default function AddComment({ closeModal, product, session }: Props) {
   }, []);
 
   return (
-    <div className="w-[400px] max-w-[80vw] bg-white">
+    <ModalWrapper>
       <ModalHeader title={"Write comment"} closeModal={closeModal} />
 
       {!showThanks && (
@@ -80,6 +81,6 @@ export default function AddComment({ closeModal, product, session }: Props) {
           </div>
         </>
       )}
-    </div>
+    </ModalWrapper>
   );
 }

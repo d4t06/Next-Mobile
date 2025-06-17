@@ -3,7 +3,7 @@ import { ChangeEvent } from "react";
 
 import { useImage } from "@/stores/ImageContext";
 import { useToast } from "@/stores/ToastContext";
-import usePrivateRequest from "./usePrivateRequest";
+import useFetch from "./useFetch";
 
 const IMAGE_URL = "/images";
 
@@ -12,7 +12,7 @@ export default function useUploadImage() {
    const { setTempImages, addImage } = useImage();
    const { setErrorToast, setSuccessToast } = useToast();
 
-   const privateRequest = usePrivateRequest();
+   const privateRequest = useFetch();
 
    const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
       try {

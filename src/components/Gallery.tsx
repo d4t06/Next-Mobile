@@ -4,12 +4,13 @@ import { useEffect, useState, useRef, useMemo } from "react";
 
 import { ArrowPathIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import { useImage } from "@/stores/ImageContext";
-import { publicRequest } from "@/utils/request";
 import Button from "./ui/Button";
 import Image from "next/image";
 import Skeleton from "./Skeleton";
 import { formatSize, sleep } from "@/utils/appHelper";
-import usePrivateRequest from "@/hooks/usePrivateRequest";
+import useFetch from "@/hooks/useFetch";
+import { request } from "@/utils/request";
+import { ModalWrapper } from "./modal/AnimateModal";
 
 type Props = {
   setImageUrl: (images: ImageType[]) => void;
@@ -40,7 +41,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
     imageStore: { currentImages, tempImages, page, count, pageSize },
     storeImages,
   } = useImage();
-  const privateRequest = usePrivateRequest();
+  const privateRequest = useFetch();
 
   const isRemaining = useMemo(() => count - page * pageSize > 0, [currentImages]);
 
@@ -95,7 +96,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
       setStatus("loadingImages");
       if (process.env.NODE_ENV === "development") await sleep(500);
 
-      const res = await publicRequest.get(`${IMAGE_URL}?page=${page}`);
+      const res = await request.get(`${IMAGE_URL}?page=${page}`);
       const data = res.data as getImagesRes;
 
       const newImages = [...currentImages, ...data.images];
@@ -114,7 +115,6 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
   };
 
   const classes = {
-    container: "w-[85vw] bg-white h-[80vh] flex flex-col",
     imageContainer: "relative pt-[100%]",
     imageFrame:
       "absolute flex w-full items-center justify-center bg-[#f1f1f1] inset-0 rounded-[8px] border-[2px] border-[#ccc] hover:border-[#cd1818] overflow-hidden",
@@ -222,7 +222,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
   }, []);
 
   return (
-    <div className={classes.container}>
+    <ModalWrapper className="w-[900px] h-[500px]">
       <div className={classes.galleryTop}>
         <div className={"flex items-center"}>
           <p className="text-[18px] sm:text-[22px] font-[500]">Gallery</p>
@@ -282,7 +282,7 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
           )}
         </div>
       </div>
-    </div>
+    </ModalWrapper>
   );
 }
 

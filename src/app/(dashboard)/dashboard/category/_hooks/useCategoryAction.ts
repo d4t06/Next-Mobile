@@ -1,21 +1,26 @@
 "use-client";
 
 import { runRevalidateTag } from "@/app/actions";
-import usePrivateRequest from "@/hooks/usePrivateRequest";
+import { ModalRef } from "@/components/modal/AnimateModal";
+import useFetch from "@/hooks/useFetch";
 import { useToast } from "@/stores/ToastContext";
 import { sleep } from "@/utils/appHelper";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { RefObject, useState } from "react";
 
 const CATEGORY_URL = "/categories";
 
-export default function useCategoryAction() {
+type Props = {
+  modalRef: RefObject<ModalRef | null>;
+};
+
+export default function useCategoryAction(props?: Props) {
   const { setSuccessToast, setErrorToast } = useToast();
   const [isFetching, setIsFetching] = useState(false);
 
   // hooks
   const router = useRouter();
-  const privateRequest = usePrivateRequest();
+  const privateRequest = useFetch();
 
   type Add = {
     type: "Add";
@@ -35,32 +40,34 @@ export default function useCategoryAction() {
 
   type Props = Add | Edit | Delete;
 
-  const actions = async ({ ...props }: Props) => {
+  const actions = async ({ ..._props }: Props) => {
     try {
       setIsFetching(true);
       if (process.env.NODE_ENV === "development") await sleep(500);
 
-      switch (props.type) {
+      switch (_props.type) {
         case "Add":
-          const { category } = props;
+          const { category } = _props;
           await privateRequest.post(`${CATEGORY_URL}`, category);
 
           break;
         case "Edit": {
-          const { category, id } = props;
+          const { category, id } = _props;
           await privateRequest.put(`${CATEGORY_URL}/${id}`, category);
 
           break;
         }
 
         case "Delete": {
-          await privateRequest.delete(`${CATEGORY_URL}/${props.id}`);
+          await privateRequest.delete(`${CATEGORY_URL}/${_props.id}`);
         }
       }
 
       await runRevalidateTag(`categories`);
 
-      setSuccessToast(`${props.type} category successful`);
+      props?.modalRef && props.modalRef.current?.close();
+
+      setSuccessToast(`${_props.type} category successful`);
     } catch (error: any) {
       if (error.response.status === 409) {
         setErrorToast("Category name had taken");

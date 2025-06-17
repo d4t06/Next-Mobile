@@ -1,20 +1,22 @@
-"use-client";
-
 import { runRevalidateTag } from "@/app/actions";
-import usePrivateRequest from "@/hooks/usePrivateRequest";
+import { ModalRef } from "@/components/modal/AnimateModal";
+import useFetch from "@/hooks/useFetch";
 import { useToast } from "@/stores/ToastContext";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, type RefObject } from "react";
 
-const URL = "/brands";
+const CATEGORY_URL = "/brands";
 
-export default function useBrandAction() {
+type Props = {
+  modalRef: RefObject<ModalRef | null>;
+};
+
+export default function useBrandAction({ modalRef }: Props) {
+  const { setErrorToast, setSuccessToast } = useToast();
+
   const [isFetching, setIsFetching] = useState(false);
 
-  //    hooks
-  const router = useRouter();
-  const privateRequest = usePrivateRequest();
-  const { setErrorToast, setSuccessToast } = useToast();
+  // hooks
+  const $fetch = useFetch();
 
   type Add = {
     type: "Add";
@@ -23,13 +25,15 @@ export default function useBrandAction() {
 
   type Edit = {
     type: "Edit";
-    brand: BrandSchema;
+    brand: Partial<BrandSchema>;
     id: number;
+    index: number;
   };
 
   type Delete = {
     type: "Delete";
     id: number;
+    index: number;
   };
 
   type Props = Add | Edit | Delete;
@@ -40,36 +44,36 @@ export default function useBrandAction() {
 
       switch (props.type) {
         case "Add":
-          const { brand } = props;
-
-          await privateRequest.post(`${URL}`, brand);
+          await $fetch.post<Brand>(CATEGORY_URL, props.brand);
 
           break;
+
         case "Edit": {
           const { brand, id } = props;
-
-          await privateRequest.put(`${URL}/${id}`, brand);
+          await $fetch.put(`${CATEGORY_URL}/${id}`, brand);
 
           break;
         }
 
         case "Delete": {
-          await privateRequest.delete(`${URL}/${props.id}`);
+          await $fetch.delete(`${CATEGORY_URL}/${props.id}`);
+
+          break;
         }
       }
 
-      await runRevalidateTag(`categories`);
-      router.refresh();
+      await runRevalidateTag("categoires");
 
-      setSuccessToast(`${props.type} brand successful`);
+      setSuccessToast(`${props.type} ok`);
     } catch (error: any) {
-      console.log({ message: error });
-
       if (error.response.status === 409) {
         setErrorToast("Brand name had taken");
-      } else setErrorToast();
+      } else {
+        setErrorToast();
+      }
     } finally {
       setIsFetching(false);
+      modalRef.current?.close();
     }
   };
 

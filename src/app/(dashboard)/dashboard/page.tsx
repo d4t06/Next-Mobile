@@ -13,9 +13,9 @@ export default async function DashboardPage() {
     <>
       <CheckAuth />
 
-      <p className="text-[22px]">
-        Hi <span className="font-[500]">Dash board page !</span>
-      </p>
+      <p className="text-[22px]">Hi</p>
+
+      {JSON.stringify(session)}
     </>
   );
 }
