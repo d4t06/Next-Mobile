@@ -1,140 +1,45 @@
 "use client";
-import {
-  ReactNode,
-  createContext,
-  useCallback,
-  useContext,
-  useReducer,
-} from "react";
 
-type ImageStore = {
-  tempImages: ImageType[];
-  page: number;
-  count: number;
-  pageSize: number;
-  currentImages: ImageType[];
+import { ReactNode, createContext, useContext, useRef, useState } from "react";
+
+type Status = "get-image" | "delete-image" | "idle";
+
+const useImage = () => {
+  const [images, setImages] = useState<ImageType[]>([]);
+  const [uploadingImages, setUploadingImages] = useState<ImageType[]>([]);
+  const [isLast, setIsLast] = useState(false);
+  const [page, setPage] = useState(1);
+
+  const [status, setStatus] = useState<Status>("idle");
+
+  const shoudFetchingImage = useRef(true);
+
+  return {
+    page,
+    setPage,
+    images,
+    setImages,
+    uploadingImages,
+    setUploadingImages,
+    isLast,
+    setIsLast,
+    status,
+    setStatus,
+    shoudFetchingImage,
+  };
 };
 
-// 1 initial state
-type StateType = {
-  imageStore: ImageStore;
-};
+type ContextType = ReturnType<typeof useImage>;
 
-const initialState: StateType = {
-  imageStore: {
-    count: 0,
-    currentImages: [],
-    tempImages: [],
-    page: 0,
-    pageSize: 0,
-  },
-};
-
-// 2 reducer
-const enum REDUCER_ACTION_TYPE {
-  STORE_IMAGES,
-  SET_STATUS,
-  ADD_IMAGE,
-}
-
-type ReducerAction = {
-  type: REDUCER_ACTION_TYPE;
-  payload: Partial<ImageStore>;
-};
-
-const reducer = (state: StateType, action: ReducerAction): StateType => {
-  switch (action.type) {
-    case REDUCER_ACTION_TYPE.STORE_IMAGES:
-      return {
-        imageStore: {
-          ...state.imageStore,
-          ...action.payload,
-        },
-      };
-    case REDUCER_ACTION_TYPE.ADD_IMAGE:
-      if (!action.payload.currentImages)
-        return { imageStore: state.imageStore };
-
-      return {
-        imageStore: {
-          ...state.imageStore,
-          currentImages: [
-            ...action.payload.currentImages,
-            ...state.imageStore.currentImages,
-          ],
-          count: state.imageStore.count + 1,
-        },
-      };
-
-    default:
-      return {
-        imageStore: state.imageStore,
-      };
-  }
-};
-
-//  4 hook
-const useImageContext = () => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
-  const storeImages = useCallback((payload: Partial<ImageStore>) => {
-    console.log("store images");
-
-    dispatch({
-      type: REDUCER_ACTION_TYPE.STORE_IMAGES,
-      payload,
-    });
-  }, []);
-
-  const setTempImages = useCallback((tempImages: ImageStore["tempImages"]) => {
-    dispatch({
-      type: REDUCER_ACTION_TYPE.STORE_IMAGES,
-      payload: { tempImages },
-    });
-  }, []);
-
-  const addImage = useCallback((image: ImageType) => {
-    dispatch({
-      type: REDUCER_ACTION_TYPE.ADD_IMAGE,
-      payload: { currentImages: [image] },
-    });
-  }, []);
-
-  return { state, storeImages, setTempImages, addImage };
-};
-
-// 3 create context
-
-type UseImageContextTye = ReturnType<typeof useImageContext>;
-
-const initialContextState: UseImageContextTye = {
-  state: initialState,
-
-  setTempImages: () => {},
-  storeImages: () => {},
-  addImage: () => {},
-};
-
-const ImageContext = createContext<UseImageContextTye>(initialContextState);
+const ct = createContext<ContextType | null>(null);
 
 export default function ImageProvider({ children }: { children: ReactNode }) {
-  return (
-    <ImageContext.Provider value={useImageContext()}>
-      {children}
-    </ImageContext.Provider>
-  );
+  return <ct.Provider value={useImage()}>{children}</ct.Provider>;
 }
 
-export const useImage = () => {
-  const context = useContext(ImageContext);
-  if (!context) throw new Error("context is required");
+export const useImageContext = () => {
+  const context = useContext(ct);
+  if (!context) throw new Error("ImageProvider is required");
 
-  const {
-    state: { imageStore },
-    ...restSetState
-  } = context;
-  return {
-    ...restSetState,
-    imageStore,
-  };
+  return context;
 };

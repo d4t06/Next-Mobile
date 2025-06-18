@@ -4,7 +4,7 @@ import { runRevalidateTag } from "@/app/actions";
 import { ModalRef } from "@/components/modal/AnimateModal";
 import useFetch from "@/hooks/useFetch";
 import { useToast } from "@/stores/ToastContext";
-import { sleep } from "@/utils/appHelper";
+import { generateId, sleep } from "@/utils/appHelper";
 import { useRouter } from "next/navigation";
 import { RefObject, useState } from "react";
 
@@ -19,12 +19,11 @@ export default function useCategoryAction(props?: Props) {
   const [isFetching, setIsFetching] = useState(false);
 
   // hooks
-  const router = useRouter();
   const privateRequest = useFetch();
 
   type Add = {
     type: "Add";
-    category: CategorySchema;
+    name: string;
   };
 
   type Edit = {
@@ -47,8 +46,13 @@ export default function useCategoryAction(props?: Props) {
 
       switch (_props.type) {
         case "Add":
-          const { category } = _props;
-          await privateRequest.post(`${CATEGORY_URL}`, category);
+          const categorySchema: CategorySchema = {
+            attribute_order: "",
+            category_name: _props.name,
+            category_name_ascii: generateId(_props.name),
+          };
+
+          await privateRequest.post(`${CATEGORY_URL}`, categorySchema);
 
           break;
         case "Edit": {

@@ -7,7 +7,6 @@ import Search from "@/layout/_components/Search";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
 import { getAllProducts } from "@/libs/getAllProducts";
 import NoProduct from "@/components/NoProduct";
-import CheckAuth from "@/components/CheckAuth";
 
 export const revalidate = 86400;
 
@@ -20,13 +19,10 @@ export default async function ProductManage() {
 
   const data = await getAllProducts();
 
-  if (!data || !categories)
-    return <p className="text-center">Some thing went wrong</p>;
+  if (!data || !categories) return <p className="text-center">Some thing went wrong</p>;
 
   return (
     <>
-      <CheckAuth />
-
       <div className="flex justify-between">
         <h1 className="text-2xl">All products</h1>
         <AddProductButton categories={categories} />
@@ -38,11 +34,8 @@ export default async function ProductManage() {
       {!!data.products.length && (
         <div className="mt-[30px]">
           {data.products.map((p, index) => (
-            <div
-              key={index}
-              className="border-b mb-[10px] pb-[10px] last:border-none"
-            >
-              <ProductItem categories={categories} product={p} />
+            <div key={index} className="border-b mb-[10px] pb-[10px] last:border-none">
+              <ProductItem product={p} />
             </div>
           ))}
         </div>

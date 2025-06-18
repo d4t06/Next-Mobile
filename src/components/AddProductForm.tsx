@@ -1,18 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import MyInput, { inputClasses } from "./ui/MyInput";
 import { generateId, initProductObject } from "@/utils/appHelper";
 import Button from "@/components/ui/Button";
-import Box from "@/components/ui/Box";
-import Modal from "@/components/modal";
-import { ArrowPathIcon } from "@heroicons/react/24/outline";
 import Gallery from "./Gallery";
-import Image from "next/image";
-import OverlayCTA from "./ui/OverlayCta";
 import useProductInfoAction from "@/hooks/useProductInfoAction";
 import ModalHeader from "./modal/ModalHeader";
-import { ModalWrapper } from "./modal/AnimateModal";
+import AnimateModal, { ModalRef, ModalWrapper } from "./modal/AnimateModal";
+import MyImage from "./ui/MyImage";
+import { PhotoIcon } from "@heroicons/react/24/outline";
 
 type AddProduct = {
   type: "Add";
@@ -51,6 +48,7 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
   const [isChange, setIsChange] = useState(false);
 
   const nameRef = useRef(null);
+  const modalRef = useRef<ModalRef>(null);
 
   // use hooks
   const { actions, isFetching } = useProductInfoAction();
@@ -130,26 +128,17 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
         <div className="flex-grow overflow-x-hidden">
           <div className="sm:flex sm:flex-row mx-[-8px] mt-[14px] pb-[30px]">
             <div className="w-full sm:w-1/3 px-[8px]">
-              {!productData.image_url ? (
-                <Box
-                  className="pt-[50%] sm:pt-[100%]"
-                  onClick={() => setIsOpenModal(true)}
-                />
-              ) : (
-                <Box>
-                  <Image src={productData.image_url} width={500} height={500} alt="asd" />
+              <MyImage
+                className="mx-auto"
+                src={productData.image_url}
+                height={200}
+                width={2000}
+              />
 
-                  <OverlayCTA
-                    data={[
-                      {
-                        cb: () => setIsOpenModal(true),
-                        icon: <ArrowPathIcon className="w-[22px]" />,
-                        className: "bg-[#f1f1f1] p-[5px] rounded-[99px]",
-                      },
-                    ]}
-                  />
-                </Box>
-              )}
+              <Button onClick={() => modalRef.current?.open()} colors={"second"}>
+                <PhotoIcon className="w-6" />
+                <span>Change image</span>
+              </Button>
             </div>
 
             <div className="mt-[30px] sm:mt-0 w-full">
@@ -222,14 +211,12 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
         </div>
       </ModalWrapper>
 
-      {isOpenModal && (
-        <Modal className="z-[199]" closeModal={localCloseModal}>
-          <Gallery
-            closeModal={localCloseModal}
-            setImageUrl={(images) => handleInput("image_url", images[0].image_url)}
-          />
-        </Modal>
-      )}
+      <AnimateModal ref={modalRef}>
+        <Gallery
+          closeModal={localCloseModal}
+          setImageUrl={(images) => handleInput("image_url", images[0].image_url)}
+        />
+      </AnimateModal>
     </>
   );
 }

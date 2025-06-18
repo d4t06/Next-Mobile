@@ -1,34 +1,31 @@
 "use client";
 import AddProductForm from "@/components/AddProductForm";
 import Modal from "@/components/modal";
+import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
 import Button from "@/components/ui/Button";
 import { PlusIcon } from "@heroicons/react/16/solid";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 type Props = {
-   categories: Category[];
+  categories: Category[];
 };
 
 export default function AddProductButton({ categories }: Props) {
-   const [openModal, setOpenModal] = useState(false);
+  const modalRef = useRef<ModalRef>(null);
 
-   const closeModal = () => setOpenModal(false);
-
-   return (
-      <>
-         <Button border={"clear"} onClick={() => setOpenModal(true)}>
-            <PlusIcon className="w-[22px]" />
-            <span className="hidden ml-[6px] sm:block">Add new</span>
-         </Button>
-         {openModal && (
-            <Modal overlayClosable={false} className="z-[100]" closeModal={closeModal}>
-               <AddProductForm
-                  closeModal={closeModal}
-                  type="Add"
-                  categories={categories}
-               />
-            </Modal>
-         )}
-      </>
-   );
+  return (
+    <>
+      <Button border={"clear"} onClick={() => modalRef.current?.open()}>
+        <PlusIcon className="w-[22px]" />
+        <span className="hidden ml-[6px] sm:block">Add new</span>
+      </Button>
+      <AnimateModal ref={modalRef}>
+        <AddProductForm
+          closeModal={() => modalRef.current?.close()}
+          type="Add"
+          categories={categories}
+        />
+      </AnimateModal>
+    </>
+  );
 }

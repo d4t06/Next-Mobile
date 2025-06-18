@@ -1,7 +1,9 @@
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
-import CheckAuth from "@/components/CheckAuth";
+import Button from "@/components/ui/Button";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
+
+export const revalidate = 86400;
 
 export default async function DashboardPage() {
   const session = await getServerSession(nextAuthOptions);
@@ -11,11 +13,12 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <CheckAuth />
+      <p className="text-[22px]">Hi!, {session.user.username}</p>
 
-      <p className="text-[22px]">Hi</p>
+      <p>Token: {session.token}</p>
+      <p>Refresh: {session.refreshToken}</p>
 
-      {JSON.stringify(session)}
+      <Button>Update</Button>
     </>
   );
 }

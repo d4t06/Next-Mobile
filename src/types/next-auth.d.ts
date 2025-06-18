@@ -4,7 +4,7 @@ declare module "next-auth" {
   // client session
   interface Session {
     user: {
-      name: string;
+      username: string;
       role: string;
     };
     token: string;
@@ -16,7 +16,7 @@ declare module "next-auth" {
     refresh_token: string;
     token: string;
     user: {
-      name: string;
+      username: string;
       role: string;
     };
   }
@@ -28,7 +28,7 @@ declare module "next-auth/jwt" {
     refreshToken: string;
     token: string;
     user: {
-      name: string;
+      username: string;
       role: string;
     };
   }

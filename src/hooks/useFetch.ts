@@ -18,16 +18,22 @@ const REFRESH_URL =
   "/auth/refresh";
 
 export function useRefreshToken() {
-  const { update } = useSession();
+  const { update, data: user } = useSession();
   const { setErrorToast } = useToast();
 
   const refresh = async () => {
     try {
-      const response = await axios.get(REFRESH_URL, { withCredentials: true });
+      if (!user) throw new Error("No user");
+
+      const response = await axios.post(
+        REFRESH_URL,
+        { refresh_token: user.refreshToken },
+        { withCredentials: true },
+      );
 
       const payload = response.data as AuthResponse;
 
-      update({ token: payload.token });
+      await update({ token: payload.token });
 
       return payload.token;
     } catch (error: any) {
@@ -52,7 +58,6 @@ export default function useFetch() {
           config.headers["Authorization"] = `Bearer ${user.token}`;
         }
 
-        // console.log("private request auth =", auth)
         return config;
       },
       (err) => Promise.reject(err), // Do something with response error

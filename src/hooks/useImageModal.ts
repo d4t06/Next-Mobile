@@ -24,7 +24,7 @@ export default function useImageModal({ src }: Props) {
 
    const transform = useRef({ x: 0, y: 0 });
    const prevTransform = useRef({ x: 0, y: 0 });
-   const currentImageSize = useRef({ height: 0, width: 0 });
+   const imagesize = useRef({ height: 0, width: 0 });
    const mousePos = useRef({ x: 0, y: 0 });
    const mousePosRatio = useRef({ x: 0, y: 0 });
 
@@ -49,10 +49,10 @@ export default function useImageModal({ src }: Props) {
       mousePositionInImage.y = clientY - imageRect.top;
 
       (mousePosRatio.current.x = +(
-         mousePositionInImage.x / currentImageSize.current.width
+         mousePositionInImage.x / imagesize.current.width
       ).toFixed(2)),
          (mousePosRatio.current.y = +(
-            mousePositionInImage.y / currentImageSize.current.height
+            mousePositionInImage.y / imagesize.current.height
          ).toFixed(2));
 
       return 0;
@@ -65,8 +65,8 @@ export default function useImageModal({ src }: Props) {
       const SPACER = 20;
       const imageRect = imageEle.getBoundingClientRect();
 
-      const isFlowHeight = currentImageSize.current.height > window.innerHeight;
-      const isFlowWidth = currentImageSize.current.width > window.innerWidth;
+      const isFlowHeight = imagesize.current.height > window.innerHeight;
+      const isFlowWidth = imagesize.current.width > window.innerWidth;
 
       const isCover = {
          top: imageRect.top < 50 + SPACER,
@@ -188,8 +188,8 @@ export default function useImageModal({ src }: Props) {
       transform.current.x = diffW * mousePosRatio.current.x;
       transform.current.y = diffH * mousePosRatio.current.y;
 
-      currentImageSize.current.height = newImageSize.height;
-      currentImageSize.current.width = newImageSize.width;
+      imagesize.current.height = newImageSize.height;
+      imagesize.current.width = newImageSize.width;
 
       if (scale.current === 1) setIsZoomAble(true);
       else if (scale.current === MAX_ZOOM) setIsZoomAble(false);
@@ -247,8 +247,8 @@ export default function useImageModal({ src }: Props) {
    useEffect(() => {
       const imageEle = imageRef.current;
       if (imageEle) {
-         currentImageSize.current.height = imageEle.clientHeight;
-         currentImageSize.current.width = imageEle.clientWidth;
+         imagesize.current.height = imageEle.clientHeight;
+         imagesize.current.width = imageEle.clientWidth;
       }
 
       return () => {

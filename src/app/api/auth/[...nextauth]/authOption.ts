@@ -45,34 +45,62 @@ export const nextAuthOptions: NextAuthOptions = {
   session: {
     // default
     strategy: "jwt",
-    maxAge: 60 * 60 * 24 * 28
+    maxAge: 60 * 60 * 24 * 28,
   },
 
   pages: {
     signIn: "/signin",
   },
   callbacks: {
-    async jwt({ token, user: loginPayload }) {
-      if (loginPayload) {
-        // console.log("jwt, check login payload", loginPayload);
-        return {
-          user: {
-            name: loginPayload.user.name,
-            role: loginPayload.user.role,
-          },
-          refreshToken: loginPayload.refresh_token,
-          token: loginPayload.token,
-        };
-      }
+    // token for persist auth
+    // user is the response from login method
+    // session is payload when call update()
+    async jwt({ token, user: loginPayload, trigger, session }) {
+      console.log(
+        ">>> jwt, login payload:",
+        loginPayload,
+        "\ntoken: ",
+        token,
+        "\nsession: ",
+        session,
+        "\ntrigger: ",
+        trigger,
+      );
 
-      // console.log("jwt, check token", token);
+      switch (trigger) {
+        case "signIn":
+          return {
+            user: {
+              username: loginPayload.user.username,
+              role: loginPayload.user.role,
+            },
+            refreshToken: loginPayload.refresh_token,
+            token: loginPayload.token,
+          };
+
+        case "update": {
+          Object.assign(token, session);
+          break;
+        }
+      }
 
       return token;
     },
 
     // for client side
-    async session({ token, session }) {
-      session.user.name = "asfsadfadsf";
+    async session({ token, session, newSession, trigger }) {
+      console.log(
+        ">>> session, token: ",
+        token,
+        "\nsession: ",
+        session,
+        "\nnew session: ",
+        newSession,
+        "\ntrigger: ",
+        trigger,
+      );
+
+      session.user.username = token.user.username;
       session.user.role = token.user.role;
       session.token = token.token;
       session.refreshToken = token.refreshToken;

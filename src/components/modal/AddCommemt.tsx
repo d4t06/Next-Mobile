@@ -29,7 +29,7 @@ export default function AddComment({ closeModal, product, session }: Props) {
     const schema: ProductCommentSchema = {
       content,
       product_id: product.id,
-      username: session.user.name,
+      username: session.user.username,
     };
 
     await action({ variant: "add", comment: schema }).then((res: any) => {
