@@ -1,26 +1,33 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { ArrowPathIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import Button from "./ui/Button";
 import Skeleton from "./Skeleton";
 import { formatSize } from "@/utils/appHelper";
-import { ModalWrapper } from "./modal/AnimateModal";
+import AnimateModal, { ModalRef, ModalWrapper } from "./modal/AnimateModal";
 import MyImage from "./ui/MyImage";
 import GalleryItem from "./GalleryItem";
 import ChooseBtn from "./ChooseImageBtn";
 import useGalleryAction from "@/hooks/useGalleryAction";
 import { useImageContext } from "@/stores/ImageContext";
+import ChooseImageModal from "./modal/ChooseImageModal";
+// import ChooseImageModal from "./modal/ChooseImageModal";
+// import Modal from "./modal";
 
 type Props = {
   setImageUrl: (images: ImageType[]) => void;
   closeModal: () => void;
   multiple?: boolean;
+  width?: number;
+  height?: number;
 };
 
-function Gallery({ setImageUrl, closeModal, multiple }: Props) {
+function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
   const { images, uploadingImages, page, shoudFetchingImage } = useImageContext();
 
   const [choseList, setChoseList] = useState<ImageType[]>([]);
   const [activeImage, setActiveImage] = useState<ImageType>();
+
+  const modalRef = useRef<ModalRef>(null);
 
   const { actions, status } = useGalleryAction();
 
@@ -75,16 +82,16 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
 
   return (
     <>
-      {" "}
       <ModalWrapper className="w-[900px] h-[500px]">
         <div className={classes.galleryTop}>
           <div className={"flex items-center"}>
             <p className="text-[18px] sm:text-[22px] font-[500]">Gallery</p>
-            <Button colors={"second"} className="ml-[10px]" size="clear">
-              <label className="py-1 px-3 flex items-center" htmlFor="image_upload">
-                <ArrowUpTrayIcon className="w-5" />
-                <span className="hidden sm:block ml-[6px]">Upload</span>
-              </label>
+            <Button
+              onClick={() => modalRef.current?.open()}
+              colors={"second"}
+              className="ml-[10px]"
+            >
+              <ArrowUpTrayIcon className="w-5" />
             </Button>
           </div>
 
@@ -165,6 +172,10 @@ function Gallery({ setImageUrl, closeModal, multiple }: Props) {
           </div>
         </div>
       </ModalWrapper>
+
+      <AnimateModal ref={modalRef}>
+        <ChooseImageModal {...props} title="Upload image" modalRef={modalRef} />
+      </AnimateModal>
     </>
   );
 }

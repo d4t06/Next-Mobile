@@ -2,6 +2,14 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-cl: #cd1818;
+
+  --text-cl: #333;
+  --a-5-cl: rgba(0, 0, 0, 0.05);
+  --a-10-cl: rgba(0, 0, 0, 0.1);
+}
+
 /* html {
    font-family: "__Montserrat_b1da2a', '__Montserrat_Fallback_b1da2a", system-ui, -apple-system, BlinkMacSystemFont,
       "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans",
@@ -12,10 +20,10 @@
 button[disabled],
 a[aria-disabled="true"],
 .disabled {
-   pointer-events: none;
-   opacity: 0.6;
+  pointer-events: none;
+  opacity: 0.6;
 }
 
 .before::before {
-   content: "";
+  content: "";
 }

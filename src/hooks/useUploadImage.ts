@@ -1,5 +1,4 @@
 import { generateId, initImageObject } from "@/utils/appHelper";
-import { ChangeEvent } from "react";
 
 import { useImageContext } from "@/stores/ImageContext";
 import { useToast } from "@/stores/ToastContext";
@@ -14,11 +13,11 @@ export default function useUploadImage() {
 
   const privateRequest = useFetch();
 
-  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+  const uploadImage = async (
+    files: FileList,
+    props?: { width?: number; height?: number },
+  ) => {
     try {
-      const inputEle = e.target as HTMLInputElement & { files: FileList };
-      const fileLists = inputEle.files;
-
       // init tempImage
       const processImageList: ImageType[] = [];
       const fileNeedToUploadIndexes: number[] = [];
@@ -30,7 +29,7 @@ export default function useUploadImage() {
       };
 
       let i = 0;
-      for (const file of fileLists) {
+      for (const file of files) {
         const imageObject: ImageType = initImageObject({
           name: generateId(file.name),
           image_url: URL.createObjectURL(file),
@@ -54,10 +53,10 @@ export default function useUploadImage() {
         i++;
       }
 
-      setUploadingImages(processImageList);
+      setUploadingImages((prev) => [...processImageList, ...prev]);
 
       for (const val of fileNeedToUploadIndexes.reverse()) {
-        const file = fileLists[val] as File & { for_image_index: number };
+        const file = files[val] as File & { for_image_index: number };
 
         const formData = new FormData();
         formData.append("image", file);
@@ -67,14 +66,23 @@ export default function useUploadImage() {
         const res = await privateRequest.post(IMAGE_URL, formData, {
           headers: { "Content-Type": "multipart/form-data" },
           signal: controller.signal,
+          params: { ...props },
         });
 
         const newImage = res.data as ImageType;
         processImageList.pop();
 
-        setUploadingImages(processImageList);
+        setUploadingImages((prev) => {
+          if (prev) {
+            prev.pop();
 
-        setImages((prev) => [...prev, newImage]);
+            return prev;
+          }
+
+          return [];
+        });
+
+        setImages((prev) => [newImage, ...prev]);
       }
       // setSuccessToast("Upload images successful");
     } catch (error) {
@@ -84,5 +92,5 @@ export default function useUploadImage() {
     }
   };
 
-  return { handleInputChange };
+  return { uploadImage };
 }

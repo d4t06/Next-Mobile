@@ -3,103 +3,82 @@ import logo from "@/assets/logo.png";
 import Button from "@/components/ui/Button";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import {
-   BookmarkSquareIcon,
-   BuildingStorefrontIcon,
-   ChatBubbleLeftRightIcon,
-   DevicePhoneMobileIcon,
+  BookmarkSquareIcon,
+  BuildingStorefrontIcon,
+  ChatBubbleLeftRightIcon,
+  DevicePhoneMobileIcon,
 } from "@heroicons/react/24/outline";
-import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 export default function DashBoardSidebar() {
-   const [expand, setExpand] = useState(false);
-   const pathName = usePathname();
+  const [expand, setExpand] = useState(false);
+  const pathName = usePathname();
 
-   const classes = {
-      container:
-         "bg-[#fff] border-r border-black/15 transition-[width] max-h-[100vh] relative flex-shrink-0 w-[50px] sm:w-[70px]",
-      containerExpand: "!w-[180px]",
-      head: "h-[60px] flex items-center justify-center",
-      logoText: "text-[22px] font-[500] whitespace-nowrap tracking-[-1px]",
-      logoImage: "max-w-[50px] p-[4px]",
-      item: "flex space-x-[6px] font-[500] items-center justify-center p-[10px] text-[#333] hover:text-[#cd1818] hover:bg-[#f8f8f8]",
-      itemActive: "text-[#cd1818] bg-[#f1f1f1]",
-      icon: "w-[24px] flex-shrink-0",
-   };
+  const classes = {
+    container:
+      "bg-[#fff] border-r border-black/15 transition-[width] max-h-[100vh] relative flex-shrink-0 w-[50px] sm:w-[70px]",
+    containerExpand: "!w-[180px] group expand",
+    head: "h-[80px] flex items-center justify-center",
+    logoText: "text-[22px] font-[500] whitespace-nowrap tracking-[-1px]",
+    logoImage: "max-w-[50px] p-[4px]",
+    itemActive: "text-[#cd1818] bg-[--a-5-cl]",
+    linkList: `[&_svg]:w-6 [&_svg]:flex-shrink-0 [&_a] [&_a]:flex [&_a]:space-x-2 [&_a]:items-center [&_a]:justify-center [&_a]:p-2 hover:[&_a]:bg-[--a-5-cl] group-[.expand]:[&_a]:justify-start [&_span]:whitespace-nowrap [&_span]:hidden group-[.expand]:[&_span]:block`,
+  };
 
-   return (
-      <div className={`${classes.container} ${expand ? classes.containerExpand : ""}`}>
-         <div className={classes.head}>
-            {expand ? (
-               <h1 className={classes.logoText}>
-                  HD <span className="text-[#cd1818]">Dashboard</span>
-               </h1>
-            ) : (
-               <Image
-                  width={50}
-                  height={50}
-                  alt="logo"
-                  className={classes.logoImage}
-                  src={logo}
-               />
-            )}
-         </div>
-         <div>
-            <Link
-               href="/dashboard/product"
-               className={`${classes.item} ${expand ? "!justify-start" : ""}
-               ${pathName === "/dashboard/product" ? classes.itemActive : ""}
-               `}
-            >
-               <DevicePhoneMobileIcon className={classes.icon} />
-               {expand && <span>Product</span>}
-            </Link>
+  const getActive = (path: string) => {
+    return pathName.includes(path) ? classes.itemActive : "";
+  };
 
-            <Link
-               className={`${classes.item} ${expand ? "!justify-start" : ""}
-               ${pathName === "/category" ? classes.itemActive : ""}
-               `}
-               href="/dashboard/category"
-            >
-               <BookmarkSquareIcon className={classes.icon} />
-               {expand && <span>Asset</span>}
-            </Link>
+  return (
+    <div className={`${classes.container} ${expand ? classes.containerExpand : ""}`}>
+      <div className={classes.head}>
+        <Link
+          href={"/dashboard"}
+          className="bg-[--a-5-cl] flex-shrink-0 w-12 flex h-12 rounded-full justify-center items-center"
+        >
+          <span className="text-[#333] text-xl font-medium translate-y-[1px]">:D</span>
+        </Link>
 
-            <Link
-               className={`${classes.item} ${expand ? "!justify-start" : ""}
-               ${pathName === "/dashboard/comment" ? classes.itemActive : ""}
-               `}
-               href="/dashboard/comment"
-            >
-               <ChatBubbleLeftRightIcon className={classes.icon} />
-               {expand && <span className="whitespace-nowrap">Comment</span>}
-            </Link>
-
-            <Link
-               target="blank"
-               className={`${classes.item} ${expand ? "!justify-start" : ""}
-               ${pathName === "/category" ? classes.itemActive : ""}
-               `}
-               href="/"
-            >
-               <BuildingStorefrontIcon className={classes.icon} />
-               {expand && <span className="whitespace-nowrap">My shop</span>}
-            </Link>
-         </div>
-         <Button
-            onClick={() => setExpand((prev) => !prev)}
-            className="hidden sm:flex p-[4px] !absolute bottom-[20px] right-0 translate-x-[50%] z-[10]"
-            size={"clear"}
-            border={"clear"}
-         >
-            {expand ? (
-               <ChevronLeftIcon className="w-[24px] " />
-            ) : (
-               <ChevronRightIcon className="w-[24px]" />
-            )}
-         </Button>
+        {expand && <span className="font-medium ml-2">Dspec</span>}
       </div>
-   );
+      <div className={classes.linkList}>
+        <Link href="/dashboard/product" className={getActive("/product")}>
+          <DevicePhoneMobileIcon />
+          <span>Product</span>
+        </Link>
+
+        <Link className={getActive("/category")} href="/dashboard/category">
+          <BookmarkSquareIcon />
+          <span>Category</span>
+        </Link>
+
+        <Link className={getActive("/comment")} href="/dashboard/comment">
+          <ChatBubbleLeftRightIcon />
+          <span>Comment</span>
+        </Link>
+
+        <Link target="blank" href="/">
+          <BuildingStorefrontIcon />
+          <span>My shop</span>
+        </Link>
+      </div>
+
+      <div className="!absolute bottom-[20px] z-[10] right-0 translate-x-[50%]">
+        <Button
+          onClick={() => setExpand((prev) => !prev)}
+          className="hidden sm:flex p-1"
+          size={"clear"}
+          border={"clear"}
+        >
+          {expand ? (
+            <ChevronLeftIcon className="w-6 " />
+          ) : (
+            <ChevronRightIcon className="w-6" />
+          )}
+        </Button>
+      </div>
+    </div>
+  );
 }

@@ -8,7 +8,7 @@ import EditToolbar from "./EditorToolbar";
 
 type Props = {
   submit: (value: string) => void;
-  isLoading?: boolean
+  isLoading?: boolean;
   className?: string;
   content: string;
 };
@@ -16,8 +16,6 @@ type Props = {
 // destructuring callback will show warning
 export default function MyEditor({ submit, isLoading, className = "", content }: Props) {
   const [isChange, setIsChange] = useState(false);
-
-  const myEditorRef = useRef<ElementRef<"div">>(null);
 
   const editor = useEditor({
     extensions: [StarterKit, Image],
@@ -31,7 +29,7 @@ export default function MyEditor({ submit, isLoading, className = "", content }:
   };
 
   return (
-    <div ref={myEditorRef} className={`${classes.wrapper} ${className || ""}`}>
+    <>
       <EditToolbar
         isLoading={isLoading}
         isChange={isChange}
@@ -44,6 +42,6 @@ export default function MyEditor({ submit, isLoading, className = "", content }:
           editor={editor}
         />
       </div>
-    </div>
+    </>
   );
 }

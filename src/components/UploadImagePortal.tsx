@@ -1,30 +1,21 @@
 "use client";
 
 import useUploadImage from "@/hooks/useUploadImage";
-import { useRef } from "react";
+import { useImageContext } from "@/stores/ImageContext";
+import { useImperativeHandle, useRef } from "react";
 
 function UploadImagePortal() {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const { handleInputChange } = useUploadImage();
+  const { uploaderRef } = useImageContext();
 
-  const classes = {
-    container: `upload portal fixed z-[199] bottom-[120px] right-[30px] max-[549px]:bottom-[unset] max-[540px]:top-[10px] max-[540px]:right-[10px]`,
-  };
+  const { uploadImage } = useUploadImage();
+
+  useImperativeHandle(uploaderRef, () => ({ upload: uploadImage }));
 
   return (
     <>
-      <div className={classes.container}>
-        <input
-          ref={inputRef}
-          onChange={handleInputChange}
-          type="file"
-          multiple
-          accept="image"
-          id="image_upload"
-          className="hidden"
-        />
-      </div>
+      <div className="fixed"></div>
     </>
   );
 }

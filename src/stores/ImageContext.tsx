@@ -4,6 +4,10 @@ import { ReactNode, createContext, useContext, useRef, useState } from "react";
 
 type Status = "get-image" | "delete-image" | "idle";
 
+export type UploaderRef = {
+  upload: (files: FileList, props: { width?: number; height?: number }) => void;
+};
+
 const useImage = () => {
   const [images, setImages] = useState<ImageType[]>([]);
   const [uploadingImages, setUploadingImages] = useState<ImageType[]>([]);
@@ -13,6 +17,7 @@ const useImage = () => {
   const [status, setStatus] = useState<Status>("idle");
 
   const shoudFetchingImage = useRef(true);
+  const uploaderRef = useRef<UploaderRef>(null);
 
   return {
     page,
@@ -26,6 +31,7 @@ const useImage = () => {
     status,
     setStatus,
     shoudFetchingImage,
+    uploaderRef,
   };
 };
 

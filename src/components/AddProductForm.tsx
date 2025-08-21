@@ -44,7 +44,6 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
     }
   });
 
-  const [isOpenModal, setIsOpenModal] = useState(false);
   const [isChange, setIsChange] = useState(false);
 
   const nameRef = useRef(null);
@@ -73,8 +72,6 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
       productData.brand_id !== undefined,
     [productData, isChange],
   );
-
-  const localCloseModal = () => setIsOpenModal(false);
 
   const title = useMemo(() => {
     switch (props.type) {
@@ -127,12 +124,12 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
         <ModalHeader closeModal={closeModal} title={title} />
         <div className="flex-grow overflow-x-hidden">
           <div className="sm:flex sm:flex-row mx-[-8px] mt-[14px] pb-[30px]">
-            <div className="w-full sm:w-1/3 px-[8px]">
+            <div className="w-full sm:w-2/5 px-[8px] flex-shrink-0">
               <MyImage
                 className="mx-auto"
                 src={productData.image_url}
                 height={200}
-                width={2000}
+                width={200}
               />
 
               <Button onClick={() => modalRef.current?.open()} colors={"second"}>
@@ -213,7 +210,9 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
 
       <AnimateModal ref={modalRef}>
         <Gallery
-          closeModal={localCloseModal}
+          height={200}
+          width={200}
+          closeModal={() => modalRef.current?.close()}
           setImageUrl={(images) => handleInput("image_url", images[0].image_url)}
         />
       </AnimateModal>
