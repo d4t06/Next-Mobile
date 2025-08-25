@@ -7,8 +7,8 @@ import CompareProvider from "@/stores/CompareContext";
 import defaultTheme from "tailwindcss/defaultTheme";
 
 const _font = localFont({
-  src: "./Montserrat-VariableFont.ttf",
-  weight: "400 700",
+  src: "./Comfortaa-VariableFont.ttf",
+  weight: "400 500 600 700",
 });
 
 export const metadata: Metadata = {

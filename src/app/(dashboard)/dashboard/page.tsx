@@ -8,6 +8,8 @@ export const revalidate = 86400;
 export default async function DashboardPage() {
   const session = await getServerSession(nextAuthOptions);
 
+  console.log("check session", session)
+
   if (!session) return redirect("/signin");
   if (session?.user.role !== "ADMIN") return redirect("/unauthorized");
 

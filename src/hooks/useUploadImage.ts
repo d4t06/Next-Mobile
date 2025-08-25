@@ -14,7 +14,7 @@ export default function useUploadImage() {
   const privateRequest = useFetch();
 
   const uploadImage = async (
-    files: FileList,
+    files: File[],
     props?: { width?: number; height?: number },
   ) => {
     try {

@@ -19,7 +19,7 @@ function useReadCopiedImage({ modalRef, ...props }: ReadCopiedImageProps) {
     const inputEle = e.target as HTMLInputElement & { files: FileList };
     const fileLists = inputEle.files;
 
-    uploaderRef.current?.upload(fileLists, { ...props });
+    uploaderRef.current?.upload(Array.from(fileLists), { ...props });
 
     modalRef?.current?.close();
   };
@@ -29,7 +29,31 @@ function useReadCopiedImage({ modalRef, ...props }: ReadCopiedImageProps) {
       const fileLists = e.clipboardData?.files;
       if (!fileLists) return;
 
-      uploaderRef.current?.upload(fileLists, { ...props });
+      uploaderRef.current?.upload(Array.from(fileLists), { ...props });
+
+      modalRef?.current?.close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleReadImageWhenClick = async () => {
+    try {
+      const clipboardItems = await navigator.clipboard.read();
+      for (const clipboardItem of clipboardItems) {
+        for (const type of clipboardItem.types) {
+          if (type.startsWith("image/")) {
+            const blob = await clipboardItem.getType(type);
+
+            const myFile = new File([blob], "image.jpeg", {
+              type: blob.type,
+            });
+
+            uploaderRef.current?.upload([myFile], { ...props });
+          }
+        }
+      }
+      console.log("No image found in clipboard.");
 
       modalRef?.current?.close();
     } catch (error) {
@@ -45,7 +69,7 @@ function useReadCopiedImage({ modalRef, ...props }: ReadCopiedImageProps) {
     };
   }, []);
 
-  return { handleInputChange };
+  return { handleInputChange, handleReadImageWhenClick };
 }
 
 type Props = {
@@ -56,7 +80,10 @@ type Props = {
 };
 
 export default function ChooseImageModal({ title, modalRef, ...props }: Props) {
-  const { handleInputChange } = useReadCopiedImage({ modalRef, ...props });
+  const { handleInputChange, handleReadImageWhenClick } = useReadCopiedImage({
+    modalRef,
+    ...props,
+  });
 
   const labelRef = useRef<HTMLLabelElement>(null);
 
@@ -81,12 +108,20 @@ export default function ChooseImageModal({ title, modalRef, ...props }: Props) {
         className={`inline-flex p-1.5 space-x-1 md:px-3`}
       ></label>
 
-      <p className="text-center">
+      <div className="space-x-2 flex items-center justify-center">
+        <Button
+          onClick={handleReadImageWhenClick}
+          className="lg:hidden"
+          colors={"second"}
+        >
+          Paste
+        </Button>
+
         <Button onClick={() => labelRef.current?.click()}>
           <FolderOpenIcon className="w-6" />
           <span>Choose from computer</span>
         </Button>
-      </p>
+      </div>
     </ModalWrapper>
   );
 }

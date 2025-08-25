@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef } from "react";
+import { useEffect, useState, useMemo, useRef, ReactEventHandler } from "react";
 import { ArrowPathIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import Button from "./ui/Button";
 import Skeleton from "./Skeleton";
@@ -10,8 +10,8 @@ import ChooseBtn from "./ChooseImageBtn";
 import useGalleryAction from "@/hooks/useGalleryAction";
 import { useImageContext } from "@/stores/ImageContext";
 import ChooseImageModal from "./modal/ChooseImageModal";
-// import ChooseImageModal from "./modal/ChooseImageModal";
-// import Modal from "./modal";
+import DetailFrame from "./ui/DetailFrame";
+import Link from "next/link";
 
 type Props = {
   setImageUrl: (images: ImageType[]) => void;
@@ -53,11 +53,19 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
     closeModal();
   };
 
+  // const handleImageLoaded: ReactEventHandler<HTMLImageElement> = (e) => {
+  //   const target = e.target as HTMLImageElement;
+  //   if (imageSizeRef.current) {
+  //     imageSizeRef.current.innerText = `${target.naturalWidth} x ${target.naturalHeight}`;
+  //   }
+  // };
+
   const classes = {
     galleryTop: "flex justify-between border-b border-black/15 mb-[10px] pb-[10px]",
     galleryBody: "flex-grow overflow-hidden flex mx-[-10px]",
     bodyLeft: "w-full sm:w-2/3 overflow-auto px-[10px]",
-    bodyRight: "hidden sm:block px-[10px] w-1/3 border-l border-black/15 space-y-[14px]",
+    bodyRight:
+      "hidden sm:block pb-1 overflow-auto px-[10px] w-1/3 border-l border-black/15 space-y-[14px]",
   };
 
   const imageSkeleton = useMemo(
@@ -150,12 +158,25 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
                   height={200}
                   className="w-full rounded-lg"
                   src={activeImage.image_url}
+                  // onLoad={handleImageLoaded}
                 />
 
-                <p className="break-words">{activeImage.name}</p>
-                <div>
-                  <p>Size: {formatSize(activeImage.size)}</p>
-                </div>
+                <DetailFrame>
+                  <p className="break-words text-lg font-bold">{activeImage.name}</p>
+                  <p className="line-clamp-1">
+                    Link:
+                    <span>
+                      <Link className="hover:underline" href={activeImage.image_url} target="_blank">
+                        {activeImage.image_url}
+                      </Link>
+                    </span>
+                  </p>
+                  <p>
+                    Size:
+                    <span>{formatSize(activeImage.size)}</span>
+                  </p>
+                </DetailFrame>
+
                 <Button
                   loading={status === "delete-image"}
                   onClick={() =>

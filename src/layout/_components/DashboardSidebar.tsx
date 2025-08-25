@@ -36,7 +36,7 @@ export default function DashBoardSidebar() {
       <div className={classes.head}>
         <Link
           href={"/dashboard"}
-          className="bg-[--a-5-cl] flex-shrink-0 w-12 flex h-12 rounded-full justify-center items-center"
+          className="bg-[--a-5-cl] flex-shrink-0 w-10 sm:w-12 flex h-10 sm:h-12 rounded-full justify-center items-center"
         >
           <span className="text-[#333] text-xl font-medium translate-y-[1px]">:D</span>
         </Link>

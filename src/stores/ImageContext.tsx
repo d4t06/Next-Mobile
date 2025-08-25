@@ -5,7 +5,7 @@ import { ReactNode, createContext, useContext, useRef, useState } from "react";
 type Status = "get-image" | "delete-image" | "idle";
 
 export type UploaderRef = {
-  upload: (files: FileList, props: { width?: number; height?: number }) => void;
+  upload: (files: File[], props: { width?: number; height?: number }) => void;
 };
 
 const useImage = () => {
