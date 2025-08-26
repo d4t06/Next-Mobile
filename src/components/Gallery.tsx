@@ -3,7 +3,7 @@ import { ArrowPathIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import Button from "./ui/Button";
 import Skeleton from "./Skeleton";
 import { formatSize } from "@/utils/appHelper";
-import AnimateModal, { ModalRef, ModalWrapper } from "./modal/AnimateModal";
+import Modal, { ModalRef, ModalContentWrapper } from "./modal/Modal";
 import MyImage from "./ui/MyImage";
 import GalleryItem from "./GalleryItem";
 import ChooseBtn from "./ChooseImageBtn";
@@ -61,11 +61,11 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
   // };
 
   const classes = {
-    galleryTop: "flex justify-between border-b border-black/15 mb-[10px] pb-[10px]",
+    galleryTop: "flex justify-between border-b border-[--a-5-cl] mb-[10px] pb-[10px]",
     galleryBody: "flex-grow overflow-hidden flex mx-[-10px]",
     bodyLeft: "w-full sm:w-2/3 overflow-auto px-[10px]",
     bodyRight:
-      "hidden sm:block pb-1 overflow-auto px-[10px] w-1/3 border-l border-black/15 space-y-[14px]",
+      "hidden sm:block pb-1 overflow-auto px-[10px] w-1/3 border-l border-[--a-5-cl] space-y-3",
   };
 
   const imageSkeleton = useMemo(
@@ -90,14 +90,15 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
 
   return (
     <>
-      <ModalWrapper className="w-[900px] h-[500px]">
+      <ModalContentWrapper className="w-[900px] h-[500px]">
         <div className={classes.galleryTop}>
           <div className={"flex items-center"}>
-            <p className="text-[18px] sm:text-[22px] font-[500]">Gallery</p>
+            <p className="text-lg sm:text-xl font-bold">Gallery</p>
             <Button
               onClick={() => modalRef.current?.open()}
               colors={"second"}
-              className="ml-[10px]"
+              size={'clear'}
+              className="ml-3 p-1.5"
             >
               <ArrowUpTrayIcon className="w-5" />
             </Button>
@@ -116,7 +117,7 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
             <div className="flex flex-wrap mt-[-8px] overflow-x-hidden overflow-y-auto mx-[-4px]">
               {uploadingImages.map((item, index) => (
                 <GalleryItem image={item} key={index} active={false}>
-                  <ArrowPathIcon className="animate-spin absolute duration-1000 text-[#000] w-6" />
+                  <ArrowPathIcon className="animate-spin absolute duration-1000 w-6" />
                 </GalleryItem>
               ))}
 
@@ -163,7 +164,7 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
 
                 <DetailFrame>
                   <p className="break-words text-lg font-bold">{activeImage.name}</p>
-                  <p className="line-clamp-1">
+                  <p className="truncate">
                     Link:
                     <span>
                       <Link className="hover:underline" href={activeImage.image_url} target="_blank">
@@ -192,11 +193,11 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
             )}
           </div>
         </div>
-      </ModalWrapper>
+      </ModalContentWrapper>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         <ChooseImageModal {...props} title="Upload image" modalRef={modalRef} />
-      </AnimateModal>
+      </Modal>
     </>
   );
 }

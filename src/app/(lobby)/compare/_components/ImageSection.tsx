@@ -52,7 +52,7 @@ export default function ImageSection({ products }: Props) {
 
    const classes = {
       proName:
-         "text-sm sm:text-medium text-center mt-auto pt-[14px] font-[500] text-[#333] leading-[1]",
+         "text-sm sm:text-medium text-center mt-auto pt-[14px] font-bold leading-[1]",
    };
 
    return (

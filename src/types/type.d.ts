@@ -98,7 +98,7 @@ type ProductComment = {
   date_diff: string;
 };
 
-type ProductCommentSchema = Omit<ProductComment, "id" | "approve" | "date_diff">;
+type ProductCommentSchema = Omit<ProductComment, "id" | "date_diff">;
 
 type ProductCommentResponse = {
   comments: ProductComment[];

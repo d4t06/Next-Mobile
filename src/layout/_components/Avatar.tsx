@@ -5,7 +5,7 @@ import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { signOut, useSession } from "next-auth/react";
 import Skeleton from "@/components/Skeleton";
 import { useRef } from "react";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import { ModalRef, Modal } from "@/components/modal";
 import ConfirmModal from "@/components/modal/Confirm";
 
 export default function Avatar() {
@@ -26,15 +26,13 @@ export default function Avatar() {
       <div className={classes.container}>
         {session ? (
           <>
-            <p>
-              hi!, <span className="font-[500]">{session.user.username}</span>
-            </p>
+            <p className="font-bold">hi!, {session.user.username}</p>
 
             <button
               onClick={() => modalRef.current?.open()}
               className="ml-[10px] hover:text-[#cd1818]"
             >
-              <ArrowRightStartOnRectangleIcon className="w-[22px]" />
+              <ArrowRightStartOnRectangleIcon className="w-6" />
             </button>
           </>
         ) : (
@@ -44,14 +42,14 @@ export default function Avatar() {
         )}
       </div>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         <ConfirmModal
           label="Logout ?"
           callback={signOut}
           closeModal={() => modalRef.current?.close()}
           loading={false}
         />
-      </AnimateModal>
+      </Modal>
     </>
   );
 }

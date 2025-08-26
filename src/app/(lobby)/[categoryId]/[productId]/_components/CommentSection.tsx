@@ -2,16 +2,16 @@ import CommentItem from "@/components/CommentItem";
 import getAllComment from "@/libs/getAllComment";
 import { ChatBubbleLeftRightIcon } from "@heroicons/react/24/outline";
 import { Suspense } from "react";
-import WriteCommentButton from "./WriteCommentButton";
 import NoProduct from "@/components/NoProduct";
 import Skeleton from "@/components/Skeleton";
+import UserInput, { Test } from "@/modules/user-input";
 
 type Props = {
   product: Product;
 };
 
 async function CommentList({ productId }: { productId: number }) {
-  const data = await getAllComment({ productId, size: 6 });
+  const data = await getAllComment({ productId, size: 6, approved: false });
 
   if (!data) return <></>;
 
@@ -48,13 +48,13 @@ const commentLoading = [...Array(2).keys()].map((item) => (
 export default async function CommentSection({ product }: Props) {
   return (
     <div className="mt-8">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-1">
-          <ChatBubbleLeftRightIcon className="w-6" />
-          <span className="sm:text-lg font-medium">Comments </span>
-        </div>
+      <div className="flex items-center space-x-1">
+        <ChatBubbleLeftRightIcon className="w-6" />
+        <span className="sm:text-lg font-medium">Comments </span>
+      </div>
 
-        <WriteCommentButton product={product} />
+      <div className="mt-5">
+        <UserInput variant="comment" targetId={product.id} />
       </div>
 
       <div className="space-y-4 mt-5">

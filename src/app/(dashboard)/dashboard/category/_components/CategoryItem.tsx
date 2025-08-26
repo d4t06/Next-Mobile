@@ -2,7 +2,7 @@ import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { useRef, useState } from "react";
 import useCategoryAction from "../_hooks/useCategoryAction";
 import { generateId } from "@/utils/appHelper";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import { Modal, ModalRef } from "@/components/modal";
 import ItemRightCta from "@/components/ui/ItemRightCta";
 import ConfirmModal from "@/components/modal/Confirm";
 import AddItem from "@/components/modal/AddItem";
@@ -37,7 +37,7 @@ export default function CategoryItem({ category }: Props) {
         </button>
       </div>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         {modal === "delete" && (
           <ConfirmModal
             loading={isFetching}
@@ -64,7 +64,7 @@ export default function CategoryItem({ category }: Props) {
             }
           />
         )}
-      </AnimateModal>
+      </Modal>
     </ItemRightCta>
   );
 }

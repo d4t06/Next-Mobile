@@ -20,8 +20,8 @@ const ButtonVariant = cva("button relative z-0", {
       },
       colors: {
          primary: "color--primary bg-[#cd1818] text-white",
-         second: "color--second bg-white text-[#333]",
-         third: "color--third bg-white text-[#333]",
+         second: "color--second bg-white dark:bg-slate-700",
+         third: "color--third bg-white dark:bg-slate-700",
          clear: "",
       },
       border: {

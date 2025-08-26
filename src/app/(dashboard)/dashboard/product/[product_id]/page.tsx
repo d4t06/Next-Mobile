@@ -19,7 +19,7 @@ export default async function EditProduct({ params: { product_id } }: Props) {
   const productDetail = await getProductDetail(product_id);
 
   const classes = {
-    group: "p-[20px] rounded-[12px] bg-[#fff] border",
+    group: "p-[20px] rounded-[12px] bg-[#fff] dark:bg-slate-800 border",
     label: "text-lg sm:text-xl font-[500]",
   };
 

@@ -34,7 +34,7 @@ export default async function ProductManage() {
       {!!data.products.length && (
         <div className="mt-[30px]">
           {data.products.map((p, index) => (
-            <div key={index} className="border-b mb-[10px] pb-[10px] last:border-none">
+            <div key={index} className="border-b border-[--a-5-cl] mb-[10px] pb-[10px] last:border-none">
               <ProductItem product={p} />
             </div>
           ))}

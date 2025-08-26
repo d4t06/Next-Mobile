@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { inputClasses } from "@/components/ui/MyInput";
 import AttributeItem from "./AttributeIttem";
 import AddNewAttributeBtn from "./AddNewAttributeBtn";
 import ChangeAttributeOrder from "./ChangeAttributeOrder";
@@ -23,10 +22,10 @@ export default function CategoryAttributeList({ categories }: Props) {
     : [];
 
   const classes = {
-    label: "font-[500] text-[#333]",
+    label: "font-bold",
     attrItem:
       " bg-[#f1f1f1] mt-[10px] ml-[10px] px-4 py-2 border-[#ccc] border rounded-[8px]",
-    cta: "ml-[10px] pl-[10px] border-[#ccc] border-l-[1px] flex items-center space-x-1 text-[#333]",
+    cta: "ml-[10px] pl-[10px] border-[#ccc] border-l-[1px] flex items-center space-x-1",
   };
 
   return (
@@ -37,7 +36,7 @@ export default function CategoryAttributeList({ categories }: Props) {
           <div className="bg-[#ccc] rounded-[12px]">
             <select
               disabled={!categories.length}
-              className={`${inputClasses.input} min-w-[100px]`}
+              className={`my-input bg-slate-700 min-w-[100px]`}
               name="category"
               onChange={(e) => setCurCategoryIndex(+e.target.value)}
             >

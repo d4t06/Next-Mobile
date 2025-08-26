@@ -1,32 +1,30 @@
 "use client";
 
-import Modal from "@/components/modal";
-import ConfirmModal from "@/components/modal/Confirm";
-import Button from "@/components/ui/Button";
-import useCommentAction from "@/hooks/useCommentAction";
-import { TrashIcon } from "@heroicons/react/24/outline";
-import { useState } from "react";
+// import ConfirmModal from "@/components/modal/Confirm";
+// import Button from "@/components/ui/Button";
+// import { TrashIcon } from "@heroicons/react/24/outline";
+// import { useState } from "react";
 
 type Props = {
   comment: ProductComment;
 };
 
-export default function DeleteCommentButton({ comment }: Props) {
-  const { action, isFetching } = useCommentAction();
+export default function DeleteCommentButton({ }: Props) {
+  // const { action, isFetching } = useCommentAction();
 
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  // const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const closeModal = () => setIsOpenModal(false);
+  // const closeModal = () => setIsOpenModal(false);
 
-  const handleDelete = async () => {
-    await action({ variant: "delete", id: comment.id });
+  // const handleDelete = async () => {
+  //   await action({ variant: "delete", id: comment.id });
 
-    closeModal();
-  };
+  //   closeModal();
+  // };
 
   return (
     <>
-      <Button
+    {/*  <Button
         loading={isFetching}
         onClick={() => setIsOpenModal(true)}
         className="space-x-1 p-1 sm:px-2"
@@ -45,7 +43,7 @@ export default function DeleteCommentButton({ comment }: Props) {
             loading={isFetching}
           />
         </Modal>
-      )}
+      )}*/}
     </>
   );
 }

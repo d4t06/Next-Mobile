@@ -12,7 +12,7 @@ export default function DetailFrame({
   return (
     <div
       className={
-        "text-sm [&_span]:font-semibold [&_span]:text-[#666] [&_span]:ml-1 " +
+        "text-sm [&_span]:font-semibold [&_span]:text-[#666] dark:[&_span]:text-[#999] [&_span]:ml-1 " +
         className
       }
     >

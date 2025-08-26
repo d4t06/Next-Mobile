@@ -21,7 +21,7 @@ async function Group() {
   const categories = (await res.json()) as Category[];
 
   const classes = {
-    group: "p-[20px] rounded-[12px] bg-[#fff] border",
+    group: "p-[20px] rounded-[12px] bg-[--a-5-cl] border border-[--a-5-cl]",
     label: "text-2xl",
   };
 

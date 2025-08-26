@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import useCategoryAction from "../_hooks/useCategoryAction";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import { Modal, ModalRef } from "@/components/modal";
 import Button from "@/components/ui/Button";
 import AddItem from "@/components/modal/AddItem";
 
@@ -18,7 +18,7 @@ export default function AddNewCategpryBtn() {
         <span className="hidden sm:block">Add new category</span>
       </Button>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         <AddItem
           variant="input"
           closeModal={() => modalRef.current?.close()}
@@ -31,7 +31,7 @@ export default function AddNewCategpryBtn() {
           loading={isFetching}
           title="Add new category"
         />
-      </AnimateModal>
+      </Modal>
     </>
   );
 }

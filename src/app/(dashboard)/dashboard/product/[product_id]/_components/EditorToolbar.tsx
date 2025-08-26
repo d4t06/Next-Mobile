@@ -1,10 +1,10 @@
 "use client";
 
 import Gallery from "@/components/Gallery";
-import Modal from "@/components/modal";
+import { Modal, ModalRef } from "@/components/modal";
 import Button from "@/components/ui/Button";
 import { Content, Editor } from "@tiptap/react";
-import { useState } from "react";
+import { useRef } from "react";
 
 type Props = {
   editor: Editor | null;
@@ -14,9 +14,9 @@ type Props = {
 };
 
 export default function EditToolbar({ editor, isLoading, isChange, ...props }: Props) {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+  const modalRef = useRef<ModalRef>(null);
 
-  const closeModal = () => setIsOpenModal(false);
+  const closeModal = () => modalRef.current?.close();
 
   const handleAddImage = (imageList: ImageType[]) => {
     if (!editor) return;
@@ -61,7 +61,7 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
           >
             h5
           </button>
-          <button onClick={() => setIsOpenModal(true)}>image</button>
+          <button onClick={() => modalRef.current?.open()}>image</button>
           <button
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().chain().focus().undo().run()}
@@ -88,15 +88,13 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
         </div>
       </div>
 
-      {isOpenModal && (
-        <Modal closeModal={closeModal}>
-          <Gallery
-            closeModal={closeModal}
-            multiple
-            setImageUrl={(images) => handleAddImage(images)}
-          />
-        </Modal>
-      )}
+      <Modal ref={modalRef}>
+        <Gallery
+          closeModal={closeModal}
+          multiple
+          setImageUrl={(images) => handleAddImage(images)}
+        />
+      </Modal>
     </>
   );
 }

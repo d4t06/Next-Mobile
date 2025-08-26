@@ -1,5 +1,5 @@
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
-import Button from "@/components/ui/Button";
+// import Button from "@/components/ui/Button";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
@@ -15,12 +15,12 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <p className="text-[22px]">Hi!, {session.user.username}</p>
-
+      <p className="text-lg">Hi!, {session.user.username}</p>
+{/*
       <p>Token: {session.token}</p>
       <p>Refresh: {session.refreshToken}</p>
-
-      <Button>Update</Button>
+*/}
+      {/*<Button>Update</Button>*/}
     </>
   );
 }

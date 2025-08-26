@@ -50,7 +50,7 @@ export default function useGalleryAction() {
             `${IMAGE_URL}/${encodeURIComponent(props.image.public_id)}`,
           );
 
-          const newImages = images.filter((image) => image.public_id !== image.public_id);
+          const newImages = images.filter((image) => image.public_id !== props.image.public_id);
           setImages(newImages);
 
           setSuccessToast("Delete image succesful");

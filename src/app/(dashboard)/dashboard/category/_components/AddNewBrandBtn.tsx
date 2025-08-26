@@ -3,7 +3,7 @@ import useBrandAction from "../_hooks/useBrandAction";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { generateId } from "@/utils/appHelper";
 import Button from "@/components/ui/Button";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import  {Modal, ModalRef } from "@/components/modal";
 import AddItem from "@/components/modal/AddItem";
 
 type Props = {
@@ -26,7 +26,7 @@ export default function AddNewBrandBtn({ currentCategory }: Props) {
         <span className="hidden sm:block">Add new brand</span>
       </Button>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         <AddItem
           v-if="props.currentCategory"
           variant="input"
@@ -46,7 +46,7 @@ export default function AddNewBrandBtn({ currentCategory }: Props) {
           loading={isFetching}
           title="Add new brand"
         />
-      </AnimateModal>
+      </Modal>
     </>
   );
 }

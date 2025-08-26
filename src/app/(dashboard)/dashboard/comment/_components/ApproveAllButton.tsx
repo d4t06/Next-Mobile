@@ -1,61 +1,61 @@
 "use client";
 
-import Modal from "@/components/modal";
-import ConfirmModal from "@/components/modal/Confirm";
-import Button from "@/components/ui/Button";
-import useCommentAction from "@/hooks/useCommentAction";
-import { CheckIcon } from "@heroicons/react/16/solid";
-import { useState } from "react";
+// import ConfirmModal from "@/components/modal/Confirm";
+// import Button from "@/components/ui/Button";
+// import { CheckIcon } from "@heroicons/react/16/solid";
+// import { useState } from "react";
 
 type Props = {
   comments: ProductComment[];
 };
 
-export default function ApproveAllButton({ comments }: Props) {
-  const [isOpenModal, setIsOpenModal] = useState(false);
+export default function ApproveAllButton({}: Props) {
+  // const [isOpenModal, setIsOpenModal] = useState(false);
 
-  const { action, isFetching } = useCommentAction();
+  // const { action, isFetching } = useCommentAction();
 
-  const closeModal = () => setIsOpenModal(false);
+  // const closeModal = () => setIsOpenModal(false);
 
-  const handleApproveAll = async () => {
-    const productIdList: number[] = [];
+  // const handleApproveAll = async () => {
+  //   const productIdList: number[] = [];
 
-    comments.forEach((c) => {
-      if (!productIdList.includes(c.product_id)) productIdList.push(c.product_id);
-    });
+  //   comments.forEach((c) => {
+  //     if (!productIdList.includes(c.product_id)) productIdList.push(c.product_id);
+  //   });
 
-    await action({
-      variant: "approve",
-      id_list: comments.map((c) => c.id),
-      product_id_list: productIdList,
-    });
+  //   await action({
+  //     variant: "approve",
+  //     id_list: comments.map((c) => c.id),
+  //     product_id_list: productIdList,
+  //   });
 
-    closeModal();
-  };
+  //   closeModal();
+  // };
 
-  return (
-    <>
-      <Button
-        border={"clear"}
-        onClick={() => setIsOpenModal(true)}
-        className="space-x-1 p-1 sm:px-2"
-        size={"clear"}
-      >
-        <CheckIcon className="w-6" />
-        <span className="hidden sm:block">Approve All</span>
-      </Button>
+  // return (
+  //   <>
+  //     <Button
+  //       border={"clear"}
+  //       onClick={() => setIsOpenModal(true)}
+  //       className="space-x-1 p-1 sm:px-2"
+  //       size={"clear"}
+  //     >
+  //       <CheckIcon className="w-6" />
+  //       <span className="hidden sm:block">Approve All</span>
+  //     </Button>
 
-      {isOpenModal && (
-        <Modal closeModal={closeModal}>
-          <ConfirmModal
-            label="Approve all?"
-            callback={handleApproveAll}
-            closeModal={closeModal}
-            loading={isFetching}
-          />
-        </Modal>
-      )}
-    </>
-  );
+  //     {isOpenModal && (
+  //       <Modal closeModal={closeModal}>
+  //         <ConfirmModal
+  //           label="Approve all?"
+  //           callback={handleApproveAll}
+  //           closeModal={closeModal}
+  //           loading={isFetching}
+  //         />
+  //       </Modal>
+  //     )}
+  //   </>
+  // );
+
+  return <></>;
 }

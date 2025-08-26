@@ -9,8 +9,8 @@ export default function ModalHeader({
    closeModal: () => void;
 }) {
    return (
-      <div className="flex justify-between mb-[15px]">
-         <h1 className="text-[22px] text-[#333] font-[500] mr-[10px] line-clamp-1">
+      <div className="flex justify-between mb-5">
+         <h1 className="text-xl font-bold mr-2 line-clamp-1">
             {title}
          </h1>
          <Button

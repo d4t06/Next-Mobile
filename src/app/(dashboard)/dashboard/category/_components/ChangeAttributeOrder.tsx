@@ -1,4 +1,4 @@
-import AnimateModal, { ModalRef, ModalWrapper } from "@/components/modal/AnimateModal";
+import { Modal, ModalRef, ModalContentWrapper } from "@/components/modal";
 import { useEffect, useMemo, useRef, useState } from "react";
 import useCategoryAction from "../_hooks/useCategoryAction";
 import Button from "@/components/ui/Button";
@@ -65,9 +65,9 @@ export default function ChangeAttributeOrder({ currentCategory }: Props) {
         <span>Change order</span>
       </Button>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         {isOpenModal && (
-          <ModalWrapper>
+          <ModalContentWrapper>
             <ModalHeader closeModal={closeModal} title="Change order" />
 
             <div className="flex flex-col flex-grow overflow-auto space-y-2">
@@ -77,7 +77,7 @@ export default function ChangeAttributeOrder({ currentCategory }: Props) {
                     key={index}
                     onClick={() => handleChangeOrder(index)}
                     data-id={att.id}
-                    className={`attribute-item p-1.5 ${currentIndex === index ? "bg-red-300" : "hover:bg-red-300 bg-[#f1f1f1]"}  border-[2px] border-[#ccc] rounded-md`}
+                    className={`attribute-item p-1.5 ${currentIndex === index ? "bg-red-500" : "bg-white dark:bg-slate-700"} border-2 border-[--a-5-cl] rounded-md`}
                   >
                     {att.attribute_name}
                   </button>
@@ -87,22 +87,24 @@ export default function ChangeAttributeOrder({ currentCategory }: Props) {
               )}
             </div>
 
-            <Button
-              className="mt-3"
-              loading={isFetching}
-              onClick={() => {
-                actions({
-                  type: "Edit",
-                  category: { attribute_order: localAttributeOrder.join("_") },
-                  id: currentCategory!.id,
-                });
-              }}
-            >
-              Save
-            </Button>
-          </ModalWrapper>
+            <p className="text-right">
+              <Button
+                className="mt-5"
+                loading={isFetching}
+                onClick={() => {
+                  actions({
+                    type: "Edit",
+                    category: { attribute_order: localAttributeOrder.join("_") },
+                    id: currentCategory!.id,
+                  });
+                }}
+              >
+                Save
+              </Button>
+            </p>
+          </ModalContentWrapper>
         )}
-      </AnimateModal>
+      </Modal>
     </>
   );
 }

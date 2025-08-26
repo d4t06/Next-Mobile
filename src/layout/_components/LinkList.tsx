@@ -14,7 +14,7 @@ export default function LinkList({ categories }: Props) {
       <>
          <div className="flex items-center -ml-3">
             {categories.map((category, index) => (
-               <LinkItem className="pl-3 font-[500]" key={index} href={"/" + category.id}>
+               <LinkItem className="pl-3 font-bold" key={index} href={"/" + category.id}>
                   {category.category_name}
                </LinkItem>
             ))}

@@ -1,24 +1,26 @@
 import { sleep } from "@/utils/appHelper";
 
 export default async function getAllComment({
-  approved,
+  approved = false,
   page,
   productId,
-  size,
+  size = 6,
 }: {
   page?: number;
   productId?: number;
   approved?: boolean;
   size?: number;
 }) {
-  let params = `?page=${page || 1}`;
+  let params = `?page=${page}`;
 
   if (productId) params += `&product_id=${productId}`;
   // default is true
-  if (typeof approved === "boolean" && !approved) params += `&approved=0`;
+  if (typeof approved === "boolean") params += approved ? `&approved=1` : `&approved=0`;
   if (size) params += `&size=${size}`;
 
   if (process.env.NODE_ENV === "development") await sleep(600);
+
+  console.log(params);
 
   const res = await fetch(
     `${
@@ -29,7 +31,7 @@ export default async function getAllComment({
         tags: productId ? [`comments-${productId}`] : ["comments"],
         revalidate: 60 * 60,
       },
-    }
+    },
   );
 
   return res.json() as Promise<ProductCommentResponse>;

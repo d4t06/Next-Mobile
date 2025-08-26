@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import AuthProvider from "@/stores/SessionContext";
 import "./globals.css";
 import "./styles.scss";
+import "./theme.css";
 import CompareProvider from "@/stores/CompareContext";
 import defaultTheme from "tailwindcss/defaultTheme";
 
@@ -24,6 +25,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body
+        className="transition-colors bg-white dark:bg-slate-800 dark:text-white"
         style={{
           fontFamily:
             _font.style.fontFamily + "," + defaultTheme.fontFamily.sans.join(","),

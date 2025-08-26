@@ -13,7 +13,7 @@ export default async function SpecificationSection({ product, productCategory }:
       : [];
 
    const classes = {
-      proName: "sm:text-xl text-center my-4 font-[500] text-[#333] leading-[1]",
+      proName: "sm:text-xl text-center my-4 font-bold leading-[1]",
       detailLeft: "w-full sm:w-1/3 px-2 flex-shrink-0",
       td: "text-sm px-3 py-1",
    };
@@ -27,7 +27,7 @@ export default async function SpecificationSection({ product, productCategory }:
                   product.image_url ||
                   "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
                }
-               className="max-h-[200px] w-auto mx-auto mt-3"
+               className="max-h-[200px] rounded-lg w-auto mx-auto mt-3"
                width={200}
                height={200}
                alt=""
@@ -36,7 +36,7 @@ export default async function SpecificationSection({ product, productCategory }:
 
             <h1 className={classes.proName}>{product.product_name}</h1>
 
-            <table className="table">
+            <table className="table font-semibold">
                <tbody>
                   {attributeOrderArray.map((id, index) => {
                      const categoryAttribute = productCategory.attributes.find(

@@ -1,8 +1,7 @@
-'use client'
+"use client";
 import { useMemo, useState } from "react";
 import AddNewBrandBtn from "./AddNewBrandBtn";
 import BrandItem from "./BrandItem";
-import { inputClasses } from "@/components/ui/MyInput";
 
 type Props = {
   categories: Category[];
@@ -11,7 +10,7 @@ type Props = {
 export type BrandListModal = "add" | "edit-name" | "image" | "delete";
 
 const classes = {
-  label: "font-[500] text-[#333]",
+  label: "font-bold",
 };
 
 export default function BrandList({ categories }: Props) {
@@ -30,7 +29,7 @@ export default function BrandList({ categories }: Props) {
           <div className="bg-[#ccc] rounded-[12px]">
             <select
               disabled={!categories.length}
-              className={`${inputClasses.input} min-w-[100px]`}
+              className={`my-input bg-slate-700 min-w-[100px]`}
               name="category"
               onChange={(e) => setCurCategoryIndex(+e.target.value)}
             >

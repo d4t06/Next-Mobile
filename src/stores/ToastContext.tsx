@@ -1,65 +1,43 @@
-'use client'
-
+"use client";
 
 // init state
-import { Dispatch, ReactNode, SetStateAction, createContext, useContext, useState } from "react";
+import { ReactNode, createContext, useContext, useState } from "react";
 import { nanoid } from "nanoid";
 
-type StateType = {
-   toasts: Toast[];
-};
-const initialState: StateType = {
-   toasts: [],
-};
+function useToast() {
+  const [toasts, setToasts] = useState<Toast[]>([]);
+  const [isDark, setIsDark] = useState<boolean>();
 
-// create context
-// we expect {
-//    state: {...props},
-//    setState
-//    ...
-// }
-type ContextType = {
-   state: StateType;
-   setToasts: Dispatch<SetStateAction<Toast[]>>;
-   setErrorToast: (message?: string) => void;
-   setSuccessToast: (message?: string) => void;
-};
+  const setErrorToast = (message: string = "Somethings went wrong") =>
+    setToasts((t) => [...t, { title: "error", id: nanoid(4), desc: message }]);
 
-const initialContext: ContextType = {
-   state: initialState,
-   setToasts: () => {},
-   setErrorToast: () => {},
-   setSuccessToast: () => {},
-};
+  const setSuccessToast = (message: string = "Somethings went successful") =>
+    setToasts((t) => [...t, { title: "success", id: nanoid(4), desc: `${message}` }]);
 
-const ToastContext = createContext(initialContext);
+  return {
+    toasts,
+    isDark,
+    setIsDark,
+    setToasts,
+    setErrorToast,
+    setSuccessToast,
+  };
+}
+
+type ContextType = ReturnType<typeof useToast>;
+
+const ToastContext = createContext<ContextType | null>(null);
 
 // define context provider
 const ToastProvider = ({ children }: { children: ReactNode }) => {
-   const [toasts, setToasts] = useState<Toast[]>([]);
-
-   const setErrorToast = (message: string = "Somethings went wrong") =>
-      setToasts((t) => [...t, { title: "error", id: nanoid(4), desc: message }]);
-
-   const setSuccessToast = (message: string = "Somethings went successful") =>
-      setToasts((t) => [...t, { title: "success", id: nanoid(4), desc: `${message}` }]);
-
-   return (
-      <ToastContext.Provider value={{ state: { toasts }, setToasts, setErrorToast, setSuccessToast }}>
-         {children}
-      </ToastContext.Provider>
-   );
+  return <ToastContext.Provider value={useToast()}>{children}</ToastContext.Provider>;
 };
 
 // define useToast Hook
-const useToast = () => {
-   const {
-      state: { toasts },
-      setToasts,
-      setErrorToast,
-      setSuccessToast,
-   } = useContext(ToastContext);
-   return { toasts, setToasts, setErrorToast, setSuccessToast };
+const useToastContext = () => {
+  const ct = useContext(ToastContext);
+  if (!ct) throw new Error("ToastProvider not provided");
+  return ct;
 };
 
 export default ToastProvider;

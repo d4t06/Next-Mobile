@@ -96,19 +96,21 @@ function Modal({ children }: Props, ref: Ref<ModalRef>) {
 
 export default forwardRef(Modal);
 
-type WrapperProps = {
-	className?: string;
-	children: ReactNode;
-	style?: string;
-};
-
-export function ModalWrapper({
+export function ModalContentWrapper({
 	children,
+	noStyle,
+	disable,
 	className = "w-[400px]",
-	style = "rounded-lg bg-white overflow-hidden p-3",
-}: WrapperProps) {
+}: {
+	disable?: boolean;
+	children: ReactNode;
+	className?: string;
+	noStyle?: boolean;
+}) {
 	return (
-		<div className={` flex flex-col max-h-[80vh] max-w-[90vw] ${style} ${className}`}>
+		<div
+			className={`relative overflow-hidden max-h-[80vh] max-w-[90vw] flex flex-col  ${disable ? "disabled" : ""} ${!noStyle ? "p-3 md:p-4 rounded-xl" : ""}  bg-white dark:bg-slate-800 ${className}`}
+		>
 			{children}
 		</div>
 	);

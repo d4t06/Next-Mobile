@@ -93,7 +93,7 @@ export default function CompareList() {
                </div>
                <button
                   onClick={() => setIsOpen(false)}
-                  className="flex w-full justify-center py-[6px] mt-[14px] hover:bg-[#f1f1f1]"
+                  className="flex w-full justify-center py-[6px] mt-[14px] hover:bg-[--a-5-cl]"
                >
                   <ChevronDownIcon className="w-[20px]" />
                </button>

@@ -1,5 +1,5 @@
+import { ModalContentWrapper } from ".";
 import Button from "../ui/Button";
-import { ModalWrapper } from "./AnimateModal";
 
 type Props = {
   callback: () => void;
@@ -21,7 +21,7 @@ export default function ConfirmModal({
   className,
 }: Props) {
   return (
-    <ModalWrapper>
+    <ModalContentWrapper>
       <h1 className="text-[20px] font-semibold">{label || "Wait a minute"}</h1>
       {desc && <p className=" text-[16px] font-semibold text-red-500">{desc}</p>}
 
@@ -33,6 +33,6 @@ export default function ConfirmModal({
           {buttonLabel || "Yes please"}
         </Button>
       </div>
-    </ModalWrapper>
+    </ModalContentWrapper>
   );
 }

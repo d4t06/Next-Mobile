@@ -1,5 +1,5 @@
 import { runRevalidateTag } from "@/app/actions";
-import { ModalRef } from "@/components/modal/AnimateModal";
+import { ModalRef } from "@/components/modal";
 import useFetch from "@/hooks/useFetch";
 import { useToast } from "@/stores/ToastContext";
 import { useRouter } from "next/navigation";

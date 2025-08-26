@@ -1,13 +1,13 @@
 "use client";
 
 import { useMemo, useRef, useState } from "react";
-import MyInput, { inputClasses } from "./ui/MyInput";
+import MyInput from "./ui/MyInput";
 import { generateId, initProductObject } from "@/utils/appHelper";
 import Button from "@/components/ui/Button";
 import Gallery from "./Gallery";
 import useProductInfoAction from "@/hooks/useProductInfoAction";
 import ModalHeader from "./modal/ModalHeader";
-import AnimateModal, { ModalRef, ModalWrapper } from "./modal/AnimateModal";
+import Modal, { ModalRef, ModalContentWrapper } from "./modal/Modal";
 import MyImage from "./ui/MyImage";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 
@@ -120,19 +120,23 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
 
   return (
     <>
-      <ModalWrapper className="w-[800px] h-[500px]">
+      <ModalContentWrapper className="w-[800px] h-[500px]">
         <ModalHeader closeModal={closeModal} title={title} />
         <div className="flex-grow overflow-x-hidden">
           <div className="sm:flex sm:flex-row mx-[-8px] mt-[14px] pb-[30px]">
             <div className="w-full sm:w-2/5 px-[8px] flex-shrink-0">
               <MyImage
-                className="mx-auto"
+                className="mx-auto rounded-lg"
                 src={productData.image_url}
                 height={200}
                 width={200}
               />
 
-              <Button onClick={() => modalRef.current?.open()} colors={"second"}>
+              <Button
+                onClick={() => modalRef.current?.open()}
+                className="mt-3"
+                colors={"second"}
+              >
                 <PhotoIcon className="w-6" />
                 <span>Change image</span>
               </Button>
@@ -161,7 +165,7 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
                     onChange={(e) =>
                       e.target.value ? handleInput("category_id", +e.target.value) : {}
                     }
-                    className={inputClasses.input}
+                    className={"my-input"}
                   >
                     <option value={undefined}>- - -</option>
                     {!!categories.length &&
@@ -180,7 +184,7 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
                     onChange={(e) =>
                       e.target.value ? handleInput("brand_id", +e.target.value) : {}
                     }
-                    className={inputClasses.input}
+                    className={"my-input"}
                   >
                     <option value={undefined}>- - -</option>
                     {!!brandByCategory.length &&
@@ -206,16 +210,16 @@ export default function AddProductForm({ closeModal, categories, ...props }: Pro
             Save
           </Button>
         </div>
-      </ModalWrapper>
+      </ModalContentWrapper>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         <Gallery
           height={200}
           width={200}
           closeModal={() => modalRef.current?.close()}
           setImageUrl={(images) => handleInput("image_url", images[0].image_url)}
         />
-      </AnimateModal>
+      </Modal>
     </>
   );
 }

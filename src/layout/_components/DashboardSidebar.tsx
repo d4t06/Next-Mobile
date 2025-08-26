@@ -1,5 +1,4 @@
 "use client";
-import logo from "@/assets/logo.png";
 import Button from "@/components/ui/Button";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import {
@@ -18,13 +17,13 @@ export default function DashBoardSidebar() {
 
   const classes = {
     container:
-      "bg-[#fff] border-r border-black/15 transition-[width] max-h-[100vh] relative flex-shrink-0 w-[50px] sm:w-[70px]",
+      "bg-white dark:bg-slate-700 border-r border-[--a-5-cl] transition-[width] max-h-[100vh] relative flex-shrink-0 w-[50px] sm:w-[70px]",
     containerExpand: "!w-[180px] group expand",
     head: "h-[80px] flex items-center justify-center",
     logoText: "text-[22px] font-[500] whitespace-nowrap tracking-[-1px]",
     logoImage: "max-w-[50px] p-[4px]",
-    itemActive: "text-[#cd1818] bg-[--a-5-cl]",
-    linkList: `[&_svg]:w-6 [&_svg]:flex-shrink-0 [&_a] [&_a]:flex [&_a]:space-x-2 [&_a]:items-center [&_a]:justify-center [&_a]:p-2 hover:[&_a]:bg-[--a-5-cl] group-[.expand]:[&_a]:justify-start [&_span]:whitespace-nowrap [&_span]:hidden group-[.expand]:[&_span]:block`,
+    itemActive: "bg-[--a-10-cl]",
+    linkList: `[&_svg]:w-6 [&_svg]:flex-shrink-0 [&_a]:font-bold [&_a]:flex [&_a]:space-x-2 [&_a]:items-center [&_a]:justify-center [&_a]:p-2 hover:[&_a]:bg-[--a-5-cl] group-[.expand]:[&_a]:justify-start [&_span]:whitespace-nowrap [&_span]:hidden group-[.expand]:[&_span]:block`,
   };
 
   const getActive = (path: string) => {
@@ -36,9 +35,9 @@ export default function DashBoardSidebar() {
       <div className={classes.head}>
         <Link
           href={"/dashboard"}
-          className="bg-[--a-5-cl] flex-shrink-0 w-10 sm:w-12 flex h-10 sm:h-12 rounded-full justify-center items-center"
+          className="bg-[#cd1818] flex-shrink-0 w-10 flex h-10 rounded-md justify-center items-center"
         >
-          <span className="text-[#333] text-xl font-medium translate-y-[1px]">:D</span>
+          <span className="text-white text-2xl font-bold translate-y-[1px]">:D</span>
         </Link>
 
         {expand && <span className="font-medium ml-2">Dspec</span>}
@@ -59,7 +58,7 @@ export default function DashBoardSidebar() {
           <span>Comment</span>
         </Link>
 
-        <Link target="blank" href="/">
+        <Link target="_blank" href="/">
           <BuildingStorefrontIcon />
           <span>My shop</span>
         </Link>

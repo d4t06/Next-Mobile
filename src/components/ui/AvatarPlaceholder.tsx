@@ -1,16 +1,17 @@
 import { generateHSL } from "@/utils/generateHsl";
 
 type Props = {
-   name: string;
+  name: string;
+  className?: string;
 };
 
-export default function Avatar({ name }: Props) {
-   return (
-      <div
-         className="w-[44px] h-[44px] rounded-full flex items-center justify-center"
-         style={{ backgroundColor: generateHSL(name) }}
-      >
-         <span className="text-[#fff] text-xl">{name.charAt(0).toUpperCase()}</span>
-      </div>
-   );
+export default function Avatar({ name, className = "w-[44px] h-[44px]" }: Props) {
+  return (
+    <div
+      className={`rounded-full flex items-center justify-center ${className}`}
+      style={{ backgroundColor: generateHSL(name) }}
+    >
+      <span className="text-xl text-white font-bold">{name.charAt(0).toUpperCase()}</span>
+    </div>
+  );
 }

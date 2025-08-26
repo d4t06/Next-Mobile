@@ -1,6 +1,6 @@
 "use client";
 
-import AnimateModal, { ModalRef, ModalWrapper } from "@/components/modal/AnimateModal";
+import { Modal, ModalRef, ModalContentWrapper } from "@/components/modal";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
 import useDescriptionAction from "../_hooks/useDescriptionAction";
@@ -27,8 +27,8 @@ export default function EditDescriptionBtn({ product }: Props) {
         <Cog6ToothIcon className="w-6" />
       </Button>
 
-      <AnimateModal ref={modalRef}>
-        <ModalWrapper className="w-[700px]" style="bg-white rounded-lg overflow-hidden">
+      <Modal ref={modalRef}>
+        <ModalContentWrapper className="w-[700px] rounded-lg overflow-hidden" noStyle>
           <MyEditor
             isLoading={isFetching}
             submit={(v) =>
@@ -39,8 +39,8 @@ export default function EditDescriptionBtn({ product }: Props) {
             }
             content={product.description.content}
           />
-        </ModalWrapper>
-      </AnimateModal>
+        </ModalContentWrapper>
+      </Modal>
     </>
   );
 }

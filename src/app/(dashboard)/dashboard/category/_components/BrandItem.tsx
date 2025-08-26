@@ -5,7 +5,7 @@ import { useRef, useState } from "react";
 import { generateId } from "@/utils/appHelper";
 
 import { PencilSquareIcon, PhotoIcon, TrashIcon } from "@heroicons/react/24/outline";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import { Modal, ModalRef } from "@/components/modal";
 import ItemRightCta from "@/components/ui/ItemRightCta";
 import ConfirmModal from "@/components/modal/Confirm";
 import AddItem from "@/components/modal/AddItem";
@@ -32,8 +32,8 @@ export default function BrandItem({ brand, index }: Props) {
 
   return (
     <>
-      <div className="border-[2px] border-[#e1e1e1] rounded-lg p-2 mt-2 ml-2">
-        <ItemRightCta className="bg-none border-none">
+      <div className="border-[2px] border-[--a-5-cl] rounded-lg p-2 mt-2 ml-2">
+        <ItemRightCta className="">
           <span>{brand.brand_name}</span>
 
           <div>
@@ -48,7 +48,7 @@ export default function BrandItem({ brand, index }: Props) {
             </button>
           </div>
 
-          <AnimateModal ref={modalRef}>
+          <Modal ref={modalRef}>
             {modal === "delete" && (
               <ConfirmModal
                 label="Delete brand"
@@ -94,7 +94,7 @@ export default function BrandItem({ brand, index }: Props) {
                 }
               />
             )}
-          </AnimateModal>
+          </Modal>
         </ItemRightCta>
 
         <MyImage

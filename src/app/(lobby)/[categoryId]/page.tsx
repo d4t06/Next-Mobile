@@ -62,7 +62,7 @@ async function ProductList({
 
   const classes = {
     item: "flex mt-[10px] group",
-    aItem: "text-[#333] font-[500] ml-[10px] group-hover:text-[#cd1818]",
+    aItem: "font-bold ml-2 group-hover:text-[#cd1818]",
     button: "",
   };
 

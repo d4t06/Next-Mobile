@@ -1,0 +1,16 @@
+:root {
+  --primary-cl: #cd1818;
+
+  --text-cl: #333;
+  --a-5-cl: rgba(0, 0, 0, 0.05);
+  --a-10-cl: rgba(0, 0, 0, 0.1);
+  --a-5-border: 1px solid var(--a-5-cl);
+
+  --second-btn-cl: #ccc;
+}
+
+.dark {
+  --a-5-cl: rgba(255, 255, 255, 0.05);
+  --a-10-cl: rgba(255, 255, 255, 0.1);
+  --second-btn-cl: #1d2430;
+}

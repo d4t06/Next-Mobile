@@ -4,7 +4,7 @@ import { useRef } from "react";
 import AddProductForm from "@/components/AddProductForm";
 import Button from "@/components/ui/Button";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import { Modal, ModalRef } from "@/components/modal";
 
 type Props = {
   product: Product;
@@ -28,14 +28,14 @@ export default function ProductInfo({ product, categories }: Props) {
         </Button>
       </div>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         <AddProductForm
           closeModal={() => modalRef.current?.close()}
           categories={categories}
           product={product}
           type="Edit"
         />
-      </AnimateModal>
+      </Modal>
     </>
   );
 }

@@ -56,16 +56,16 @@ export const nextAuthOptions: NextAuthOptions = {
     // user is the response from login method
     // session is payload when call update()
     async jwt({ token, user: loginPayload, trigger, session }) {
-      console.log(
-        ">>> jwt, login payload:",
-        loginPayload,
-        "\ntoken: ",
-        token,
-        "\nsession: ",
-        session,
-        "\ntrigger: ",
-        trigger,
-      );
+      // console.log(
+      //   ">>> jwt, login payload:",
+      //   loginPayload,
+      //   "\ntoken: ",
+      //   token,
+      //   "\nsession: ",
+      //   session,
+      //   "\ntrigger: ",
+      //   trigger,
+      // );
 
       switch (trigger) {
         case "signIn":
@@ -89,16 +89,16 @@ export const nextAuthOptions: NextAuthOptions = {
 
     // for client side
     async session({ token, session, newSession, trigger }) {
-      console.log(
-        ">>> session, token: ",
-        token,
-        "\nsession: ",
-        session,
-        "\nnew session: ",
-        newSession,
-        "\ntrigger: ",
-        trigger,
-      );
+      // console.log(
+      //   ">>> session, token: ",
+      //   token,
+      //   "\nsession: ",
+      //   session,
+      //   "\nnew session: ",
+      //   newSession,
+      //   "\ntrigger: ",
+      //   trigger,
+      // );
 
       session.user.username = token.user.username;
       session.user.role = token.user.role;

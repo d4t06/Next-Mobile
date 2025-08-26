@@ -25,9 +25,9 @@ export default function Specification({ categories, product }: Props) {
 
    return (
       <>
-         <table className="w-full overflow-hidden rounded-[8px] ">
-            <thead className="bg-[#cd1818]  text-white">
-               <tr className="text-left [&_th]:py-[4px] [&_th]:font-[500] [&_th]:px-[8px] sm:[&_th]:py-[8px] sm:[&_th]:px-[16px]">
+         <table className="w-full overflow-hidden rounded-lg ">
+            <thead className="bg-[#cd1818] text-white ">
+               <tr className="text-left font-bold [&_th]:py-1 [&_th]:px-2 sm:[&_th]:py-2 sm:[&_th]:px-4">
                   <th>Name</th>
                   <th>Value</th>
                   <th></th>

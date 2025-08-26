@@ -2,7 +2,7 @@
 
 import ModalHeader from "@/components/modal/ModalHeader";
 import MyImage from "@/components/ui/MyImage";
-import MyInput, { inputClasses } from "@/components/ui/MyInput";
+import MyInput from "@/components/ui/MyInput";
 import useDebounce from "@/hooks/useDebounce";
 import useSearchProduct from "@/hooks/useSearchProduct";
 import { ArrowPathIcon } from "@heroicons/react/24/outline";

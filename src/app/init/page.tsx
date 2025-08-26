@@ -52,7 +52,7 @@ export default function Init() {
          case 0:
             return (
                <>
-                  <h1 className="text-[40px] font-[500] text-[#333]">Welcome</h1>
+                  <h1 className="text-[40px] font-bold">Welcome</h1>
 
                   <Button
                      onClick={next}
@@ -125,7 +125,7 @@ export default function Init() {
          case 2:
             return (
                <>
-                  <h1 className="text-[40px] font-[500] text-[#333]">Finish</h1>
+                  <h1 className="text-[40px] font-bold">Finish</h1>
                   <Button
                      border={"clear"}
                      className={"!absolute bottom-[60px]"}

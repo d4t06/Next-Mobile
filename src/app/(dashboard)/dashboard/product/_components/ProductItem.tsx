@@ -16,14 +16,14 @@ export default function ProductItem({ product }: Props) {
         <Image
           alt=""
           className="rounded-[6px]"
-          width={70}
-          height={70}
+          width={60}
+          height={60}
           src={
             product.image_url ||
             "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
           }
         />
-        <p className="font-[500] ml-[10px] line-clamp-2">{product.product_name}</p>
+        <p className="font-bold ml-2 line-clamp-2">{product.product_name}</p>
       </Link>
     </>
   );

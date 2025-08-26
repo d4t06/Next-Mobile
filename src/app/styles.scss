@@ -1,84 +1,83 @@
 .button {
-   &:active {
+  &:active {
+    &::before {
+      box-shadow: none !important;
+    }
+  }
+
+  &.variant {
+    &--primary {
+      border-radius: 8px;
+
+      &:active {
+        transform: translateY(2px);
+      }
       &::before {
-         box-shadow: none !important;
+        content: "";
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        position: absolute;
+        z-index: -1;
+        border-radius: 8px;
       }
-   }
+    }
+  }
 
-   &.variant {
-      &--primary {
-         border-radius: 8px;
-
-         &:active {
-            transform: translateY(2px);
-         }
-         &::before {
-            content: "";
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            position: absolute;
-            z-index: -1;
-            border-radius: 8px;
-         }
+  &.color {
+    &--primary {
+      &::before {
+        border-color: #a00000;
+        box-shadow: 0 2px 0 #a00000;
       }
-   }
+    }
 
-   &.color {
-      &--primary {
-         &::before {
-            border-color: #a00000;
-            box-shadow: 0 2px 0 #a00000;
-         }
+    &--second {
+      &::before {
+        border-color: var(--second-btn-cl);
+        box-shadow: 0 2px 0 var(--second-btn-cl);
       }
+    }
 
-      &--second {
-         &::before {
-            border-color: #ccc;
-            box-shadow: 0 2px 0 #ccc;
-         }
+    &--third {
+      &::before {
+        border-color: #a00000;
+        box-shadow: 0 2px 0 #a00000;
       }
-
-      &--third {
-         &::before {
-            border-color: #a00000;
-            box-shadow: 0 2px 0 #a00000;
-         }
-      }
-   }
+    }
+  }
 }
 
 // product spec table
 .table {
-   width: 100%;
-   tr {
+  width: 100%;
+  tr {
+    td {
+      font-size: 14px;
+      // color: #3f3f3f;
+      padding: 12px 8px;
+      white-space: pre-line;
+
+      &:first-child {
+        border-radius: 8px 0 0 8px;
+      }
+
+      &:last-child {
+        border-radius: 0 8px 8px 0;
+      }
+    }
+
+    &:nth-child(even) {
       td {
-         font-size: 14px;
-         color: #3f3f3f;
-         padding: 12px 8px;
-         white-space: pre-line;
-
-         &:first-child {
-            border-radius: 8px 0 0 8px;
-            color: #808080;
-         }
-
-         &:last-child {
-            border-radius: 0 8px 8px 0;
-         }
+        line-height: 2;
+        background-color: var(--a-5-cl);
       }
-
-      &:nth-child(even) {
-         td {
-            line-height: 2;
-            background-color: #f1f1f1;
-         }
-      }
-   }
+    }
+  }
 }
 
 // menu btn on mobile
 .menu-btn {
-   transform: translateY(-50%);
+  transform: translateY(-50%);
 }

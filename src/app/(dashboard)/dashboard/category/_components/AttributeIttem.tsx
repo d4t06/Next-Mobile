@@ -3,7 +3,7 @@ import useAttributeAction from "../_hooks/useAttributeAction";
 import { useRef, useState } from "react";
 import { generateId } from "@/utils/appHelper";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import { Modal, ModalRef } from "@/components/modal";
 import ItemRightCta from "@/components/ui/ItemRightCta";
 import ConfirmModal from "@/components/modal/Confirm";
 import AddItem from "@/components/modal/AddItem";
@@ -40,7 +40,7 @@ export default function AttributeItem({ attribute, index }: Props) {
           </button>
         </div>
 
-        <AnimateModal ref={modalRef}>
+        <Modal ref={modalRef}>
           {modal === "delete" && index !== undefined && (
             <ConfirmModal
               loading={isFetching}
@@ -76,7 +76,7 @@ export default function AttributeItem({ attribute, index }: Props) {
               }
             />
           )}
-        </AnimateModal>
+        </Modal>
       </ItemRightCta>
     </>
   );

@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { generateId } from "@/utils/appHelper";
 import useAttributeAction from "../_hooks/useAttributeAction";
-import AnimateModal, { ModalRef } from "@/components/modal/AnimateModal";
+import {Modal, ModalRef } from "@/components/modal";
 import Button from "@/components/ui/Button";
 import AddItem from "@/components/modal/AddItem";
 
@@ -26,7 +26,7 @@ export default function AddNewAttributeBtn({ currentCategory }: Props) {
         <span className="hidden sm:block">Add new brand</span>
       </Button>
 
-      <AnimateModal ref={modalRef}>
+      <Modal ref={modalRef}>
         <AddItem
           v-if="props.currentCategory"
           variant="input"
@@ -46,7 +46,7 @@ export default function AddNewAttributeBtn({ currentCategory }: Props) {
           loading={isFetching}
           title="Add new attribute"
         />
-      </AnimateModal>
+      </Modal>
     </>
   );
 }
