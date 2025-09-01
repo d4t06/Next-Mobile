@@ -5,24 +5,23 @@ import { usePathname } from "next/navigation";
 import { ReactNode } from "react";
 
 type Props = {
-   children: ReactNode;
-   href: string;
-   activeClass?: string;
-   className?: string;
+  children: ReactNode;
+  href: string;
+  activeClass?: string;
+  className?: string;
 };
-export default function LinkItem({ children, href, activeClass, className }: Props) {
-   const pathName = usePathname();
+export default function LinkItem({ children, href, activeClass = "", className = '' }: Props) {
+  const pathName = usePathname();
 
-   const classes = {
-      linkItem: "hover:text-yellow-500",
-   };
+  const isActive = href === pathName;
 
-   return (
-      <Link
-         className={`${classes.linkItem} ${className} `}
-         href={href}
-      >
-         {children}
-      </Link>
-   );
+
+  return (
+    <Link
+      className={`${className} ${isActive ? activeClass : ""}`}
+      href={href}
+    >
+      {children}
+    </Link>
+  );
 }

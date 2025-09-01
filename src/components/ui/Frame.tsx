@@ -17,7 +17,7 @@ export default function Frame({
 }: Props) {
    if (type === "border")
       return (
-         <div className="bg-[#e1e1e1] dark:bg-[#a1a1a1] p-1 pb-2 rounded-xl w-full h-full">
+         <div className="bg-[#e1e1e1] dark:bg-[--second-btn-cl] p-1 pb-2 rounded-xl w-full h-full">
             <div className={`bg-white dark:bg-slate-800 relative rounded-xl overflow-hidden p-2 h-full w-full ${className}`}>
                {children}
             </div>

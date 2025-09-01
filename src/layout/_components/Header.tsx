@@ -40,7 +40,7 @@ export default async function Header() {
               </div>
             </div>
           </div>
-          <div className="bg-[#cd1818] h-8 text-white items-center px-[10px] rounded-[6px] hidden gap-[10px] sm:flex">
+          <div className="bg-[#cd1818] h-8 text-white items-center rounded-md hidden sm:flex">
             <LinkList categories={categories} />
           </div>
         </div>

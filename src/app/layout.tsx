@@ -13,8 +13,12 @@ const _font = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Dspec",
-  description: "Laptop and mobile specifications",
+  title: "Dspec Vercel",
+  description:
+    "I'm Nguyen Huu Dat - a final-year Software Engineering student at Can Tho University with a strong passion for web technologies seeking an job opportunity.",
+  verification: {
+    google: "Zr0gom2JXEgWZu3IFSKVXYDqC885w4kSH7cHdQZyaqA",
+  },
 };
 
 export default async function RootLayout({

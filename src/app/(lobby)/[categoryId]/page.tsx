@@ -19,11 +19,6 @@ type Params = {
 
 export const revalidate = 86400;
 
-export function generateMetadata() {
-  return {
-    title: "Products",
-  };
-}
 
 export async function generateStaticParams() {
   const categories = await getAllCategories();
