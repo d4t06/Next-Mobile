@@ -1,7 +1,7 @@
 import { generateId, initImageObject } from "@/utils/appHelper";
 
 import { useImageContext } from "@/stores/ImageContext";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import useFetch from "./useFetch";
 
 const IMAGE_URL = "/images";
@@ -9,13 +9,13 @@ const IMAGE_URL = "/images";
 export default function useUploadImage() {
   // hooks
   const { setUploadingImages, setImages } = useImageContext();
-  const { setErrorToast } = useToast();
+  const { setErrorToast } = useToastContext();
 
   const privateRequest = useFetch();
 
   const uploadImage = async (
     files: File[],
-    props?: { width?: number; height?: number },
+    // props?: { width?: number; height?: number },
   ) => {
     try {
       // init tempImage
@@ -66,7 +66,7 @@ export default function useUploadImage() {
         const res = await privateRequest.post(IMAGE_URL, formData, {
           headers: { "Content-Type": "multipart/form-data" },
           signal: controller.signal,
-          params: props,
+          params: {width: 1000},
         });
 
         const newImage = res.data as ImageType;

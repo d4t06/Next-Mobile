@@ -79,7 +79,7 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
           <Button
             size={"clear"}
             colors={"second"}
-            className="text-[14px] px-[9px] py-[3px]"
+            className="text-sm px-2 py-1"
             onClick={handleSubmit}
             disabled={!isChange}
           >

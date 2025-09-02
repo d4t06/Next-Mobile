@@ -228,7 +228,7 @@ export default function useImageModal({ src }: Props) {
    };
 
    const handleTouchStart: TouchEventHandler<HTMLImageElement> = (e) => {
-      console.log("touch start");
+      // console.log("touch start");
 
       startDrag(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
    };
@@ -239,7 +239,7 @@ export default function useImageModal({ src }: Props) {
    };
 
    const handleTouchEnd: TouchEventHandler<HTMLImageElement> = (e) => {
-      console.log("touch end");
+      // console.log("touch end");
 
       stopDrag(e.changedTouches[0].clientX, e.changedTouches[0].clientY, true);
    };

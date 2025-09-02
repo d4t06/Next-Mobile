@@ -1,6 +1,6 @@
 import { runRevalidateTag } from "@/app/actions";
 import useFetch from "@/hooks/useFetch";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import { useState } from "react";
 
 const PRODUCT_URL = "/products";
@@ -10,7 +10,7 @@ export default function useProductInfoAction() {
 
   //    hooks
   const privateRequest = useFetch();
-  const { setErrorToast, setSuccessToast } = useToast();
+  const { setErrorToast, setSuccessToast } = useToastContext();
 
   type Add = {
     variant: "Add";

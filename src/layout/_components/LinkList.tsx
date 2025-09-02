@@ -12,7 +12,7 @@ export default function LinkList({ categories }: Props) {
 
    return (
       <>
-         <div className="flex h-full [&_a]:leading-[32px] [&_a.active]:bg-white [&_a.active]:text-[--primary-cl] dark:[&_a.active]:bg-slate-800 font-semibold [&_a]:px-3">
+         <div className="flex h-full">
             {categories.map((category, index) => (
                <LinkItem activeClass="active" key={index} href={"/" + category.id}>
                   {category.category_name}

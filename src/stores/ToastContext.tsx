@@ -41,4 +41,4 @@ const useToastContext = () => {
 };
 
 export default ToastProvider;
-export { useToast };
+export { useToastContext };

@@ -1,7 +1,7 @@
 import { runRevalidateTag } from "@/app/actions";
 import { ModalRef } from "@/components/modal";
 import useFetch from "@/hooks/useFetch";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import { useRouter } from "next/navigation";
 import { useState, type RefObject } from "react";
 
@@ -12,7 +12,7 @@ type Props = {
 };
 
 export default function useAttributeAction({ modalRef }: Props) {
-  const { setErrorToast, setSuccessToast } = useToast();
+  const { setErrorToast, setSuccessToast } = useToastContext();
 
   const $fetch = useFetch();
   // const router = useRouter();

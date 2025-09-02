@@ -20,7 +20,7 @@ export default async function getAllComment({
 
   if (process.env.NODE_ENV === "development") await sleep(600);
 
-  console.log(params);
+  // console.log(params);
 
   const res = await fetch(
     `${

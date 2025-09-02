@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { sleep } from "@/utils/appHelper";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import useFetch from "@/hooks/useFetch";
 import { runRevalidateTag } from "@/app/actions";
 
@@ -14,7 +14,7 @@ export default function useSpecAction({ productId }: Props) {
    const [isFetching, setIsFetching] = useState(false);
 
    //hooks
-   const { setSuccessToast, setErrorToast } = useToast();
+   const { setSuccessToast, setErrorToast } = useToastContext();
    const privateRequest = useFetch();
 
    type Edit = {

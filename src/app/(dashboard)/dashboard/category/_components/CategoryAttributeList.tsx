@@ -36,7 +36,7 @@ export default function CategoryAttributeList({ categories }: Props) {
           <div className="bg-[#ccc] rounded-[12px]">
             <select
               disabled={!categories.length}
-              className={`my-input bg-slate-700 min-w-[100px]`}
+              className={`my-input min-w-[100px]`}
               name="category"
               onChange={(e) => setCurCategoryIndex(+e.target.value)}
             >

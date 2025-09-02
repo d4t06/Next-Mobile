@@ -3,7 +3,7 @@
 import { runRevalidateTag } from "@/app/actions";
 import { ModalRef } from "@/components/modal";
 import useFetch from "@/hooks/useFetch";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import { generateId, sleep } from "@/utils/appHelper";
 import { useRouter } from "next/navigation";
 import { RefObject, useState } from "react";
@@ -15,7 +15,7 @@ type Props = {
 };
 
 export default function useCategoryAction(props?: Props) {
-  const { setSuccessToast, setErrorToast } = useToast();
+  const { setSuccessToast, setErrorToast } = useToastContext();
   const [isFetching, setIsFetching] = useState(false);
 
   // hooks

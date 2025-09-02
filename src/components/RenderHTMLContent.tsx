@@ -6,10 +6,18 @@ type Props = {
 };
 
 export default function HTMLConent({ content }: Props) {
-	// will return <Paragraph><span>{'Custom component'}</span></Paragraph>
 	return htmr(content, {
 		transform: {
-			img: (props) => <Image {...props} width={800} height={600} />,
+			img: (props) => (
+				// @ts-ignore
+				<Image
+					data-src={props.src}
+					alt="i don't know"
+					{...props}
+					width={1000}
+					height={700}
+				/>
+			),
 		},
 	});
 }

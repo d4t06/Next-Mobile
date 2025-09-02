@@ -8,22 +8,23 @@ type Props = {
 };
 
 export default function ProductItem({ product }: Props) {
-
-
   return (
     <>
       <Link className="flex" href={`/dashboard/product/${product.id}`}>
-        <Image
-          alt=""
-          className="rounded-[6px]"
-          width={60}
-          height={60}
-          src={
-            product.image_url ||
-            "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
-          }
-        />
-        <p className="font-bold ml-2 line-clamp-2">{product.product_name}</p>
+        <div className="w-12 h-12 rounded-md overflow-hidden">
+          <Image
+            alt=""
+            width={60}
+            height={60}
+            className="w-full h-full object-cover"
+            src={
+              product.image_url ||
+              "https://d4t06.github.io/HD-Chat/assets/search-empty-ChRLxitn.png"
+            }
+          />
+        </div>
+
+        <p className="font-semibold ml-2 line-clamp-2">{product.product_name}</p>
       </Link>
     </>
   );

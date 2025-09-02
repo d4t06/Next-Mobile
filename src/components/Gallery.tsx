@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, useRef, ReactEventHandler } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { ArrowPathIcon, ArrowUpTrayIcon } from "@heroicons/react/24/outline";
 import Button from "./ui/Button";
 import Skeleton from "./Skeleton";
@@ -44,21 +44,11 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
   };
 
   const handleSubmit = () => {
-    if (multiple) {
-      if (choseList.length) setImageUrl(choseList);
-    } else {
-      if (activeImage) setImageUrl([activeImage]);
-    }
+    if (choseList.length) setImageUrl(choseList);
+    else if (activeImage) setImageUrl([activeImage]);
 
     closeModal();
   };
-
-  // const handleImageLoaded: ReactEventHandler<HTMLImageElement> = (e) => {
-  //   const target = e.target as HTMLImageElement;
-  //   if (imageSizeRef.current) {
-  //     imageSizeRef.current.innerText = `${target.naturalWidth} x ${target.naturalHeight}`;
-  //   }
-  // };
 
   const classes = {
     galleryTop: "flex justify-between border-b border-[--a-5-cl] mb-[10px] pb-[10px]",
@@ -97,7 +87,7 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
             <Button
               onClick={() => modalRef.current?.open()}
               colors={"second"}
-              size={'clear'}
+              size={"clear"}
               className="ml-3 p-1.5"
             >
               <ArrowUpTrayIcon className="w-5" />
@@ -167,7 +157,11 @@ function Gallery({ setImageUrl, closeModal, multiple, ...props }: Props) {
                   <p className="truncate">
                     Link:
                     <span>
-                      <Link className="hover:underline" href={activeImage.image_url} target="_blank">
+                      <Link
+                        className="hover:underline"
+                        href={activeImage.image_url}
+                        target="_blank"
+                      >
                         {activeImage.image_url}
                       </Link>
                     </span>

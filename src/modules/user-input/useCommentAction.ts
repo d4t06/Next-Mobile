@@ -2,7 +2,7 @@
 
 import { useRef, useState } from "react";
 import { runRevalidateTag } from "@/app/actions";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import useFetch from "@/hooks/useFetch";
 import { ModalRef } from "@/components/modal";
 import { request } from "@/utils/request";
@@ -17,7 +17,7 @@ export default function useCommentAction() {
   const modalRef = useRef<ModalRef>(null);
 
   const privateRequest = useFetch();
-  const { setErrorToast, setSuccessToast } = useToast();
+  const { setErrorToast, setSuccessToast } = useToastContext();
 
   type Add = {
     variant: "add";

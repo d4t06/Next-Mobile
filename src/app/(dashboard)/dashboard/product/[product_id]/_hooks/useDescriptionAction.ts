@@ -2,7 +2,7 @@
 
 import { runRevalidateTag } from "@/app/actions";
 import useFetch from "@/hooks/useFetch";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import { sleep } from "@/utils/appHelper";
 import { useState } from "react";
 
@@ -12,7 +12,7 @@ export default function useDescriptionAction() {
   const [isFetching, setIsFetching] = useState(false);
 
   //    hooks
-  const { setSuccessToast, setErrorToast } = useToast();
+  const { setSuccessToast, setErrorToast } = useToastContext();
   const privateRequest = useFetch();
 
   const update = async ({

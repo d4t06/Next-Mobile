@@ -1,7 +1,7 @@
 import { runRevalidateTag } from "@/app/actions";
 import { ModalRef } from "@/components/modal";
 import useFetch from "@/hooks/useFetch";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 import { useState, type RefObject } from "react";
 
 const CATEGORY_URL = "/brands";
@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function useBrandAction({ modalRef }: Props) {
-  const { setErrorToast, setSuccessToast } = useToast();
+  const { setErrorToast, setSuccessToast } = useToastContext();
 
   const [isFetching, setIsFetching] = useState(false);
 

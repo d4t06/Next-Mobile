@@ -76,7 +76,7 @@ const reducer = (
 
          const indexInSelect = newIds.findIndex((id) => id === product.id);
 
-         console.log(indexInSelect, newIds);
+         // console.log(indexInSelect, newIds);
 
          if (indexInSelect !== -1) {
             newIds.splice(indexInSelect, 1);

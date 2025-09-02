@@ -1,7 +1,7 @@
 import { ArrowPathIcon } from "@heroicons/react/16/solid";
 import { VariantProps, cva } from "class-variance-authority";
 import Link from "next/link";
-import { ReactNode } from "react";
+import { MouseEventHandler, ReactNode } from "react";
 
 const classes = {
    active: "before:shadow-none font-[500] translate-y-[2px] text-[#cd1818]",
@@ -20,7 +20,7 @@ const ButtonVariant = cva("button relative z-0", {
       },
       colors: {
          primary: "color--primary bg-[#cd1818] text-white",
-         second: "color--second bg-white dark:bg-slate-700",
+         second: "color--second bg-white dark:bg-slate-700 text-[#333] dark:text-white",
          third: "color--third bg-white dark:bg-slate-700",
          clear: "",
       },
@@ -53,7 +53,7 @@ const ButtonVariant = cva("button relative z-0", {
 });
 
 interface Props extends VariantProps<typeof ButtonVariant> {
-   onClick?: () => void;
+   onClick?:MouseEventHandler;
    loading?: boolean;
    children: ReactNode;
    disabled?: boolean;

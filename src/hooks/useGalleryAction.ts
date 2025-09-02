@@ -1,6 +1,6 @@
 import { useImageContext } from "@/stores/ImageContext";
 import useFetch from "./useFetch";
-import { useToast } from "@/stores/ToastContext";
+import { useToastContext } from "@/stores/ToastContext";
 
 type GetImageRes = {
   page: number;
@@ -13,7 +13,7 @@ const IMAGE_URL = "/images";
 
 export default function useGalleryAction() {
   const { images, setStatus, status, setImages, setPage } = useImageContext();
-  const { setErrorToast, setSuccessToast } = useToast();
+  const { setErrorToast, setSuccessToast } = useToastContext();
 
   const $fetch = useFetch();
 
