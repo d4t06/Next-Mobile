@@ -1,5 +1,6 @@
 "use client";
 
+import HTMLConent from "@/components/RenderHTMLContent";
 import ImageModal from "@/components/modal/ImageModal";
 import useDescriptionSection from "@/hooks/useDescriptionSection";
 import useMagnifier from "@/hooks/useMagnifier";
@@ -17,7 +18,9 @@ export default function DescriptionSection({ product }: Props) {
   return (
     <>
       <div className="content [&>*]:mt-5 [&>h5]:font-bold [&>h5]:text-xl [&>img]:rounded-[8px] sm:[&>img]:max-w-[80%] [&>img]:mx-auto">
-        {HTMLReactParser(product.description.content || "")}
+        {/*{HTMLReactParser(product.description.content || "")}*/}
+
+        <HTMLConent content={product.description.content} />
       </div>
 
       {!!isOpenModal && <ImageModal src={isOpenModal} closeModal={closeModal} />}

@@ -66,7 +66,7 @@ export default function useUploadImage() {
         const res = await privateRequest.post(IMAGE_URL, formData, {
           headers: { "Content-Type": "multipart/form-data" },
           signal: controller.signal,
-          params: { ...props },
+          params: props,
         });
 
         const newImage = res.data as ImageType;
