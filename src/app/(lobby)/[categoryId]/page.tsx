@@ -28,6 +28,7 @@ export async function generateStaticParams() {
   return categories.map((c) => ({ categoryId: c.id + "" }) as Params["params"]);
 }
 
+
 async function ProductList({
   categoryId,
   brandId,
@@ -66,7 +67,7 @@ async function ProductList({
       {!!data.products.length && (
         <div className="mt-[20px]">
           {data.products.map((p, index) => (
-            <Link href={`/${categoryId}/${p.id}`} key={index} className={classes.item}>
+            <Link href={`/product/${p.id}`} key={index} className={classes.item}>
               <div className="h-[70px] w-[70px]">
                 <MyImage
                   alt=""

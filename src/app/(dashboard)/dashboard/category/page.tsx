@@ -12,8 +12,8 @@ async function Group() {
   const res = await fetch(
     `${
       process.env.NEXT_PUBLIC_API_ENDPOINT ||
-      "https://nest-mobile.vercel.app/api" ||
-      "https://nest-mobile.vercel.app/api"
+      "https://nest-mobile-production.up.railway.app/api" ||
+      "https://nest-mobile-production.up.railway.app/api"
     }/categories`,
   );
   if (!res.ok) return <></>;

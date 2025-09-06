@@ -15,7 +15,7 @@ export const getAllProducts = async (props?: {
    const res = await fetch(
       `${
          process.env.NEXT_PUBLIC_API_ENDPOINT ||
-         "https://nest-mobile.vercel.app/api"
+         "https://nest-mobile-production.up.railway.app/api"
       }/products${params}`,
       {
          next: {

@@ -24,7 +24,7 @@ export default async function getAllComment({
 
   const res = await fetch(
     `${
-      process.env.NEXT_PUBLIC_API_ENDPOINT || "https://nest-mobile.vercel.app/api"
+      process.env.NEXT_PUBLIC_API_ENDPOINT || "https://nest-mobile-production.up.railway.app/api"
     }/comments${params}`,
     {
       next: {

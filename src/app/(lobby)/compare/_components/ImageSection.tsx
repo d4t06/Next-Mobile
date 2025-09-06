@@ -66,7 +66,7 @@ export default function ImageSection({ products }: Props) {
                   <div className={`flex`}>
                      <div className={`w-1/5 sm:w-1/6`}></div>
                      {products.map((p, index) => (
-                        <Link href={`${p.category_id}/${p.id}`} key={index} className="flex-1 flex flex-col px-[6px]">
+                        <Link href={`/product/${p.id}`} key={index} className="flex-1 flex flex-col px-[6px]">
                            <MyImage
                               src={p?.image_url || ""}
                               className={`max-h-[200px] mx-auto ${

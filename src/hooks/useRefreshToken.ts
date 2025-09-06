@@ -8,7 +8,7 @@ export default function useRefreshToken() {
     try {
       if (!data || !data.token) return;
       const res = await request.post(
-        `${process.env.NEXT_PUBLIC_API_ENDPOINT || "https://nest-mobile.vercel.app/api"}/auth/refresh`,
+        `${process.env.NEXT_PUBLIC_API_ENDPOINT || "https://nest-mobile-production.up.railway.app/api"}/auth/refresh`,
         { refresh_token: data.refreshToken },
         {
           withCredentials: true,

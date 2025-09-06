@@ -1,206 +1,79 @@
 "use client";
 
-import {
-   ReactNode,
-   createContext,
-   useCallback,
-   useContext,
-   useEffect,
-   useReducer,
-} from "react";
+import { getLocalStorage, setLocalStorage } from "@/utils/appHelper";
+import { ReactNode, createContext, useContext, useEffect, useRef, useState } from "react";
 
-type StateType = {
-   products: Product[];
-   selectIdList: number[];
+export type CompareRef = { setIsOpen: (v: boolean) => void };
+
+const useCompare = () => {
+  const [products, setProducts] = useState<Product[]>([]);
+  const [selectIdList, setSelectIdList] = useState<number[]>([]);
+
+  const compareRef = useRef<CompareRef | null>(null);
+
+  const addProduct = (product: Product) => {
+    const newProducts = [...products];
+    const newIds = [...selectIdList];
+
+       const productIndex = newProducts.findIndex((p) => p.id === product.id);
+
+    if (productIndex === -1) newProducts.push(product);
+    else newProducts.splice(productIndex, 1);
+
+    const indexInSelect = newIds.findIndex((id) => id === product.id);
+    if (indexInSelect !== -1) newIds.splice(indexInSelect, 1);
+
+    setProducts(newProducts);
+    setSelectIdList(newIds);
+    setLocalStorage("compare-products", newProducts);
+  };
+
+  const selectProduct = (product: Product) => {
+    const newIds = [...selectIdList];
+
+    const indexInSelect = newIds.findIndex((id) => id === product.id);
+    if (indexInSelect !== -1) newIds.splice(indexInSelect, 1);
+    else newIds.push(product.id)
+
+    setSelectIdList(newIds);
+  };
+
+  const reset = () => {
+    setProducts([]);
+    setSelectIdList([]);
+    setLocalStorage("compare-products", []);
+  };
+
+  useEffect(() => {
+    const storage = getLocalStorage();
+    setProducts(storage["compare-products"] || []);
+  }, []);
+
+  return {
+    products,
+    setProducts,
+    selectIdList,
+    setSelectIdList,
+    selectProduct,
+    addProduct,
+    reset,
+    compareRef,
+  };
 };
 
-const getLocalStorage = () =>
-   typeof window !== "undefined"
-      ? (JSON.parse(
-           window.localStorage.getItem("next-mobile") || "{}"
-        ) as Record<string, any>)
-      : {};
+type ContextType = ReturnType<typeof useCompare>;
 
-const setLocalStorage = (key: string, value: any) => {
-   const storage = getLocalStorage();
-   storage[key] = value;
-
-   if (typeof window !== "undefined")
-      window.localStorage.setItem("next-mobile", JSON.stringify(storage));
-};
-
-const initState: StateType = {
-   products: [],
-   selectIdList: [],
-};
-
-const enum REDUCER_ACTION_TYPE {
-   INIT,
-   TOGGLE_PRODUCT,
-   SELECT,
-   RESET,
-}
-
-type Toggle = {
-   type: REDUCER_ACTION_TYPE.TOGGLE_PRODUCT;
-   payload: Product;
-};
-
-type Init = {
-   type: REDUCER_ACTION_TYPE.INIT;
-   payload: Partial<StateType>;
-};
-
-type Select = {
-   type: REDUCER_ACTION_TYPE.SELECT;
-   payload: Product;
-};
-
-type Reset = {
-   type: REDUCER_ACTION_TYPE.RESET;
-};
-
-const reducer = (
-   state: StateType,
-   action: Init | Toggle | Reset | Select
-): StateType => {
-   switch (action.type) {
-      case REDUCER_ACTION_TYPE.TOGGLE_PRODUCT: {
-         const product = action.payload;
-         const newProducts = [...state.products];
-         const newIds = [...state.selectIdList];
-
-         const productIndex = newProducts.findIndex((p) => p.id === product.id);
-         if (productIndex === -1) newProducts.push(product);
-         else newProducts.splice(productIndex, 1);
-
-         const indexInSelect = newIds.findIndex((id) => id === product.id);
-
-         // console.log(indexInSelect, newIds);
-
-         if (indexInSelect !== -1) {
-            newIds.splice(indexInSelect, 1);
-            setLocalStorage("selectIdList", newIds);
-         }
-
-         setLocalStorage("products", newProducts);
-
-         return {
-            ...state,
-            products: newProducts,
-            selectIdList: newIds,
-         };
-      }
-      case REDUCER_ACTION_TYPE.SELECT: {
-         const product = action.payload;
-         const newIds = [...state.selectIdList];
-
-         const index = newIds.findIndex((id) => id === product.id);
-         if (index === -1) newIds.push(product.id);
-         else newIds.splice(index, 1);
-
-         setLocalStorage("selectIdList", newIds);
-
-         return {
-            ...state,
-            selectIdList: newIds,
-         };
-      }
-      case REDUCER_ACTION_TYPE.RESET:
-         setLocalStorage("selectIdList", []);
-         setLocalStorage("products", []);
-
-         return initState;
-      case REDUCER_ACTION_TYPE.INIT:
-         return {
-            ...state,
-            ...action.payload,
-         };
-
-      default:
-         return state;
-   }
-};
-
-const useCompareListContext = () => {
-   const [state, dispatch] = useReducer(reducer, initState);
-
-   const initCompareStore = useCallback((payload: Init["payload"]) => {
-      dispatch({
-         type: REDUCER_ACTION_TYPE.INIT,
-         payload,
-      });
-   }, []);
-
-   const toggleProduct = useCallback((payload: Product) => {
-      dispatch({
-         type: REDUCER_ACTION_TYPE.TOGGLE_PRODUCT,
-         payload,
-      });
-   }, []);
-
-   const selectProduct = useCallback((payload: Product) => {
-      dispatch({
-         type: REDUCER_ACTION_TYPE.SELECT,
-         payload,
-      });
-   }, []);
-
-   const resetCompareList = useCallback(() => {
-      dispatch({
-         type: REDUCER_ACTION_TYPE.RESET,
-      });
-   }, []);
-
-   return {
-      state,
-      toggleProduct,
-      resetCompareList,
-      selectProduct,
-      initCompareStore,
-   };
-};
-
-type ContextType = ReturnType<typeof useCompareListContext>;
-
-const initContextState: ContextType = {
-   state: initState,
-   resetCompareList: () => {},
-   toggleProduct: () => {},
-   initCompareStore: () => {},
-   selectProduct: () => {},
-};
-
-const CompareContext = createContext<ContextType>(initContextState);
+const CompareContext = createContext<ContextType | null>(null);
 
 export default function CompareProvider({ children }: { children: ReactNode }) {
-   const { initCompareStore, ...rest } = useCompareListContext();
-
-   useEffect(() => {
-      const storage = getLocalStorage();
-      initCompareStore({
-         products: storage["products"] || [],
-         selectIdList: storage["selectIdList"] || [],
-      });
-   }, []);
-   return (
-      <CompareContext.Provider value={{ ...rest, initCompareStore }}>
-         {children}
-      </CompareContext.Provider>
-   );
+  return (
+    <CompareContext.Provider value={useCompare()}>{children}</CompareContext.Provider>
+  );
 }
 
-export const useCompare = () => {
-   const context = useContext(CompareContext);
-   if (!context) throw new Error("context is required");
+export const useCompareContext = () => {
+  const context = useContext(CompareContext);
+  if (!context) throw new Error("context is required");
 
-   const {
-      state: { products, selectIdList },
-      ...restSetState
-   } = context;
-   return {
-      ...restSetState,
-      products,
-      selectIdList,
-   };
+  return context;
 };

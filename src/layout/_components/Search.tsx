@@ -6,7 +6,7 @@ import {
   MagnifyingGlassIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import { ElementRef, useMemo, useRef, useState } from "react";
+import { ElementRef, FormEventHandler, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import NoProduct from "@/components/NoProduct";
@@ -46,6 +46,13 @@ export default function Search({ variant }: Props) {
     router.push(href);
   };
 
+  const handlSubmit: FormEventHandler = (e) => {
+    e.preventDefault();
+
+    closeModal();
+    router.push(`/search/${value}`);
+  };
+
   const handleClear = () => {
     setValue("");
     setSearchResult([]);
@@ -82,7 +89,7 @@ export default function Search({ variant }: Props) {
           case "home":
             return (
               <div
-                onClick={() => handleNavigate(`/${p.category_id}/${p.id}`)}
+                onClick={() => handleNavigate(`/product/${p.id}`)}
                 className={classes.searchItem}
                 key={index}
               >
@@ -105,7 +112,7 @@ export default function Search({ variant }: Props) {
   return (
     <>
       <div className={`relative ${variant === "home" ? "z-[100]" : ""}`}>
-        <div className={classes.container}>
+        <form onSubmit={handlSubmit} className={classes.container}>
           <input
             ref={inputRef}
             value={value}
@@ -130,7 +137,7 @@ export default function Search({ variant }: Props) {
               )}
             </div>
           )}
-        </div>
+        </form>
 
         <div className="absolute top-[calc(100%+6px)] w-full">
           {isShowSearchResult && (

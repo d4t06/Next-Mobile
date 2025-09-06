@@ -7,3 +7,4 @@ export { default as MyInput } from "./MyInput";
 export { default as MyImage } from "./MyImage";
 export { default as ItemRightCta } from "./ItemRightCta";
 export { default as Box } from "./Box";
+export { default as Center } from "./Center";
