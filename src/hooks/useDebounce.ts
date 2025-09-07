@@ -1,25 +1,35 @@
-import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { useState } from "react";
 
 function useDebounce(value: string, delay: number) {
-   const [debounceValue, setDebounceValue] = useState(value);
+  const [debounceValue, setDebounceValue] = useState(value);
 
-   useEffect(() => {
-      if (!value.trim()) {
-         setDebounceValue("");
-         return;
-      }      
+  const timerId = useRef<NodeJS.Timeout>();
 
-      const timeId = setTimeout(() => {
-         setDebounceValue(value);
-      }, delay);
+  const pahtName = usePathname();
 
-      return () => {
-         clearTimeout(timeId);
-      };
-   }, [value, delay]);
+  useEffect(() => {
+    if (!value.trim()) {
+      setDebounceValue("");
+      return;
+    }
 
-   return debounceValue;
+    timerId.current = setTimeout(() => {
+      setDebounceValue(value);
+    }, delay);
+
+    return () => {
+      clearTimeout(timerId.current);
+    };
+  }, [value, delay]);
+
+  useEffect(() => {
+    setDebounceValue("");
+    clearTimeout(timerId.current);
+  }, [pahtName]);
+
+  return debounceValue;
 }
 
 export default useDebounce;

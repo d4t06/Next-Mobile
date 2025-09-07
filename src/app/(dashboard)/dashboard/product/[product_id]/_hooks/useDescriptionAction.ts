@@ -17,19 +17,46 @@ export default function useDescriptionAction() {
 
   const update = async ({
     desc,
-    productId,
+    product,
   }: {
-    productId: number;
+    product: Product;
     desc: Partial<DescriptionSchema>;
   }) => {
     try {
-      setIsFetching(true);
-      if (process.env.NODE_ENV === "development") await sleep(500);
+      if (!desc.content) return;
 
-      await privateRequest.put(`${URL}/${productId}`, desc);
+      setIsFetching(true);
+      if (process.env.NODE_ENV === "development") await sleep(300);
+
+      await privateRequest.put(`${URL}/${product.id}`, desc);
       setSuccessToast("Update description successful");
 
-      runRevalidateTag("product-" + productId);
+      runRevalidateTag("product-" + product.id);
+
+      const oldImages: string[] = [];
+      const regex = /<img.*?src="(.*?)"/g;
+
+      let result;
+      while ((result = regex.exec(product.description.content))) {
+        oldImages.push(result[1]);
+      }
+
+      if (oldImages.length) {
+        const newImages: string[] = [];
+
+        let result;
+        while ((result = regex.exec(desc.content))) {
+          newImages.push(result[1]);
+        }
+
+        const noUseImages = oldImages.filter((src) => !newImages.includes(src));
+
+        if (noUseImages?.length) {
+          await privateRequest.delete(`/images`, {
+            params: { images: noUseImages },
+          });
+        }
+      }
     } catch (error) {
       console.log({ message: error });
       setErrorToast("Update description fail");

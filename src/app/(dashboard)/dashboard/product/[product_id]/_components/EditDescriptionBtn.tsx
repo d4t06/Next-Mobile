@@ -34,7 +34,7 @@ export default function EditDescriptionBtn({ product }: Props) {
             submit={(v) =>
               update({
                 desc: { content: v },
-                productId: product.id,
+                product,
               })
             }
             content={product.description.content}
