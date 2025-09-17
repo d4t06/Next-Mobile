@@ -4,7 +4,8 @@ import Gallery from "@/components/Gallery";
 import { Modal, ModalRef } from "@/components/modal";
 import Button from "@/components/ui/Button";
 import { Content, Editor } from "@tiptap/react";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import AddVideoModal from "./AddVideoModal";
 
 type Props = {
   editor: Editor | null;
@@ -13,8 +14,17 @@ type Props = {
   isLoading?: boolean;
 };
 
+type Modal = "gallery" | "add-video";
+
 export default function EditToolbar({ editor, isLoading, isChange, ...props }: Props) {
+  const [modal, setModal] = useState("");
+
   const modalRef = useRef<ModalRef>(null);
+
+  const openModal = (m: Modal) => {
+    setModal(m);
+    modalRef.current?.open();
+  };
 
   const closeModal = () => modalRef.current?.close();
 
@@ -28,6 +38,14 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
     }));
 
     editor.chain().focus().insertContent(imageContents).run();
+  };
+
+  const handleAddVideo = ({ id, title }: { id: string; title: string }) => {
+    if (!editor) return;
+
+    if (id) {
+      editor.chain().focus().setIframe({ id, title }).run();
+    }
   };
 
   const handleSubmit = async () => {
@@ -46,7 +64,9 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
   return (
     <>
       <div
-        className={`${isLoading ? "disabled" : ""} bg-[#cd1818] text-white flex  justify-between items-center p-[10px] `}
+        className={`${
+          isLoading ? "disabled" : ""
+        } bg-[#cd1818] text-white flex justify-between items-center p-[10px] `}
       >
         <div className={`${classes.left}`}>
           <button
@@ -61,7 +81,8 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
           >
             h5
           </button>
-          <button onClick={() => modalRef.current?.open()}>image</button>
+          <button onClick={() => openModal("gallery")}>image</button>
+          <button onClick={() => openModal("add-video")}>video</button>
           <button
             onClick={() => editor.chain().focus().undo().run()}
             disabled={!editor.can().chain().focus().undo().run()}
@@ -89,11 +110,17 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
       </div>
 
       <Modal ref={modalRef}>
-        <Gallery
-          closeModal={closeModal}
-          multiple
-          setImageUrl={(images) => handleAddImage(images)}
-        />
+        {modal === "gallery" && (
+          <Gallery
+            closeModal={closeModal}
+            multiple
+            setImageUrl={(images) => handleAddImage(images)}
+          />
+        )}
+
+        {modal === "add-video" && (
+          <AddVideoModal clsoeModal={closeModal} submit={handleAddVideo} />
+        )}
       </Modal>
     </>
   );

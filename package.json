@@ -17,7 +17,6 @@
     "@tiptap/starter-kit": "^2.4.0",
     "axios": "^1.6.7",
     "class-variance-authority": "^0.7.0",
-    "html-react-parser": "^5.1.10",
     "htmr": "^1.0.2",
     "next": "14.1.0",
     "next-auth": "^4.24.6",

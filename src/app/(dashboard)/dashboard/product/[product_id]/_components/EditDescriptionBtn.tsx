@@ -5,7 +5,7 @@ import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { useRef } from "react";
 import useDescriptionAction from "../_hooks/useDescriptionAction";
 import Button from "@/components/ui/Button";
-import MyEditor from "./MyEditor";
+import MyEditor from "@/modules/editor";
 
 type Props = {
   product: Product;

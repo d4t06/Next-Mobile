@@ -6,8 +6,11 @@
   .my-input {
     @apply p-1.5 px-3 bg-[#f1f1f1] dark:bg-slate-700 w-full font-bold rounded-lg outline-none text-[#333] dark:text-white;
   }
-}
 
+  .prose {
+    @apply [&_*]:mt-5 [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:border-[2px] [&_img]:max-w-[80%] [&_img]:border-transparent;
+  }
+}
 
 @font-face {
   font-family: "Comfortaa";
@@ -20,8 +23,6 @@ html {
   font-family: "Comfortaa", system-ui;
 }
 
-
-
 button[disabled],
 a[aria-disabled="true"],
 .disabled {
@@ -33,6 +34,9 @@ a[aria-disabled="true"],
   content: "";
 }
 
+label {
+  color: #666;
+}
 
 html .moon {
   display: none;
@@ -48,4 +52,20 @@ html.dark .moon {
 
 .popup-shadow {
   box-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.15);
+}
+
+iframe {
+  height: 100%;
+  width: 100%;
+  border-radius: 0.75rem;
+}
+
+.tiptap {
+  outline: none;
+  border: 1px solid var(--a-10-cl);
+  padding: 0 10px;
+}
+
+summary {
+  cursor: pointer;
 }

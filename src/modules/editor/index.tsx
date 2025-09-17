@@ -5,6 +5,8 @@ import StarterKit from "@tiptap/starter-kit";
 import Image from "@tiptap/extension-image";
 import { useState } from "react";
 import EditToolbar from "./EditorToolbar";
+// import Video from "./video";
+import Video from "./video";
 
 type Props = {
   submit: (value: string) => void;
@@ -18,7 +20,7 @@ export default function MyEditor({ isLoading, submit, content }: Props) {
   const [isChange, setIsChange] = useState(false);
 
   const editor = useEditor({
-    extensions: [StarterKit, Image],
+    extensions: [StarterKit, Image, Video],
     onUpdate: () => setIsChange(true),
     content,
   });
@@ -37,7 +39,7 @@ export default function MyEditor({ isLoading, submit, content }: Props) {
       />
       <div className={`${classes.editContainer}`}>
         <EditorContent
-          className="pt-[30px] sm:w-[70%] sm:mx-auto px-[20px] sm:px-[50px] pb-[50vh] [&_*]:mt-5 [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:border-[2px] [&_img]:border-transparent [&_.ProseMirror-selectednode]:border-red-500"
+          className="prose pt-[30px] sm:mx-auto px-[20px] sm:px-[50px] pb-[50vh] [&_.ProseMirror-selectednode]:border-red-500"
           editor={editor}
         />
       </div>
