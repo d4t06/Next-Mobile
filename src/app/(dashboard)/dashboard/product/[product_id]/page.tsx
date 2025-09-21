@@ -5,6 +5,7 @@ import Description from "./_components/Description";
 import DangerZone from "./_components/DangerZone";
 import { getProductDetail } from "@/libs/getProductDetail";
 import EditDescriptionBtn from "./_components/EditDescriptionBtn";
+import { Title } from "@/components";
 
 type Props = {
   params: {
@@ -12,11 +13,13 @@ type Props = {
   };
 };
 
-export const revalidate = 0;
+// export const revalidate = 86400;
 
 export default async function EditProduct({ params: { product_id } }: Props) {
-  const categories = await getAllCategories();
-  const productDetail = await getProductDetail(product_id);
+  const [categories, productDetail] = await Promise.all([
+    getAllCategories(),
+    getProductDetail(product_id),
+  ]);
 
   const classes = {
     group: "p-[20px] rounded-[12px] bg-[#fff] dark:bg-slate-800 border",
@@ -30,17 +33,19 @@ export default async function EditProduct({ params: { product_id } }: Props) {
       <div className="space-y-[30px]">
         <ProductInfo categories={categories} product={productDetail} />
 
-        <h1 className={classes.label}>Specification</h1>
+        <Title title="Specification" variant={"h2"} />
+
         <Specification categories={categories} product={productDetail} />
 
         <div className="flex justify-between items-center">
-          <h1 className={classes.label}>Description</h1>
+          <Title title="Description" variant={"h2"} />
           <EditDescriptionBtn product={productDetail} />
         </div>
 
         <Description product={productDetail} />
 
-        <h1 className={`${classes.label} text-red-500 font-[500]`}>Danger Zone</h1>
+        <Title title="Danger Zone" className="text-red-500" variant={"h2"} />
+
         <div className={`${classes.group} border-red-500`}>
           <DangerZone product={productDetail} />
         </div>

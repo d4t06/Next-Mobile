@@ -3,8 +3,8 @@ import UploadImageProvider from "@/stores/ImageContext";
 import DashBoardHeader from "./_components/DashboardHeader";
 import DashBoardSidebar from "./_components/DashboardSidebar";
 import { ReactNode } from "react";
-import ToastPortal from "@/components/ToastPotal";
-import UploadImagePortal from "@/components/UploadImagePortal";
+import UploadImagePortal from "@/modules/upload-image-portal";
+import ToastPortal from "@/modules/toast-portal";
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
    return (

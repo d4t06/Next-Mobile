@@ -6,6 +6,7 @@ import {
   BuildingStorefrontIcon,
   ChatBubbleLeftRightIcon,
   DevicePhoneMobileIcon,
+  TagIcon,
 } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -18,7 +19,7 @@ export default function DashBoardSidebar() {
   const classes = {
     container:
       "bg-white dark:bg-slate-700 border-r border-[--a-5-cl] transition-[width] max-h-[100vh] relative flex-shrink-0 w-[50px] sm:w-[70px]",
-    containerExpand: "!w-[180px] group expand",
+    containerExpand: "!w-[170px] group expand",
     head: "h-[80px] flex items-center justify-center",
     logoText: "text-[22px] font-[500] whitespace-nowrap tracking-[-1px]",
     logoImage: "max-w-[50px] p-[4px]",
@@ -35,9 +36,9 @@ export default function DashBoardSidebar() {
       <div className={classes.head}>
         <Link
           href={"/dashboard"}
-          className="bg-[#cd1818] flex-shrink-0 w-10 flex h-10 rounded-md justify-center items-center"
+          className="bg-[#cd1818] flex-shrink-0 w-8 flex h-8 rounded-md justify-center items-center"
         >
-          <span className="text-white text-2xl font-bold translate-y-[1px]">:D</span>
+          <span className="text-white text-xl font-bold translate-y-[1px]">:D</span>
         </Link>
 
         {expand && <span className="font-medium ml-2">Dspec</span>}
@@ -56,6 +57,11 @@ export default function DashBoardSidebar() {
         <Link className={getActive("/comment")} href="/dashboard/comment">
           <ChatBubbleLeftRightIcon />
           <span>Comment</span>
+        </Link>
+
+        <Link className={getActive("/tag")} href="/dashboard/tag">
+          <TagIcon />
+          <span>Tag</span>
         </Link>
 
         <Link target="_blank" href="/">

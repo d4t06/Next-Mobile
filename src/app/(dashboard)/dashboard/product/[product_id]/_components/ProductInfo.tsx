@@ -1,10 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import AddProductForm from "@/components/AddProductForm";
 import Button from "@/components/ui/Button";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { Modal, ModalRef } from "@/components/modal";
+import AddProductModal from "@/modules/add-product-modal";
 
 type Props = {
   product: Product;
@@ -29,8 +29,7 @@ export default function ProductInfo({ product, categories }: Props) {
       </div>
 
       <Modal ref={modalRef}>
-        <AddProductForm
-          closeModal={() => modalRef.current?.close()}
+        <AddProductModal
           categories={categories}
           product={product}
           type="Edit"

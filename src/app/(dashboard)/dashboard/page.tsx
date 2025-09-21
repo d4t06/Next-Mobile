@@ -1,14 +1,11 @@
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
-// import Button from "@/components/ui/Button";
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
 
-export const revalidate = 86400;
+// export const revalidate = 86400;
 
 export default async function DashboardPage() {
   const session = await getServerSession(nextAuthOptions);
-
-  // console.log("check session", session)
 
   if (!session) return redirect("/signin");
   if (session?.user.role !== "ADMIN") return redirect("/unauthorized");
@@ -16,11 +13,6 @@ export default async function DashboardPage() {
   return (
     <>
       <p className="text-lg">Hi!, {session.user.username}</p>
-{/*
-      <p>Token: {session.token}</p>
-      <p>Refresh: {session.refreshToken}</p>
-*/}
-      {/*<Button>Update</Button>*/}
     </>
   );
 }

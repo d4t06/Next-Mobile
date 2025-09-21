@@ -16,12 +16,12 @@ export default function VertialMenu({
 }: Props) {
   const classes = {
     container:
-      "hover:[&>*:not(div.absolute)]:bg-[--a-5-cl] [&>*]:px-3 [&>*]:py-2 [&>*]:w-full [&>*]:space-x-2 [&>*]:text-sm [&>*]:flex [&>*]:items-center [&_svg]:w-6  [&_svg]:flex-shrink-0 [&>*]:items-center [&_span]:font-semibold",
+      `hover:[&>*:not(div.absolute)]:bg-[--a-5-cl] [&>*]:px-3 [&>*]:rounded-md [&>*]:py-2 [&>*]:w-full [&>*]:space-x-2 [&>*]:text-sm [&>*]:flex [&>*]:items-center [&_svg]:w-6  [&_svg]:flex-shrink-0 [&>*]:items-center [&_span]:font-semibold ${className}`,
   };
 
   if (dismiss)
     return (
-      <DismisPopupWrapper cb={cb} className={`${classes.container} ${className}`}>
+      <DismisPopupWrapper cb={cb} className={classes.container}>
         {children}
       </DismisPopupWrapper>
     );

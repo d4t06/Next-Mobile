@@ -46,7 +46,7 @@ export default function useSpecAction({ productId }: Props) {
 
          await runRevalidateTag("product-" + productId);
 
-         setSuccessToast(`${props.type} Update attribute successful`);
+         setSuccessToast(`${props.type} attribute successful`);
       } catch (error) {
          console.log({ message: error });
          setErrorToast(`Update attribute fail`);

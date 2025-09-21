@@ -58,7 +58,7 @@ export default function SpecItem({ id, product, productCategory }: Props) {
       });
     }
 
-    () => modalRef.current?.close();
+    modalRef.current?.close();
   };
 
   if (!foundedCatAttribute)
@@ -91,7 +91,6 @@ export default function SpecItem({ id, product, productCategory }: Props) {
           variant="text-are"
           loading={isFetching}
           cbWhenSubmit={(value) => handleUpdateAttribute(value)}
-          closeModal={() => modalRef.current?.close()}
           title={`Edit '${foundedCatAttribute.attribute_name}'`}
           initValue={foundedAttribute?.value || ""}
         />

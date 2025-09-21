@@ -1,5 +1,6 @@
 import { ModalContentWrapper } from ".";
 import Button from "../ui/Button";
+import { useModalContext } from "./Modal";
 
 type Props = {
   callback: () => void;
@@ -7,19 +8,17 @@ type Props = {
   desc?: string;
   buttonLabel?: string;
   loading: boolean;
-  className?: string;
-  closeModal: () => void;
 };
 
 export default function ConfirmModal({
   loading,
   callback,
   label,
-  closeModal,
   buttonLabel,
   desc = "This action cannot be undone",
-  className,
 }: Props) {
+  const { closeModal } = useModalContext();
+
   return (
     <ModalContentWrapper>
       <h1 className="text-[20px] font-semibold">{label || "Wait a minute"}</h1>

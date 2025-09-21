@@ -64,7 +64,7 @@ export default function useBrandAction({ modalRef }: Props) {
 
       await runRevalidateTag("categoires");
 
-      setSuccessToast(`${props.type} ok`);
+      setSuccessToast(`${props.type} brand successful`);
     } catch (error: any) {
       if (error.response.status === 409) {
         setErrorToast("Brand name had taken");

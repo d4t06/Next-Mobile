@@ -15,9 +15,10 @@ type Category = {
   attributes: CategoryAttribute[];
   attribute_order: string;
   brands: Brand[];
+  tags: Tag[];
 };
 
-type CategorySchema = Omit<Category, "id" | "attributes" | "brands">;
+type CategorySchema = Omit<Category, "id" | "attributes" | "brands" | "tags">;
 
 type CategoryAttribute = {
   id: number;
@@ -27,6 +28,12 @@ type CategoryAttribute = {
 };
 
 type CategoryAttributeSchema = Omit<CategoryAttribute, "id">;
+
+type ProductTag = {
+  product_id: number;
+  tag_id: number;
+  tag: Tag;
+};
 
 type Product = {
   id: number;
@@ -38,11 +45,18 @@ type Product = {
   category: Category;
   attributes: ProductAttribute[];
   description: Description;
+  product_tags: ProductTag[];
 };
 
 type ProductSchema = Omit<
   Product,
-  "id" | "attributes" | "category" | "category_id" | "brand_id" | "description"
+  | "id"
+  | "attributes"
+  | "category"
+  | "category_id"
+  | "brand_id"
+  | "description"
+  | "product_tags"
 > & {
   category_id: number | undefined;
   brand_id: number | undefined;
@@ -53,9 +67,11 @@ type ProductResponse = {
   page: number;
   count: number;
   page_size: number;
-  category_id: number | null;
   brand_id: number[] | null;
+  category_id: number | null;
 };
+
+type TagProductResponse = Omit<ProductResponse, "brand_id" | "category_id">;
 
 type Description = {
   id: number;
@@ -107,3 +123,19 @@ type ProductCommentResponse = {
   size: number;
   count: number;
 };
+
+type Tag = {
+  id: number;
+  category_id: number;
+  name: string;
+};
+
+type TagSchema = Omit<Tag, "id">;
+
+type LikeProduct = {
+  user_id: number;
+  product_id: number;
+  product: Product;
+};
+
+type LikeProductSchema = Omit<LikeProduct, "product">;

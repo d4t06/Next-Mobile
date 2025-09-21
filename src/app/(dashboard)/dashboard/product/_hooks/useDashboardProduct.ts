@@ -1,6 +1,7 @@
 import { useToastContext } from "@/stores/ToastContext";
-import { generateId } from "@/utils/appHelper";
+import { convertToEn, generateId } from "@/utils/appHelper";
 import { request } from "@/utils/request";
+import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
 
 const tabs = ["All", "Result"] as const;
@@ -15,23 +16,27 @@ export default function useDashboardProduct() {
 
   const { setErrorToast } = useToastContext();
 
+  const router = useRouter();
+
   const handleSubmit = async (e: FormEvent) => {
     try {
       e.preventDefault();
-      if (isFetching) return;
 
-      setIsFetching(true);
+      router.push("/dashboard/product?q=" + convertToEn(value));
+      // if (isFetching) return;
 
-      const res = await request.get<Product[]>(`/products/search?q=${generateId(value)}`);
+      // setIsFetching(true);
 
-      setSearchResult(res.data);
+      // const res = await request.get<Product[]>(`/products/search?q=${generateId(value)}`);
 
-      setTab("Result");
+      // setSearchResult(res.data);
+
+      // setTab("Result");
     } catch (err) {
       console.log({ message: err });
       setErrorToast();
     } finally {
-      setIsFetching(false);
+      // setIsFetching(false);
     }
   };
 

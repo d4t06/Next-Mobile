@@ -1,6 +1,6 @@
 export default function CustomVideo({ ...props }: Record<string, any>) {
   return (
-    <div className="aspect-video">
+    <div className="">
       <iframe {...props} />
     </div>
   );

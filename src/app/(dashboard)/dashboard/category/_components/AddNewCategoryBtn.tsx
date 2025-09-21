@@ -21,7 +21,6 @@ export default function AddNewCategpryBtn() {
       <Modal ref={modalRef}>
         <AddItem
           variant="input"
-          closeModal={() => modalRef.current?.close()}
           cbWhenSubmit={(v) =>
             actions({
               type: "Add",

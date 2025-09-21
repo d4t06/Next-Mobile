@@ -20,7 +20,8 @@ export const nextAuthOptions: NextAuthOptions = {
 
         const res = await fetch(
           `${
-            process.env.NEXT_PUBLIC_API_ENDPOINT || "https://nest-mobile-production.up.railway.app/api"
+            process.env.NEXT_PUBLIC_API_ENDPOINT ||
+            "https://nest-mobile-production.up.railway.app/api"
           }/auth/login`,
           {
             method: "POST",
@@ -71,8 +72,10 @@ export const nextAuthOptions: NextAuthOptions = {
         case "signIn":
           return {
             user: {
-              username: loginPayload.user.username,
-              role: loginPayload.user.role,
+              // username: loginPayload.user.username,
+              // role: loginPayload.user.role,
+
+              ...loginPayload.user,
             },
             refreshToken: loginPayload.refresh_token,
             token: loginPayload.token,
@@ -88,7 +91,7 @@ export const nextAuthOptions: NextAuthOptions = {
     },
 
     // for client side
-    async session({ token, session, newSession, trigger }) {
+    async session({ token, session }) {
       // console.log(
       //   ">>> session, token: ",
       //   token,
@@ -100,10 +103,7 @@ export const nextAuthOptions: NextAuthOptions = {
       //   trigger,
       // );
 
-      session.user.username = token.user.username;
-      session.user.role = token.user.role;
-      session.token = token.token;
-      session.refreshToken = token.refreshToken;
+      Object.assign(session, token);
 
       return session;
     },

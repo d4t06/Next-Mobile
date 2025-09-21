@@ -1,10 +1,10 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
-import Avatar from "./Avatar";
-import ToggleTheme from "./ToggleTheme";
 
 export default function DashBoardHeader() {
+  const { data: session } = useSession();
   const [scroll, setScroll] = useState(false);
 
   const handleScroll = (e: Event) => {
@@ -14,10 +14,10 @@ export default function DashBoardHeader() {
 
   useEffect(() => {
     const dashboardEle = document.querySelector(".dashboard-content");
-    if (!dashboardEle) return;
-
-    dashboardEle.addEventListener("scroll", handleScroll);
-    return () => dashboardEle.removeEventListener("scroll", handleScroll);
+    if (dashboardEle) {
+      dashboardEle.addEventListener("scroll", handleScroll);
+    }
+    return () => dashboardEle?.removeEventListener("scroll", handleScroll);
   }, []);
 
   const classes = {
@@ -27,13 +27,7 @@ export default function DashBoardHeader() {
 
   return (
     <div className={`${classes.container} ${scroll ? "shadow-md" : ""}`}>
-      <div className="ml-auto">
-        <Avatar />
-      </div>
-
-      <div className="ml-4">
-        <ToggleTheme />
-      </div>
+      <div className="ml-auto">{session?.user.username}</div>
     </div>
   );
 }

@@ -5,7 +5,6 @@ import NoProduct from "@/components/NoProduct";
 import { getAllCategories } from "@/libs/getAllCategory";
 import ImageSection from "./_components/ImageSection";
 import SpecSection from "./_components/SpecSection";
-import HTMLReactParser from "html-react-parser/lib/index";
 import DescriptionSection from "./_components/DescSectiont";
 
 type Props = {

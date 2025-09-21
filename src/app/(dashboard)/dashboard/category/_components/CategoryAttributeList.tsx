@@ -21,18 +21,11 @@ export default function CategoryAttributeList({ categories }: Props) {
     ? currentCategory.attribute_order.split("_")
     : [];
 
-  const classes = {
-    label: "font-bold",
-    attrItem:
-      " bg-[#f1f1f1] mt-[10px] ml-[10px] px-4 py-2 border-[#ccc] border rounded-[8px]",
-    cta: "ml-[10px] pl-[10px] border-[#ccc] border-l-[1px] flex items-center space-x-1",
-  };
-
   return (
     <>
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-[10px]">
-          <p className={classes.label}>Category: </p>
+        <div className="flex items-center space-x-2 h-9">
+          <p className="faded-text">Category: </p>
           <div className="bg-[#ccc] rounded-[12px]">
             <select
               disabled={!categories.length}
@@ -54,11 +47,7 @@ export default function CategoryAttributeList({ categories }: Props) {
         {currentCategory && <AddNewAttributeBtn currentCategory={currentCategory} />}
       </div>
 
-      <div
-        className={`mt-[4px] flex flex-wrap items-start ml-[-10px] ${
-          false ? "disable" : ""
-        }`}
-      >
+      <div className={`flex flex-wrap gap-2`}>
         {currentCategory && (
           <>
             {attributeOrder.length ? (
@@ -85,8 +74,8 @@ export default function CategoryAttributeList({ categories }: Props) {
         )}
       </div>
 
-      {currentCategory && (
-        <p className="mt-5">
+      {currentCategory && attributeOrder.length >= 2 && (
+        <p className="">
           <ChangeAttributeOrder currentCategory={currentCategory} />
         </p>
       )}

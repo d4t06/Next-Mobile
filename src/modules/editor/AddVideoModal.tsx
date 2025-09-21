@@ -3,11 +3,11 @@ import { ModalContentWrapper, ModalHeader } from "@/components/modal";
 import { useState } from "react";
 
 type Props = {
-  clsoeModal: () => void;
   submit: (data: { title: string; id: string }) => void;
 };
 
-export default function AddVideoModal({ clsoeModal, submit }: Props) {
+export default function AddVideoModal({  submit }: Props) {
+
   const [title, setTitle] = useState("Disassembly video");
   const [id, setId] = useState("");
 
@@ -15,12 +15,11 @@ export default function AddVideoModal({ clsoeModal, submit }: Props) {
     if (!title.trim() || !id.trim()) return;
     
     submit({ title, id });
-    clsoeModal();
   };
 
   return (
     <ModalContentWrapper>
-      <ModalHeader title="Add video" closeModal={clsoeModal} />
+      <ModalHeader title="Add video" />
 
       <div>
         <label>Title</label>

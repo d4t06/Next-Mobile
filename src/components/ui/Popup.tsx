@@ -86,7 +86,11 @@ export default function Popup({
 }: { children: ReactNode } & PopupProps) {
   return (
     <Context.Provider value={usePopup({ ...rest, appendOnPortal })}>
-      {!appendOnPortal ? <div className={`relative ${className}`}>{children}</div> : children}
+      {!appendOnPortal ? (
+        <div className={`relative ${className}`}>{children}</div>
+      ) : (
+        children
+      )}
     </Context.Provider>
   );
 }
@@ -119,7 +123,7 @@ export const PopupTrigger = forwardRef(function Func(
     if (!isMounted) {
       setTimeout(() => {
         setIsOpen(false);
-      }, 400);
+      }, 300);
     }
   }, [isMounted]);
 
@@ -274,7 +278,7 @@ export function PopupContent({
     >
       <div
         ref={animationRef}
-        className={` transition-[transform,opacity] duration-[.25s] ease-linear ${
+        className={` transition-[transform,opacity] duration-200 ease-in-out ${
           animationClassName || ""
         } ${isMounted ? classes.mountedContent : classes.unMountedContent}`}
       >

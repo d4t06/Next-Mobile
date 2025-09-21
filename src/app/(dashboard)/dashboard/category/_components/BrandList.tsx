@@ -9,10 +9,6 @@ type Props = {
 
 export type BrandListModal = "add" | "edit-name" | "image" | "delete";
 
-const classes = {
-  label: "font-bold",
-};
-
 export default function BrandList({ categories }: Props) {
   const [curCategoryIndex, setCurCategoryIndex] = useState<number>();
 
@@ -24,8 +20,8 @@ export default function BrandList({ categories }: Props) {
   return (
     <>
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-[10px]">
-          <p className={classes.label}>Category: </p>
+        <div className="flex items-center space-x-2 h-9">
+          <p className="faded-text">Category: </p>
           <div className="bg-[#ccc] rounded-[12px]">
             <select
               disabled={!categories.length}
@@ -48,9 +44,7 @@ export default function BrandList({ categories }: Props) {
       </div>
 
       <div
-        className={`mt-[4px] flex flex-wrap items-start ml-[-10px] ${
-          false ? "disable" : ""
-        }`}
+        className={`flex flex-wrap gap-2`}
       >
         {currentCategory && (
           <>

@@ -8,11 +8,11 @@ export default function AuthLayout({ children }: { children: ReactNode }) {
          {children}
          <Button
             href="/"
-            className="!absolute p-[6px] bottom-[20px] left-[20px]"
+            className="!absolute p-1.5 bottom-5 left-5"
             size={"clear"}
             border={'clear'}
          >
-            <HomeIcon className="w-[24px]" />
+            <HomeIcon className="w-6" />
          </Button>
       </div>
    );

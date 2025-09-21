@@ -7,6 +7,7 @@
   --a-5-border: 1px solid var(--a-5-cl);
 
   --second-btn-cl: #ccc;
+  --primary-shadow: 0 0 6px 0 rgba(0, 0, 0, 0.15);
 }
 
 .dark {

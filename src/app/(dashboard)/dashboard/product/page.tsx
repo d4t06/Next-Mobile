@@ -1,30 +1,49 @@
 import { getServerSession } from "next-auth";
 import { redirect } from "next/navigation";
-import ProductItem from "./_components/ProductItem";
 import { getAllCategories } from "@/libs/getAllCategory";
-import AddProductButton from "./_components/AddProductButton";
-import Search from "@/layout/_components/Search";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
-import { getAllProducts } from "@/libs/getAllProducts";
-import NoProduct from "@/components/NoProduct";
+import { NotFound, Title } from "@/components";
+import AddProductButton from "./_components/AddProductButton";
+import SearchBar from "./_components/SearchBar";
+import { Suspense } from "react";
+import { ProductListSkelton } from "@/components/skeleton";
 import DashboardProductContent from "./Content";
 
-export const revalidate = 86400;
+// export const revalidate = 86400;
 
-export default async function ProductManage() {
+type Params = {
+  searchParams: { q: string };
+};
+
+export default async function ProductManage({ searchParams: { q = "" } }: Params) {
   const session = await getServerSession(nextAuthOptions);
   const categories = await getAllCategories();
 
   if (!session) return redirect("/signin");
   if (session.user.role !== "ADMIN") return redirect("/unauthorized");
 
-  const data = await getAllProducts();
-
-  if (!data || !categories) return <p className="text-center">Some thing went wrong</p>;
+  if (!categories) return <NotFound variant="less" />;
 
   return (
     <>
-     <DashboardProductContent  categories={categories} products={data.products} />
+      <div className="flex justify-between">
+        <Title title="Products" />
+        <AddProductButton categories={categories} />
+      </div>
+
+      <div className="mt-3 inline-block">
+        <SearchBar q={q} />
+      </div>
+
+      <Suspense
+        fallback={
+          <div className="mt-5 space-y-4">
+            <ProductListSkelton />
+          </div>
+        }
+      >
+        <DashboardProductContent keyword={q} />
+      </Suspense>
     </>
   );
 }

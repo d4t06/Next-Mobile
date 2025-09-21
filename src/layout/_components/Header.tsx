@@ -1,10 +1,9 @@
 import Link from "next/link";
-import Search from "./Search";
 import { getAllCategories } from "@/libs/getAllCategory";
 import LinkList from "./LinkList";
 import MobileSidebar from "./MobileSidebar";
-import Avatar from "./Avatar";
-import ToggleTheme from "./ToggleTheme";
+import UserCta from "./UserCta";
+import Search from "@/modules/search";
 
 export default async function Header() {
   const categories = await getAllCategories();
@@ -33,14 +32,11 @@ export default async function Header() {
               <Search variant="home" />
 
               <div className="hidden sm:block ml-6">
-                <Avatar />
-              </div>
-              <div className="ml-5 hidden sm:inline-flex">
-                <ToggleTheme />
+                <UserCta />
               </div>
             </div>
           </div>
-          <div className="bg-[#cd1818] h-8 text-white items-center rounded-md hidden sm:flex [&_a]:leading-[32px] [&_a.active]:bg-white [&_a.active]:text-[--primary-cl] dark:[&_a.active]:bg-slate-800 font-semibold [&_a]:px-3">
+          <div className="bg-[#cd1818] px-2 h-8 text-white items-center rounded-md hidden sm:flex [&_a]:leading-[32px] [&_a.active]:bg-white [&_a.active]:text-[--primary-cl] dark:[&_a.active]:bg-slate-800 font-semibold [&_a]:px-3">
             <LinkList categories={categories} />
           </div>
         </div>

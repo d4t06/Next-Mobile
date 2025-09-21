@@ -107,7 +107,7 @@ export default function useAttributeAction({ modalRef }: Props) {
 
       await runRevalidateTag("categories");
 
-      setSuccessToast(`${props.type} ok`);
+      setSuccessToast(`${props.type} attribute ok`);
     } catch (error: any) {
       if (error.response.status === 409) {
         setErrorToast("Attribite name had taken");

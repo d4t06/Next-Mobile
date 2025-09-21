@@ -10,17 +10,27 @@
   .prose {
     @apply [&_*]:mt-5 [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:border-[2px] [&_img]:max-w-[80%] [&_img]:border-transparent;
   }
-}
 
-@font-face {
-  font-family: "Comfortaa";
-  src: url("/Comfortaa-VariableFont.ttf") format("truetype-variations");
-  font-weight: 500 700;
-  font-display: swap;
-}
+  .spec-table {
+    @apply [&_tr]:border-b [&_tr]:last:border-none [&_tr]:border-[--a-5-cl] [&_tr>*]:py-1 [&_tr>*]:px-2 sm:[&_tr>*]:py-2 sm:[&_tr>*]:px-4;
+  }
 
-html {
-  font-family: "Comfortaa", system-ui;
+  .tag-item {
+    @apply flex space-x-1 font-semibold bg-[--a-5-cl] dark:bg-slate-600 rounded-md py-1 px-2;
+  }
+
+  .login-form {
+    @apply p-5 border border-[--a-5-cl] w-[400px] max-w-[90vw] primary-shadow bg-white dark:bg-slate-900 rounded-xl space-y-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
+  }
+
+  label {
+    @apply text-gray-600 dark:text-gray-100;
+  }
+
+  .faded-text {
+    @apply text-gray-600 dark:text-gray-100;
+  }
+
 }
 
 button[disabled],
@@ -34,12 +44,19 @@ a[aria-disabled="true"],
   content: "";
 }
 
-label {
+/*label {
   color: #666;
 }
-
+*/
 html .moon {
   display: none;
+}
+
+.moon svg {
+  color: #8a7f8d;
+}
+.sun svg {
+  color: #ffdd40;
 }
 
 html.dark .sun {
@@ -47,7 +64,7 @@ html.dark .sun {
 }
 
 html.dark .moon {
-  display: block;
+  display: inline-flex;
 }
 
 .popup-shadow {
@@ -58,14 +75,19 @@ iframe {
   height: 100%;
   width: 100%;
   border-radius: 0.75rem;
+  aspect-ratio: 16/9;
 }
 
 .tiptap {
   outline: none;
-  border: 1px solid var(--a-10-cl);
-  padding: 0 10px;
+  border-bottom: 1px solid var(--a-10-cl);
+  padding: 0 30px;
 }
 
 summary {
   cursor: pointer;
+}
+
+.primary-shadow {
+  box-shadow: var(--primary-shadow);
 }

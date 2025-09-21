@@ -48,11 +48,6 @@ export default function ChangeAttributeOrder({ currentCategory }: Props) {
     setIsOpenModal(true);
   };
 
-  const closeModal = () => {
-    modalRef.current?.close();
-    setIsOpenModal(false);
-  };
-
   useEffect(() => {
     if (currentCategory)
       setLocalAttributeOrder(currentCategory.attribute_order.split("_"));
@@ -65,10 +60,10 @@ export default function ChangeAttributeOrder({ currentCategory }: Props) {
         <span>Change order</span>
       </Button>
 
-      <Modal ref={modalRef}>
+      <Modal onClose={() => setIsOpenModal(false)} ref={modalRef}>
         {isOpenModal && (
           <ModalContentWrapper>
-            <ModalHeader closeModal={closeModal} title="Change order" />
+            <ModalHeader title="Change order" />
 
             <div className="flex flex-col flex-grow overflow-auto space-y-2">
               {orderedAttribute.map((att, index) =>

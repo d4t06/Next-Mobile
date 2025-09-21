@@ -1,4 +1,3 @@
-import CategoryLabel from "@/components/CategoryLabel";
 import NoProduct from "@/components/NoProduct";
 import Button from "@/components/ui/Button";
 import { getAllCategories } from "@/libs/getAllCategory";
@@ -6,9 +5,12 @@ import { getAllProducts } from "@/libs/getAllProducts";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loading from "./loading";
-import MyImage from "@/components/ui/MyImage";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
-// import { ChevronRightIcon } from "@heroicons/react/24/outline";
+import ProductItem from "@/components/ProductItem";
+import CategoryLabel from "./_components/CategoryLabel";
+import { TagIcon } from "@heroicons/react/24/outline";
+
+export const revalidate = 86400;
 
 type Params = {
   params: {
@@ -17,9 +19,6 @@ type Params = {
   searchParams: { page: string; brand_id: string };
 };
 
-export const revalidate = 86400;
-
-
 export async function generateStaticParams() {
   const categories = await getAllCategories();
 
@@ -27,7 +26,6 @@ export async function generateStaticParams() {
 
   return categories.map((c) => ({ categoryId: c.id + "" }) as Params["params"]);
 }
-
 
 async function ProductList({
   categoryId,
@@ -56,29 +54,13 @@ async function ProductList({
     brandObj[b.id] = b.image_url;
   });
 
-  const classes = {
-    item: "flex mt-[10px] group",
-    aItem: "font-bold ml-2 group-hover:text-[#cd1818]",
-    button: "",
-  };
-
   return (
     <>
       {!!data.products.length && (
         <div className="mt-[20px]">
           {data.products.map((p, index) => (
-            <Link href={`/product/${p.id}`} key={index} className={classes.item}>
-              <div className="h-[70px] w-[70px]">
-                <MyImage
-                  alt=""
-                  width={70}
-                  height={70}
-                  className="rounded-[6px] h-full object-contain"
-                  src={p.image_url || brandObj[p.brand_id]}
-                />
-              </div>
-
-              <span className={classes.aItem}>{p.product_name}</span>
+            <Link href={`/product/${p.id}`} key={index}>
+              <ProductItem product={p} />
             </Link>
           ))}
         </div>
@@ -128,28 +110,44 @@ async function BrandListServerSide({
   const curCategory = categories?.find((c) => c.id === +categoryId);
 
   return (
-    <div className="flex flex-wrap -ml-2">
-      <Button
-        href={`/${categoryId}`}
-        colors={"second"}
-        size={"clear"}
-        active={!brandId}
-        className="mt-2 ml-2 py-1 px-3"
-      >
-        All
-      </Button>
-      {curCategory?.brands.map((b, index) => (
+    <div className="mt-3">
+      <p className="faded-text">Brands:</p>
+      <div className="flex flex-wrap gap-2 mt-1">
         <Button
-          key={index}
-          href={`/${categoryId}${`?brand_id=${b.id}`}`}
+          href={`/${categoryId}`}
           colors={"second"}
           size={"clear"}
-          active={+brandId === b.id}
-          className="mt-2 ml-2 py-1 px-3"
+          active={!brandId}
+          className="py-1 px-3"
         >
-          {b.brand_name}
+          All
         </Button>
-      ))}
+        {curCategory?.brands.map((b, index) => (
+          <Button
+            key={index}
+            href={`/${categoryId}${`?brand_id=${b.id}`}`}
+            colors={"second"}
+            size={"clear"}
+            active={+brandId === b.id}
+            className="py-1 px-3"
+          >
+            {b.brand_name}
+          </Button>
+        ))}
+      </div>
+
+      <p className="faded-text mt-3">Tags:</p>
+
+      <div className="flex flex-wrap gap-2 mt-1">
+        {curCategory?.tags.map((t, i) => (
+          <Link href={`/tag/${t.id}`} key={i}>
+            <Button colors={"second"} size={"clear"} className="py-1 px-3">
+              <TagIcon className="w-5" />
+              <span>{t.name}</span>
+            </Button>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 }
@@ -167,10 +165,8 @@ export default async function ProductPage({
     <>
       <CategoryLabel categoryId={categoryId} />
 
-      {/* <BrandList brands={curCategory?.brands || []} /> */}
       <BrandListServerSide brandId={searchParams.brand_id} categoryId={categoryId} />
 
-      {/* <div key={page}> */}
       <Suspense fallback={<Loading />}>
         <ProductList
           categoryId={categoryId}
@@ -178,7 +174,6 @@ export default async function ProductPage({
           page={page}
         />
       </Suspense>
-      {/* </div> */}
     </>
   );
 }

@@ -1,7 +1,7 @@
 import { sleep } from "@/utils/appHelper";
 
 export const searchProduct = async (keyword: string, controller?: AbortController) => {
-  if (keyword.length < 3) return;
+  if (keyword.length < 2) return;
 
   const res = await fetch(
     `${

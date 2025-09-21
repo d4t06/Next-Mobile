@@ -13,7 +13,6 @@ import MyInput from "@/components/ui/MyInput";
 import { ModalContentWrapper } from ".";
 
 type Props = {
-  closeModal: () => void;
   cbWhenSubmit: (value: string) => void;
   title: string;
   initValue?: string;
@@ -23,7 +22,6 @@ type Props = {
 };
 
 export default function AddItem({
-  closeModal,
   cbWhenSubmit,
   title,
   initValue,
@@ -50,7 +48,7 @@ export default function AddItem({
 
   return (
     <ModalContentWrapper>
-      <ModalHeader closeModal={closeModal} title={title} />
+      <ModalHeader title={title} />
       <form action="" onSubmit={handleSubmit}>
         {variant === "input" && (
           <MyInput

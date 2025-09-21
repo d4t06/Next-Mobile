@@ -14,7 +14,7 @@ export default function CategoryList({ categories }: Props) {
         {categories.length ? (
           categories.map((c, index) => <CategoryItem key={index} category={c} />)
         ) : (
-          <NotFound />
+          <NotFound className="mx-auto" />
         )}
       </div>
     </>

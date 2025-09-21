@@ -28,7 +28,7 @@ export default function AttributeItem({ attribute, index }: Props) {
 
   return (
     <>
-      <ItemRightCta className="attribute-item ml-2 mt-2" data-id={attribute.id}>
+      <ItemRightCta>
         <span>{attribute.attribute_name}</span>
 
         <div>
@@ -44,7 +44,6 @@ export default function AttributeItem({ attribute, index }: Props) {
           {modal === "delete" && index !== undefined && (
             <ConfirmModal
               loading={isFetching}
-              closeModal={() => modalRef.current?.close()}
               callback={() =>
                 actions({
                   type: "Delete",
@@ -61,7 +60,6 @@ export default function AttributeItem({ attribute, index }: Props) {
               variant="input"
               title="Edit category"
               loading={isFetching}
-              closeModal={() => modalRef.current?.close()}
               initValue={attribute.attribute_name}
               cbWhenSubmit={(v) =>
                 actions({

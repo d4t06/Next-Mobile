@@ -41,7 +41,6 @@ export default function CategoryItem({ category }: Props) {
         {modal === "delete" && (
           <ConfirmModal
             loading={isFetching}
-            closeModal={() => modalRef.current?.close()}
             callback={() => actions({ type: "Delete", id: category.id })}
           />
         )}
@@ -51,7 +50,6 @@ export default function CategoryItem({ category }: Props) {
             title="Edit category"
             loading={isFetching}
             initValue={category.category_name}
-            closeModal={() => modalRef.current?.close()}
             cbWhenSubmit={(v) =>
               actions({
                 type: "Edit",

@@ -7,7 +7,6 @@ import { getAllProducts } from "@/libs/getAllProducts";
 import DescriptionSection from "./_components/DesctiptionSection";
 import CommentSection from "./_components/CommentSection";
 import MagnifierProvider from "@/stores/MagnifierContext";
-import { Title } from "@/components";
 
 export const revalidate = 86400;
 
@@ -70,8 +69,6 @@ export default async function ProductDetailPage({ params: { productId } }: Param
   return (
     <>
       <MagnifierProvider>
-        <Title title="Product detail" />
-
         <div className={classes.detailBody}>
           <div className={classes.detailLeft}>
             <SpecificationSection product={product} productCategory={productCategory} />

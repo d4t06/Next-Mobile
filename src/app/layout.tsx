@@ -1,16 +1,17 @@
 import type { Metadata } from "next";
-// import localFont from "next/font/local";
-import AuthProvider from "@/stores/SessionContext";
+import localFont from "next/font/local";
 import "./globals.css";
 import "./styles.scss";
 import "./theme.css";
 import CompareProvider from "@/stores/CompareContext";
-// import defaultTheme from "tailwindcss/defaultTheme";
+import AuthProvider from "@/stores/AuthContext";
+import ThemeEffect from "@/layout/_components/ThemeEffect";
+import defaultTheme from "tailwindcss/defaultTheme";
 
-// const _font = localFont({
-//   src: "./Comfortaa-VariableFont.ttf",
-//   weight: "400 500 600 700",
-// });
+const _font = localFont({
+  src: "./Comfortaa-VariableFont.ttf",
+  weight: "500 700",
+});
 
 export const metadata: Metadata = {
   title: "Dspec Vercel",
@@ -30,10 +31,10 @@ export default async function RootLayout({
     <html lang="en">
       <body
         className="transition-colors bg-white dark:bg-slate-800 dark:text-white"
-        // style={{
-        //   fontFamily:
-        //     _font.style.fontFamily + "," + defaultTheme.fontFamily.sans.join(","),
-        // }}
+        style={{
+          fontFamily:
+            _font.style.fontFamily + "," + defaultTheme.fontFamily.sans.join(","),
+        }}
       >
         <AuthProvider>
           <CompareProvider>
@@ -41,6 +42,8 @@ export default async function RootLayout({
             <div id="portals"></div>
           </CompareProvider>
         </AuthProvider>
+
+        <ThemeEffect />
       </body>
     </html>
   );

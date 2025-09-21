@@ -1,7 +1,7 @@
 "use client";
-import AddProductForm from "@/components/AddProductForm";
 import { Modal, ModalRef } from "@/components/modal";
 import Button from "@/components/ui/Button";
+import AddProductModal from "@/modules/add-product-modal";
 import { PlusIcon } from "@heroicons/react/16/solid";
 import { useRef } from "react";
 
@@ -19,8 +19,7 @@ export default function AddProductButton({ categories }: Props) {
         <span className="hidden ml-[6px] sm:block">Add new</span>
       </Button>
       <Modal ref={modalRef}>
-        <AddProductForm
-          closeModal={() => modalRef.current?.close()}
+        <AddProductModal
           type="Add"
           categories={categories}
         />

@@ -87,13 +87,12 @@ export default function SignUnPage() {
   }, []);
 
   const classes = {
-    formContainer:
-      "p-[20px] border border-black/10 w-[400px] max-w-[100vw] shadow-[4px_4px_0px_rgba(0,0,0,0.1)] bg-white rounded-[16px] space-y-[20px] absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%]",
-    label: "font-[500] flex items-center space-x-[4px]",
+    formContainer: "login-form",
+    label: "flex items-center space-x-1",
     constructor:
       "bg-[#333] p-[6px] rounded-[6px] text-sm text-white origin-top duration-[.3s] transition-all",
-    checkIcon: "text-emerald-500 w-[24px]",
-    xIcon: "text-red-500 w-[24px]",
+    checkIcon: "text-emerald-500 w-6",
+    xIcon: "text-red-500 w-6",
   };
 
   return (
@@ -105,10 +104,10 @@ export default function SignUnPage() {
       )}
       <h1 className="text-center text-[24px] font-[500]">Sign Up</h1>
 
-      <div className="space-y-[4px]">
-        <div className={"space-y-[6px]"}>
+      <div className="space-y-2">
+        <div className={"space-y-1"}>
           <label className={classes.label} htmlFor="name">
-            Username
+            <span>Username</span>
             {!!username && (
               <span>
                 {validName ? (
@@ -142,9 +141,9 @@ export default function SignUnPage() {
           </div>
         </div>
 
-        <div className={"space-y-[6px]"}>
+        <div className={"space-y-1"}>
           <label className={classes.label} htmlFor="password">
-            Password
+            <span>Password</span>
             {password && (
               <span>
                 {validPwd ? (
@@ -176,9 +175,9 @@ export default function SignUnPage() {
           </p>
         </div>
 
-        <div className={"space-y-[6px]"}>
+        <div className={"space-y-1"}>
           <label className={classes.label} htmlFor="confirm">
-            Confirm password
+            <span>Confirm password</span>
             {password && (
               <span className={validMatchPwg && validPwd ? "" : "hide"}>
                 {validMatchPwg && validPwd ? (

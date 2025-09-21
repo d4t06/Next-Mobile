@@ -46,7 +46,6 @@ export default function DangerZone({ product }: Props) {
       <Modal ref={modalRef}>
         <ConfirmModal
           loading={isFetching}
-          closeModal={() => modalRef.current?.close()}
           callback={handleDeleteProduct}
         />
       </Modal>

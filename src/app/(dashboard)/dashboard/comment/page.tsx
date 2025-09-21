@@ -8,7 +8,7 @@ import { getServerSession } from "next-auth";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
 import { redirect } from "next/navigation";
 
-export const revalidate = 86400;
+// export const revalidate = 86400;
 
 export default async function DashboardComment() {
   const session = await getServerSession(nextAuthOptions);

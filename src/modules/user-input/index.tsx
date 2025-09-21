@@ -8,7 +8,7 @@ import {
   MyPopupTrigger,
   PopupWrapper,
 } from "@/components/popup";
-import { useAuthContext } from "@/stores/SessionContext";
+import { useAuthContext } from "@/stores/AuthContext";
 import useCommentInput from "./useCommentInput";
 import { Modal, ModalContentWrapper } from "@/components/modal";
 import { Title, AvatarPlaceholder, Button } from "@/components";

@@ -101,7 +101,7 @@ export default function AddProduct() {
       </div>
 
       <Modal ref={modalRef}>
-        <SearchBox submit={(p) => handleSetProduct(p)} closeModal={closeModal} />
+        <SearchBox submit={(p) => handleSetProduct(p)} />
       </Modal>
     </>
   );

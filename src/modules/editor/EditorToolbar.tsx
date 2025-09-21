@@ -1,11 +1,11 @@
 "use client";
 
-import Gallery from "@/components/Gallery";
 import { Modal, ModalRef } from "@/components/modal";
 import Button from "@/components/ui/Button";
 import { Content, Editor } from "@tiptap/react";
 import { useRef, useState } from "react";
 import AddVideoModal from "./AddVideoModal";
+import Gallery from "../gallery";
 
 type Props = {
   editor: Editor | null;
@@ -26,8 +26,6 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
     modalRef.current?.open();
   };
 
-  const closeModal = () => modalRef.current?.close();
-
   const handleAddImage = (imageList: ImageType[]) => {
     if (!editor) return;
     const imageContents: Content[] = imageList.map((i) => ({
@@ -43,9 +41,8 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
   const handleAddVideo = ({ id, title }: { id: string; title: string }) => {
     if (!editor) return;
 
-    if (id) {
-      editor.chain().focus().setIframe({ id, title }).run();
-    }
+    editor.chain().focus().setIframe({ id, title }).run();
+    modalRef.current?.close();
   };
 
   const handleSubmit = async () => {
@@ -111,16 +108,10 @@ export default function EditToolbar({ editor, isLoading, isChange, ...props }: P
 
       <Modal ref={modalRef}>
         {modal === "gallery" && (
-          <Gallery
-            closeModal={closeModal}
-            multiple
-            setImageUrl={(images) => handleAddImage(images)}
-          />
+          <Gallery multiple setImageUrl={(images) => handleAddImage(images)} />
         )}
 
-        {modal === "add-video" && (
-          <AddVideoModal clsoeModal={closeModal} submit={handleAddVideo} />
-        )}
+        {modal === "add-video" && <AddVideoModal submit={handleAddVideo} />}
       </Modal>
     </>
   );

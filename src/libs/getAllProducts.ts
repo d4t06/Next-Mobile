@@ -4,13 +4,15 @@ export const getAllProducts = async (props?: {
    page?: number | string;
    category_id?: string | number;
    brand_id?: string | number;
+   tag_id?: string | number;
 }) => {
-   const { category_id, page, brand_id } = props || {};
+   const { category_id, page, brand_id, tag_id } = props || {};
 
    let params = `?page=${page || 1}`;
 
    if (category_id) params += `&category_id=${category_id}`;
    if (brand_id) params += `&brand_id=${brand_id}`;
+   if (brand_id) params += `&tag_id=${tag_id}`;
 
    const res = await fetch(
       `${

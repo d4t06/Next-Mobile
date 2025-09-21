@@ -4,8 +4,10 @@ declare module "next-auth" {
   // client session
   interface Session {
     user: {
+      id: number,
       username: string;
       role: string;
+      like_products: LikeProductSchema[];
     };
     token: string;
     refreshToken: string;
@@ -16,8 +18,10 @@ declare module "next-auth" {
     refresh_token: string;
     token: string;
     user: {
+      id: number,
       username: string;
       role: string;
+      like_products: LikeProductSchema[];
     };
   }
 }

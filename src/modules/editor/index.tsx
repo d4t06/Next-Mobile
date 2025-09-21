@@ -39,7 +39,7 @@ export default function MyEditor({ isLoading, submit, content }: Props) {
       />
       <div className={`${classes.editContainer}`}>
         <EditorContent
-          className="prose pt-[30px] sm:mx-auto px-[20px] sm:px-[50px] pb-[50vh] [&_.ProseMirror-selectednode]:border-red-500"
+          className="prose pt-[30px] sm:mx-auto pb-[50vh] [&_.ProseMirror-selectednode]:border-red-500"
           editor={editor}
         />
       </div>

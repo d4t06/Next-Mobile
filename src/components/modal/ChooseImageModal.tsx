@@ -1,23 +1,19 @@
-import {
-  ChangeEvent,
-  ClipboardEventHandler,
-  RefObject,
-  useRef,
-} from "react";
+import { ChangeEvent, ClipboardEventHandler, RefObject, useRef } from "react";
 
 import { FolderOpenIcon } from "@heroicons/react/24/outline";
-import { ModalRef,ModalContentWrapper } from ".";
+import { ModalRef, ModalContentWrapper } from ".";
 import ModalHeader from "./ModalHeader";
 import Button from "../ui/Button";
 import { useImageContext } from "@/stores/ImageContext";
+import { useModalContext } from "./Modal";
 
 type ReadCopiedImageProps = {
-  modalRef?: RefObject<ModalRef>;
   width?: number;
   height?: number;
 };
 
-function useReadCopiedImage({ modalRef, ...props }: ReadCopiedImageProps) {
+function useReadCopiedImage({ ...props }: ReadCopiedImageProps) {
+  const { closeModal } = useModalContext();
   const { uploaderRef } = useImageContext();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -26,7 +22,7 @@ function useReadCopiedImage({ modalRef, ...props }: ReadCopiedImageProps) {
 
     uploaderRef.current?.upload(Array.from(fileLists), { ...props });
 
-    modalRef?.current?.close();
+    closeModal();
   };
 
   const handlePaste: ClipboardEventHandler = async (e) => {
@@ -36,7 +32,7 @@ function useReadCopiedImage({ modalRef, ...props }: ReadCopiedImageProps) {
 
       uploaderRef.current?.upload(Array.from(fileLists), { ...props });
 
-      modalRef?.current?.close();
+      closeModal();
     } catch (error) {
       console.log(error);
     }
@@ -54,18 +50,14 @@ type Props = {
 
 export default function ChooseImageModal({ title, modalRef, ...props }: Props) {
   const { handleInputChange, handlePaste } = useReadCopiedImage({
-    modalRef,
     ...props,
   });
 
   const labelRef = useRef<HTMLLabelElement>(null);
 
   return (
-   <ModalContentWrapper>
-      <ModalHeader
-        title={title || "Choose image"}
-        closeModal={() => modalRef.current?.close()}
-      />
+    <ModalContentWrapper>
+      <ModalHeader title={title || "Choose image"} />
 
       <input
         onChange={handleInputChange}
@@ -81,13 +73,16 @@ export default function ChooseImageModal({ title, modalRef, ...props }: Props) {
         className={`inline-flex p-1.5 space-x-1 md:px-3`}
       ></label>
 
-      <input
-        onPaste={handlePaste}
-        type="text"
-        readOnly
-        placeholder="Paste image here"
-        className="my-input "
-      />
+      <div className="relative">
+        <p className="bg-[--a-5-cl] py-1 px-3 rounded-md text-[#808080]">
+          Paste image here
+        </p>
+        <div
+          className="absolute inset-0 text-transparent py-1 px-3 bg-transparent"
+          onPaste={handlePaste}
+          contentEditable
+        ></div>
+      </div>
 
       <p className="text-center mt-5">
         <Button onClick={() => labelRef.current?.click()}>

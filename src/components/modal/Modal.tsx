@@ -6,6 +6,8 @@ import {
 	type MouseEventHandler,
 	type ReactNode,
 	type Ref,
+	createContext,
+	useContext,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -14,12 +16,33 @@ export type ModalRef = {
 	close: () => void;
 };
 
+function useModal() {
+	const [isOpen, setIsOpen] = useState(false);
+
+	const closeModal = () => setIsOpen(false);
+
+	return { isOpen, setIsOpen, closeModal };
+}
+
+type ContextType = ReturnType<typeof useModal>;
+
+const context = createContext<ContextType | null>(null);
+
+export function useModalContext() {
+	const ct = useContext(context);
+	if (!ct) throw new Error("ModalContext not provided");
+
+	return ct;
+}
+
 type Props = {
 	children: ReactNode;
+	onClose?: () => void;
 };
 
-function Modal({ children }: Props, ref: Ref<ModalRef>) {
-	const [isOpen, setIsOpen] = useState(false);
+function ModalContent({ children, onClose, modalRef }: Props & { modalRef: Ref<ModalRef> }) {
+	const { isOpen, setIsOpen } = useModalContext();
+
 	const [isMounted, setIsMounted] = useState(false);
 
 	const open = () => {
@@ -37,7 +60,7 @@ function Modal({ children }: Props, ref: Ref<ModalRef>) {
 		setIsMounted(false);
 	};
 
-	useImperativeHandle(ref, () => ({
+	useImperativeHandle(modalRef, () => ({
 		close,
 		open,
 	}));
@@ -46,7 +69,7 @@ function Modal({ children }: Props, ref: Ref<ModalRef>) {
 		if (!isMounted) {
 			setTimeout(() => {
 				setIsOpen(false);
-			}, 400);
+			}, 300);
 		}
 	}, [isMounted]);
 
@@ -55,6 +78,8 @@ function Modal({ children }: Props, ref: Ref<ModalRef>) {
 			setTimeout(() => {
 				setIsMounted(true);
 			}, 100);
+		} else {
+			onClose && onClose();
 		}
 	}, [isOpen]);
 
@@ -72,12 +97,12 @@ function Modal({ children }: Props, ref: Ref<ModalRef>) {
 					<div className="fixed inset-0 z-[99]">
 						<div
 							onClick={handleOverlayClick}
-							className={`transition-opacity duration-300 absolute bg-black inset-0 z-[90]
+							className={`transition-opacity ease-in-out duration-200 absolute bg-black inset-0 z-[90]
                              ${isMounted ? classes.mountedLayer : classes.unMountedLayer}
                         `}
 						></div>
 						<div
-							className={`absolute duration-300 transition-[transform,opacity] z-[99] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
+							className={`absolute duration-200 transition-[transform,opacity] ease-in-out z-[99] top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2
                             ${
 															isMounted
 																? classes.mountedContent
@@ -91,6 +116,14 @@ function Modal({ children }: Props, ref: Ref<ModalRef>) {
 					document.getElementById("portals")!,
 				)}
 		</>
+	);
+}
+
+function Modal({ children, ...rest }: Props, ref: Ref<ModalRef>) {
+	return (
+		<context.Provider value={useModal()}>
+			<ModalContent modalRef={ref} {...rest}>{children}</ModalContent>
+		</context.Provider>
 	);
 }
 

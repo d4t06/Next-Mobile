@@ -1,8 +1,8 @@
 "use client";
 
-import ImageModal from "@/components/modal/ImageModal";
-import useDescriptionSection from "@/hooks/useDescriptionSection";
 import { createPortal } from "react-dom";
+import useDescriptionSection from "../_hooks/useDescriptionSection";
+import ImageModal from "@/modules/image-modal";
 
 export default function ImageModalAndMagnifier() {
   const { isOpenModal, magnifierRef, closeModal, isMounted } = useDescriptionSection();

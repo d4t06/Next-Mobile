@@ -41,7 +41,7 @@ export default function NotFound({
 
   return (
     <div className={`${className}`}>
-      <Image className="mx-auto" width={200} src={simon_empty.src} alt="" />
+      <Image className="mx-auto" width={120} height={120} src={simon_empty.src} alt="" />
       {renderContent()}
       {children}
     </div>

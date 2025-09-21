@@ -30,7 +30,6 @@ export default function AddNewAttributeBtn({ currentCategory }: Props) {
         <AddItem
           v-if="props.currentCategory"
           variant="input"
-          closeModal={() => modalRef.current?.close()}
           cbWhenSubmit={(v) =>
             currentCategory &&
             actions({
