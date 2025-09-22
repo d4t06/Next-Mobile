@@ -7,7 +7,7 @@ import { useToastContext } from "@/stores/ToastContext";
 import { ModalContentWrapper, ModalHeader } from "@/components/modal";
 import { Button, MyInput } from "@/components";
 import { useModalContext } from "@/components/modal/Modal";
-import { useCurrentCategoryContext } from "./CurrentCategoryContext";
+import { useCurrentCategoryContext } from "../../_components/CurrentCategoryContext";
 
 type Props = {
   afterSubmit?: (tag: Tag) => void;

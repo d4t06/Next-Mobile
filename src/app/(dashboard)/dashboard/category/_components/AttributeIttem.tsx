@@ -7,14 +7,16 @@ import { Modal, ModalRef } from "@/components/modal";
 import ItemRightCta from "@/components/ui/ItemRightCta";
 import ConfirmModal from "@/components/modal/Confirm";
 import AddItem from "@/components/modal/AddItem";
+import { useCurrentCategoryContext } from "../../_components/CurrentCategoryContext";
 
 type Props = {
   attribute: CategoryAttribute;
   index: number | undefined;
 };
+type Modal = "edit" | "delete";
 
 export default function AttributeItem({ attribute, index }: Props) {
-  type Modal = "edit" | "delete";
+  const { currentCategory } = useCurrentCategoryContext();
 
   const modalRef = useRef<ModalRef | null>(null);
   const [modal, setModal] = useState<Modal | "">("");
@@ -41,14 +43,14 @@ export default function AttributeItem({ attribute, index }: Props) {
         </div>
 
         <Modal ref={modalRef}>
-          {modal === "delete" && index !== undefined && (
+          {modal === "delete" && currentCategory && index !== undefined && (
             <ConfirmModal
               loading={isFetching}
               callback={() =>
                 actions({
                   type: "Delete",
                   id: attribute.id,
-                  categoryId: attribute.category_id,
+                  category: currentCategory,
                   index,
                 })
               }

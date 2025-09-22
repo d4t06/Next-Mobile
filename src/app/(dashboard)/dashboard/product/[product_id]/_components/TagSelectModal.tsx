@@ -48,7 +48,7 @@ export default function TagSelectModal({ current, loading, choose, tags }: Props
           handleSubmit={() => {}}
         />
 
-        <div className="h-[40vh] flex flex-wrap items-start mt-3 gap-2 overflow-y-auto">
+        <div className="flex flex-wrap mt-5 gap-2 overflow-y-auto">
           {_tags.length ? (
             _tags.map((t, i) => {
               const isSelected = selectedTags.find((_t) => _t.id === t.id);
@@ -72,7 +72,7 @@ export default function TagSelectModal({ current, loading, choose, tags }: Props
             </>
           )}
         </div>
-        <p className="text-right mt-auto">
+        <p className="text-right mt-5">
           <Button loading={loading} onClick={() => choose(selectedTags)}>
             <span>Submit</span>
           </Button>

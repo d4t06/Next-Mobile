@@ -2,7 +2,7 @@ import { useRef } from "react";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { generateId } from "@/utils/appHelper";
 import useAttributeAction from "../_hooks/useAttributeAction";
-import {Modal, ModalRef } from "@/components/modal";
+import { Modal, ModalRef } from "@/components/modal";
 import Button from "@/components/ui/Button";
 import AddItem from "@/components/modal/AddItem";
 
@@ -23,7 +23,7 @@ export default function AddNewAttributeBtn({ currentCategory }: Props) {
         onClick={() => modalRef.current?.open()}
       >
         <PlusIcon className="w-6" />
-        <span className="hidden sm:block">Add new brand</span>
+        <span className="hidden sm:block">Add new attribute</span>
       </Button>
 
       <Modal ref={modalRef}>
@@ -34,7 +34,7 @@ export default function AddNewAttributeBtn({ currentCategory }: Props) {
             currentCategory &&
             actions({
               type: "Add",
-              categoryId: currentCategory.id,
+              category: currentCategory,
               attribute: {
                 attribute_name: v,
                 attribute_name_ascii: generateId(v),

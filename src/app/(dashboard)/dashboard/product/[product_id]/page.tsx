@@ -4,8 +4,9 @@ import Specification from "./_components/Specification";
 import Description from "./_components/Description";
 import DangerZone from "./_components/DangerZone";
 import { getProductDetail } from "@/libs/getProductDetail";
-import EditDescriptionBtn from "./_components/EditDescriptionBtn";
-import { Title } from "@/components";
+import TagSection from "./_components/TagSection";
+import CurrentCategoryProvider from "../../_components/CurrentCategoryContext";
+import CurrentProductProdiver from "./CurrentProductContext";
 
 type Props = {
   params: {
@@ -21,35 +22,23 @@ export default async function EditProduct({ params: { product_id } }: Props) {
     getProductDetail(product_id),
   ]);
 
-  const classes = {
-    group: "p-[20px] rounded-[12px] bg-[#fff] dark:bg-slate-800 border",
-    label: "text-lg sm:text-xl font-[500]",
-  };
-
   if (!categories || !productDetail) return;
 
   return (
-    <>
-      <div className="space-y-[30px]">
-        <ProductInfo categories={categories} product={productDetail} />
+    <CurrentProductProdiver categories={categories} product={productDetail}>
+      <CurrentCategoryProvider>
+        <div className="space-y-5">
+          <ProductInfo  />
 
-        <Title title="Specification" variant={"h2"} />
+          <Specification />
 
-        <Specification categories={categories} product={productDetail} />
+          <TagSection />
 
-        <div className="flex justify-between items-center">
-          <Title title="Description" variant={"h2"} />
-          <EditDescriptionBtn product={productDetail} />
+          <Description />
+
+          <DangerZone />
         </div>
-
-        <Description product={productDetail} />
-
-        <Title title="Danger Zone" className="text-red-500" variant={"h2"} />
-
-        <div className={`${classes.group} border-red-500`}>
-          <DangerZone product={productDetail} />
-        </div>
-      </div>
-    </>
+      </CurrentCategoryProvider>
+    </CurrentProductProdiver>
   );
 }

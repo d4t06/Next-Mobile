@@ -7,7 +7,6 @@ import useFetch from "@/hooks/useFetch";
 import { useAuthContext } from "@/stores/AuthContext";
 import { useToastContext } from "@/stores/ToastContext";
 import { Session } from "next-auth";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
@@ -50,12 +49,6 @@ export default function ProductList(_props: Props) {
 		}
 	}, [user]);
 
-	const classes = {
-		item: "flex mt-[10px] group",
-		aItem: "font-bold ml-2 group-hover:text-[#cd1818]",
-		button: "",
-	};
-
 	if (isFetching) return;
 
 	return (
@@ -67,13 +60,11 @@ export default function ProductList(_props: Props) {
 					<>
 						{!!likeProducts.length ? (
 							likeProducts.map((lP, index) => (
-								<Link
+								<ProductItem
 									href={`/product/${lP.product.id}`}
 									key={index}
-									className={classes.item}
-								>
-									<ProductItem product={lP.product} />
-								</Link>
+									product={lP.product}
+								/>
 							))
 						) : (
 							<NotFound />

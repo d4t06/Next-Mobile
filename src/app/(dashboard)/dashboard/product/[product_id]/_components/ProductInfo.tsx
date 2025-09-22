@@ -5,16 +5,12 @@ import Button from "@/components/ui/Button";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import { Modal, ModalRef } from "@/components/modal";
 import AddProductModal from "@/modules/add-product-modal";
+import { useCurrentProductContext } from "../CurrentProductContext";
 
-type Props = {
-  product: Product;
-  categories: Category[];
-};
-
-export default function ProductInfo({ product, categories }: Props) {
+export default function ProductInfo() {
+  const { categories, product } = useCurrentProductContext();
   const modalRef = useRef<ModalRef>(null);
 
-  if (!product) return;
   return (
     <>
       <div className="flex justify-between items-center">
@@ -29,11 +25,7 @@ export default function ProductInfo({ product, categories }: Props) {
       </div>
 
       <Modal ref={modalRef}>
-        <AddProductModal
-          categories={categories}
-          product={product}
-          type="Edit"
-        />
+        <AddProductModal categories={categories} product={product} type="Edit" />
       </Modal>
     </>
   );

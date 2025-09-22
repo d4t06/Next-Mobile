@@ -1,5 +1,6 @@
 "use client";
 import { runRevalidateTag } from "@/app/actions";
+import { Title } from "@/components";
 import { Modal, ModalRef } from "@/components/modal";
 import ConfirmModal from "@/components/modal/Confirm";
 import Button from "@/components/ui/Button";
@@ -7,14 +8,13 @@ import useFetch from "@/hooks/useFetch";
 import { sleep } from "@/utils/appHelper";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
-
-type Props = {
-  product: Product;
-};
+import { useCurrentProductContext } from "../CurrentProductContext";
 
 const URL = "products";
 
-export default function DangerZone({ product }: Props) {
+export default function DangerZone() {
+  const { product } = useCurrentProductContext();
+
   const [isFetching, setIsFetching] = useState(false);
 
   const modalRef = useRef<ModalRef>(null);
@@ -42,12 +42,14 @@ export default function DangerZone({ product }: Props) {
 
   return (
     <>
-      <Button onClick={() => modalRef.current?.open()}>Delete</Button>
+      <Title title="Danger Zone" className="text-red-500" variant={"h2"} />
+
+      <div className={`p-4 rounded-lg border-red-500`}>
+        <Button onClick={() => modalRef.current?.open()}>Delete</Button>
+      </div>
+
       <Modal ref={modalRef}>
-        <ConfirmModal
-          loading={isFetching}
-          callback={handleDeleteProduct}
-        />
+        <ConfirmModal loading={isFetching} callback={handleDeleteProduct} />
       </Modal>
     </>
   );

@@ -123,10 +123,10 @@ export default function AddProductModal({ categories, ...props }: Props) {
         <ModalHeader title={title} />
         <div className="flex-grow overflow-x-hidden">
           <div className="sm:flex sm:flex-row -mx-2">
-            <div className="w-full sm:w-2/5 px-2 flex-shrink-0">
+            <div className="w-full sm:w-[200px] px-2 flex-shrink-0">
               <MyImage
                 className="mx-auto rounded-lg"
-                src={productData.image_url}
+                src={productData.image_url || "/cho_vo_tri.jpg"}
                 height={200}
                 width={200}
               />
@@ -141,8 +141,8 @@ export default function AddProductModal({ categories, ...props }: Props) {
               </Button>
             </div>
 
-            <div className="mt-[30px] sm:mt-0 w-full">
-              <div className="space-y-3 px-2">
+            <div className="mt-[30px] sm:mt-0 w-full px-2">
+              <div className="space-y-3">
                 <div className="space-y-1">
                   <label htmlFor="">Name</label>
                   <MyInput

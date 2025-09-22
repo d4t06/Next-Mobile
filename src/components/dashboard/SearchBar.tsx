@@ -38,48 +38,42 @@ export default function Searchbar({
   };
 
   const content = (
-    <form
-      ref={formRef}
-      onSubmit={submit}
-      className="flex gap-2 justify-between items-center"
-    >
-      <div className="relative flex-grow flex items-center">
-        <MyInput
-          type="text"
-          ref={inputRef}
-          className="font-semibold pr-10"
-          value={value}
-          cb={(v) => setValue(v)}
-          onFocus={onFocus}
-          placeholder={place || "..."}
-        />
+    <form ref={formRef} onSubmit={submit} className="flex">
+      <MyInput
+        type="text"
+        ref={inputRef}
+        className="pr-3 bg-transparent p-0"
+        value={value}
+        cb={(v) => setValue(v)}
+        onFocus={onFocus}
+        placeholder={place || "..."}
+      />
 
-        {value && (
-          <button
-            type="button"
-            onClick={() => {
-              if (!loading) {
-                setValue("");
-                whenClear && whenClear();
-              }
-            }}
-            className="absolute right-3"
-          >
-            {loading ? (
-              <ArrowPathIcon className="w-6 animate-spin" />
-            ) : (
-              <XMarkIcon className="w-6" />
-            )}
-          </button>
-        )}
-      </div>
-      <button type="submit" className="p-2 flex-shrink-0">
+      {value && (
+        <button
+          type="button"
+          onClick={() => {
+            if (!loading) {
+              setValue("");
+              whenClear && whenClear();
+            }
+          }}
+          className="faded-text"
+        >
+          {loading ? (
+            <ArrowPathIcon className="w-6 animate-spin" />
+          ) : (
+            <XMarkIcon className="w-6" />
+          )}
+        </button>
+      )}
+      <button type="submit" className="p-1 flex-shrink-0">
         <MagnifyingGlassIcon className="w-6" />
       </button>
     </form>
   );
 
-  if (frame) return <Frame className={className}>{content}</Frame>;
+  if (frame) return <Frame className={""}>{content}</Frame>;
 
   return content;
 }

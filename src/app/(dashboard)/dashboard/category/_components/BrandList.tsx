@@ -1,7 +1,9 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import AddNewBrandBtn from "./AddNewBrandBtn";
 import BrandItem from "./BrandItem";
+import { useCurrentCategoryContext } from "../../_components/CurrentCategoryContext";
+import CategorySelect from "../../_components/CategorySelect";
 
 type Props = {
   categories: Category[];
@@ -10,42 +12,17 @@ type Props = {
 export type BrandListModal = "add" | "edit-name" | "image" | "delete";
 
 export default function BrandList({ categories }: Props) {
-  const [curCategoryIndex, setCurCategoryIndex] = useState<number>();
-
-  const currentCategory = useMemo(
-    () => (curCategoryIndex != undefined ? categories[curCategoryIndex] : undefined),
-    [categories, curCategoryIndex],
-  );
+  const { currentCategory } = useCurrentCategoryContext();
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2 h-9">
-          <p className="faded-text">Category: </p>
-          <div className="bg-[#ccc] rounded-[12px]">
-            <select
-              disabled={!categories.length}
-              className={`my-input min-w-[100px]`}
-              name="category"
-              onChange={(e) => setCurCategoryIndex(+e.target.value)}
-            >
-              <option value={undefined}>---</option>
-              {!!categories.length &&
-                categories.map((category, index) => (
-                  <option key={index} value={index}>
-                    {category.category_name}
-                  </option>
-                ))}
-            </select>
-          </div>
-        </div>
+      <div className="flex items-center justify-between h-9">
+        <CategorySelect categories={categories} />
 
-        {currentCategory && <AddNewBrandBtn currentCategory={currentCategory} />}
+        {currentCategory && <AddNewBrandBtn />}
       </div>
 
-      <div
-        className={`flex flex-wrap gap-2`}
-      >
+      <div className={`flex flex-wrap gap-2`}>
         {currentCategory && (
           <>
             {currentCategory.brands.length ? (

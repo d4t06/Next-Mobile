@@ -9,6 +9,7 @@ import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import ProductItem from "@/components/ProductItem";
 import CategoryLabel from "./_components/CategoryLabel";
 import { TagIcon } from "@heroicons/react/24/outline";
+import Pagination from "@/components/Pagination";
 
 export const revalidate = 86400;
 
@@ -57,42 +58,26 @@ async function ProductList({
   return (
     <>
       {!!data.products.length && (
-        <div className="mt-[20px]">
+        <div className="mt-5 space-y-3">
           {data.products.map((p, index) => (
-            <Link href={`/product/${p.id}`} key={index}>
-              <ProductItem product={p} />
-            </Link>
+            <ProductItem
+              href={`/product/${p.id}`}
+              image_url={p.image_url || brandObj[p.brand_id]}
+              key={index}
+              product={p}
+            />
           ))}
         </div>
       )}
       {!data.products.length && <NoProduct />}
+
       {!!data.products.length && (
-        <div className="flex mt-[30px] justify-center">
-          <Button
-            disabled={page === 1}
-            href={`/${categoryId}${
-              brandId ? `?page=${page - 1}&brand_id=${brandId}` : `?page=${page - 1}`
-            }`}
-            size={"clear"}
-            className="px-[12px] py-[3px]"
-            colors={"second"}
-          >
-            <ChevronLeftIcon className="w-6" />
-            Previous
-          </Button>
-          <Button
-            href={`/${categoryId}${
-              brandId ? `?page=${page + 1}&brand_id=${brandId}` : `?page=${page + 1}`
-            }`}
-            size={"clear"}
-            className="px-[12px] py-[3px] ml-3"
-            colors={"second"}
-            disabled={!isRemaining}
-          >
-            Next
-            <ChevronRightIcon className="w-6" />
-          </Button>
-        </div>
+        <Pagination
+          href={`/${categoryId}`}
+          page={page}
+          isHasNextPage={isRemaining}
+          query={{ brand_id: brandId }}
+        />
       )}
     </>
   );
@@ -112,7 +97,8 @@ async function BrandListServerSide({
   return (
     <div className="mt-3">
       <p className="faded-text">Brands:</p>
-      <div className="flex flex-wrap gap-2 mt-1">
+
+      <div className="flex flex-wrap gap-2 mt-1 text-sm">
         <Button
           href={`/${categoryId}`}
           colors={"second"}
@@ -138,7 +124,7 @@ async function BrandListServerSide({
 
       <p className="faded-text mt-3">Tags:</p>
 
-      <div className="flex flex-wrap gap-2 mt-1">
+      <div className="flex flex-wrap gap-2 mt-1 text-sm">
         {curCategory?.tags.map((t, i) => (
           <Link href={`/tag/${t.id}`} key={i}>
             <Button colors={"second"} size={"clear"} className="py-1 px-3">

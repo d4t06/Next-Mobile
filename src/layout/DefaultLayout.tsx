@@ -13,7 +13,7 @@ export default async function DefaultLayout({ children }: { children: ReactNode 
         <Suspense fallback={<div className="h-[80px] sm:h-[92px]"></div>}>
           <Header />
         </Suspense>
-        <div className="container min-h-screen mt-[30px]">{children}</div>
+        <div className="container min-h-screen mt-5">{children}</div>
         <CompareList />
         <ScrollTop />
         <Footer />

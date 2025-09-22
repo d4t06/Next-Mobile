@@ -2,18 +2,12 @@
 
 import { useEffect, useMemo } from "react";
 import SpecItem from "./SpecItem";
-import AddTagBtn from "./AddTagBtn";
-import TagItem from "@/components/ui/TagItem";
-import CurrentCategoryProvider, {
-  useCurrentCategoryContext,
-} from "../../../tag/_components/CurrentCategoryContext";
+import { useCurrentCategoryContext } from "../../../_components/CurrentCategoryContext";
+import { Title } from "@/components";
+import { useCurrentProductContext } from "../CurrentProductContext";
 
-type Props = {
-  categories: Category[];
-  product: Product;
-};
-
-function Content({ categories, product }: Props) {
+export default function Specification() {
+  const { categories, product } = useCurrentProductContext();
   const { setCurrentCategory, currentCategory } = useCurrentCategoryContext();
 
   const attributeOrderArray = useMemo(
@@ -32,6 +26,8 @@ function Content({ categories, product }: Props) {
 
   return (
     <>
+      <Title title="Specification" variant={"h2"} />
+
       <table className="w-full spec-table primary-shadow overflow-hidden rounded-lg ">
         <thead className="bg-[#cd1818] text-white ">
           <tr>
@@ -51,30 +47,8 @@ function Content({ categories, product }: Props) {
                 />
               ))
             : ""}
-
-          <tr>
-            <td>Tags</td>
-            <td>
-              <div className="flex flex-wrap gap-2">
-                {product.product_tags.map((pT, i) => (
-                  <TagItem key={i} tag={pT.tag} />
-                ))}
-              </div>
-            </td>
-            <td>
-              <AddTagBtn tags={currentCategory.tags} product={product} />
-            </td>
-          </tr>
         </tbody>
       </table>
     </>
-  );
-}
-
-export default function Specification(props: Props) {
-  return (
-    <CurrentCategoryProvider>
-      <Content {...props} />
-    </CurrentCategoryProvider>
   );
 }

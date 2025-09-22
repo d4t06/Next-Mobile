@@ -20,11 +20,9 @@ async function ProductList({ q }: Props["searchParams"]) {
 	return (
 		<>
 			{!!products.length && (
-				<div className="mt-[20px]">
+				<div className="mt-5 space-y-5">
 					{products.map((p, index) => (
-						<Link href={`/product/${p.id}`} key={index}>
-							<ProductItem product={p} />
-						</Link>
+						<ProductItem href={`/product/${p.id}`} key={index} product={p} />
 					))}
 				</div>
 			)}

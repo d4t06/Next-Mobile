@@ -1,21 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
 import AttributeItem from "./AttributeIttem";
 import AddNewAttributeBtn from "./AddNewAttributeBtn";
 import ChangeAttributeOrder from "./ChangeAttributeOrder";
+import CategorySelect from "../../_components/CategorySelect";
+import { useCurrentCategoryContext } from "../../_components/CurrentCategoryContext";
 
 type Props = {
   categories: Category[];
 };
 
 export default function CategoryAttributeList({ categories }: Props) {
-  const [curCategoryIndex, setCurCategoryIndex] = useState<number>();
-
-  const currentCategory = useMemo(
-    () => (curCategoryIndex != undefined ? categories[curCategoryIndex] : undefined),
-    [categories, curCategoryIndex],
-  );
+  const { currentCategory } = useCurrentCategoryContext();
 
   const attributeOrder = currentCategory?.attribute_order
     ? currentCategory.attribute_order.split("_")
@@ -23,27 +19,8 @@ export default function CategoryAttributeList({ categories }: Props) {
 
   return (
     <>
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-2 h-9">
-          <p className="faded-text">Category: </p>
-          <div className="bg-[#ccc] rounded-[12px]">
-            <select
-              disabled={!categories.length}
-              className={`my-input min-w-[100px]`}
-              name="category"
-              onChange={(e) => setCurCategoryIndex(+e.target.value)}
-            >
-              <option value={undefined}>---</option>
-              {!!categories.length &&
-                categories.map((category, index) => (
-                  <option key={index} value={index}>
-                    {category.category_name}
-                  </option>
-                ))}
-            </select>
-          </div>
-        </div>
-
+      <div className="flex items-center justify-between h-9">
+        <CategorySelect categories={categories} />
         {currentCategory && <AddNewAttributeBtn currentCategory={currentCategory} />}
       </div>
 

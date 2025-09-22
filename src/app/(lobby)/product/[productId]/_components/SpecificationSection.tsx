@@ -1,6 +1,6 @@
 import Frame from "@/components/ui/Frame";
 import SpecificationCta from "./SpecificationCta";
-import { MyImage } from "@/components";
+import { MyImage, Title } from "@/components";
 import TagItem from "@/components/ui/TagItem";
 
 type Props = {
@@ -30,9 +30,7 @@ export default async function SpecificationSection({ product, productCategory }:
           height={120}
           alt=""
         />
-
         <h1 className={classes.proName}>{product.product_name}</h1>
-
         <table className="spec-table">
           <tbody>
             {attributeOrderArray.map((id, index) => {
@@ -46,24 +44,20 @@ export default async function SpecificationSection({ product, productCategory }:
 
               return (
                 <tr className="group" key={index}>
-                  <td className={`${classes.td} `}>{categoryAttribute.attribute_name}</td>
-                  <td className={`${classes.td} `}>{foundedValue?.value || "..."}</td>
+                  <td className="faded-text">{categoryAttribute.attribute_name}</td>
+                  <td>{foundedValue?.value || "..."}</td>
                 </tr>
               );
             })}
-
-            <tr>
-              <td>Tags</td>
-              <td>
-                <div className="flex flex-wrap gap-1">
-                  {product.product_tags.map((pT, i) => (
-                    <TagItem key={i} tag={pT.tag} />
-                  ))}
-                </div>
-              </td>
-            </tr>
           </tbody>
         </table>
+        {!!product.product_tags.length && (
+          <div className="mt-5 flex flex-wrap gap-1.5 mb-2">
+            {product.product_tags.map((pT, i) => (
+              <TagItem key={i} tag={pT.tag} />
+            ))}
+          </div>
+        )}{" "}
       </Frame>
     </>
   );

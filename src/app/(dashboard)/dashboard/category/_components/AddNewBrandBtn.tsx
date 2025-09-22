@@ -3,14 +3,13 @@ import useBrandAction from "../_hooks/useBrandAction";
 import { PlusIcon } from "@heroicons/react/24/outline";
 import { generateId } from "@/utils/appHelper";
 import Button from "@/components/ui/Button";
-import  {Modal, ModalRef } from "@/components/modal";
+import { Modal, ModalRef } from "@/components/modal";
 import AddItem from "@/components/modal/AddItem";
+import { useCurrentCategoryContext } from "../../_components/CurrentCategoryContext";
 
-type Props = {
-  currentCategory: Category;
-};
+export default function AddNewBrandBtn() {
+  const { currentCategory } = useCurrentCategoryContext();
 
-export default function AddNewBrandBtn({ currentCategory }: Props) {
   const modalRef = useRef<ModalRef>(null);
   const { actions, isFetching } = useBrandAction({ modalRef });
 

@@ -72,7 +72,7 @@ export default function ChangeAttributeOrder({ currentCategory }: Props) {
                     key={index}
                     onClick={() => handleChangeOrder(index)}
                     data-id={att.id}
-                    className={`attribute-item p-1.5 ${currentIndex === index ? "bg-red-500" : "bg-white dark:bg-slate-700"} border-2 border-[--a-5-cl] rounded-md`}
+                    className={`attribute-item  p-1.5 ${currentIndex === index ? "bg-red-500 text-white" : "bg-white dark:bg-slate-700 hover:text-red-500"} border-2 border-[--a-5-cl] rounded-md`}
                   >
                     {att.attribute_name}
                   </button>

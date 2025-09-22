@@ -32,7 +32,7 @@ export default function useTagAction() {
         case "add": {
           const res = await $fetch.post<Tag>("/tags", props.tag);
 
-          await runRevalidateTag("tags");
+          await runRevalidateTag("categories");
 
           setIsFetching(false);
 
@@ -44,7 +44,7 @@ export default function useTagAction() {
         case "edit": {
           await $fetch.put(`/tags/${props.id}`, { name: props.name });
 
-          await runRevalidateTag("tags");
+          await runRevalidateTag("categories");
 
           setSuccessToast("Edit tag successful");
 
@@ -54,7 +54,7 @@ export default function useTagAction() {
         case "delete": {
           await $fetch.delete(`/tags/${props.id}`);
 
-          await runRevalidateTag("tags");
+          await runRevalidateTag("categories");
 
           setSuccessToast("Delete genre successful");
 

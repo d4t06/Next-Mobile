@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { nextAuthOptions } from "@/app/api/auth/[...nextauth]/authOption";
 import AddNewCategpryBtn from "./_components/AddNewCategoryBtn";
 import { Title } from "@/components";
+import CurrentCategoryProvider from "../_components/CurrentCategoryContext";
 
 export const revalidate = 86400;
 
@@ -24,10 +25,16 @@ async function Group() {
       <CategoryList categories={categories} />
 
       <Title title="Brand" />
-      <BrandList categories={categories} />
+
+      <CurrentCategoryProvider>
+        <BrandList categories={categories} />
+      </CurrentCategoryProvider>
 
       <Title title="Attribute" />
-      <CategoryAttributeList categories={categories} />
+
+      <CurrentCategoryProvider>
+        <CategoryAttributeList categories={categories} />
+      </CurrentCategoryProvider>
     </div>
   );
 }

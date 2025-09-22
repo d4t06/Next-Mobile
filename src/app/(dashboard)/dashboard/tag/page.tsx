@@ -23,12 +23,12 @@ async function Group() {
 
 export default async function CategoryManagePage() {
 	return (
-		<>
+		<div className="space-y-5">
 			<Title title="Tags" />
 
 			<Suspense fallback={<p>Loading...</p>}>
 				<Group />
 			</Suspense>
-		</>
+		</div>
 	);
 }

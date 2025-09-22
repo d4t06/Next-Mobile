@@ -1,5 +1,4 @@
 import ProductItem from "@/components/ProductItem";
-import Link from "next/link";
 import { searchProduct } from "@/libs/searchProduct";
 import { getAllProducts } from "@/libs/getAllProducts";
 import { sleep } from "@/utils/appHelper";
@@ -28,9 +27,7 @@ export default async function DashboardProductContent({ keyword }: Props) {
 		<>
 			<div className="mt-5 space-y-3">
 				{products.map((p, index) => (
-					<Link className="block" key={index} href={`/dashboard/product/${p.id}`}>
-						<ProductItem product={p} />
-					</Link>
+					<ProductItem key={index} href={`/dashboard/product/${p.id}`} product={p} />
 				))}
 			</div>
 		</>
