@@ -51,7 +51,9 @@ export default function useAttributeAction({ modalRef }: Props) {
       switch (props.type) {
         case "Add":
         case "Delete":
-          newOrder = props.category.attribute_order.split("_");
+          newOrder = props.category.attribute_order
+            ? props.category.attribute_order.split("_")
+            : [];
           // newOrder = props.category.attributes.map((a) => a.id + "");
 
           break;

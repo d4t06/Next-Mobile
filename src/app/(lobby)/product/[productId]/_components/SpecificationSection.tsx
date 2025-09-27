@@ -25,7 +25,7 @@ export default async function SpecificationSection({ product, productCategory }:
         <SpecificationCta product={product} />
         <MyImage
           src={product.image_url}
-          className="max-w-[200px] rounded-lg mx-auto mt-3"
+          className="rounded-lg mx-auto mt-3"
           width={120}
           height={120}
           alt=""

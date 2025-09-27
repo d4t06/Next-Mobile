@@ -48,6 +48,20 @@ export const findCurCategory = (categories: Category[], curCategoryAscii: string
   return curCategory;
 };
 
+export const getImageByBrand = (categories: Category[]) => {
+  const imageByBrand: Record<number, Record<number, string>> = {};
+
+  categories.forEach((c) => {
+    c.brands.forEach((b) => {
+      if (!imageByBrand[c.id]) imageByBrand[c.id] = {};
+
+      imageByBrand[c.id][b.id] = b.image_url;
+    });
+  });
+
+  return imageByBrand;
+};
+
 export const formatSize = (size: number) => {
   const units = ["Kb", "Mb"];
   let mb = 0;

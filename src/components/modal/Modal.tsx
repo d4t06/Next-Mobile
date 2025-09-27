@@ -8,6 +8,7 @@ import {
 	type Ref,
 	createContext,
 	useContext,
+	useRef,
 } from "react";
 import { createPortal } from "react-dom";
 
@@ -18,10 +19,11 @@ export type ModalRef = {
 
 function useModal() {
 	const [isOpen, setIsOpen] = useState(false);
+	const persist = useRef(false);
 
 	const closeModal = () => setIsOpen(false);
 
-	return { isOpen, setIsOpen, closeModal };
+	return { isOpen, setIsOpen, closeModal, persist };
 }
 
 type ContextType = ReturnType<typeof useModal>;
@@ -40,8 +42,12 @@ type Props = {
 	onClose?: () => void;
 };
 
-function ModalContent({ children, onClose, modalRef }: Props & { modalRef: Ref<ModalRef> }) {
-	const { isOpen, setIsOpen } = useModalContext();
+function ModalContent({
+	children,
+	onClose,
+	modalRef,
+}: Props & { modalRef: Ref<ModalRef> }) {
+	const { isOpen, setIsOpen, persist } = useModalContext();
 
 	const [isMounted, setIsMounted] = useState(false);
 
@@ -57,6 +63,8 @@ function ModalContent({ children, onClose, modalRef }: Props & { modalRef: Ref<M
 		e.preventDefault();
 		e.stopPropagation();
 
+		if (persist.current) return;
+
 		setIsMounted(false);
 	};
 
@@ -69,6 +77,7 @@ function ModalContent({ children, onClose, modalRef }: Props & { modalRef: Ref<M
 		if (!isMounted) {
 			setTimeout(() => {
 				setIsOpen(false);
+				persist.current = false;
 			}, 300);
 		}
 	}, [isMounted]);
@@ -122,7 +131,9 @@ function ModalContent({ children, onClose, modalRef }: Props & { modalRef: Ref<M
 function Modal({ children, ...rest }: Props, ref: Ref<ModalRef>) {
 	return (
 		<context.Provider value={useModal()}>
-			<ModalContent modalRef={ref} {...rest}>{children}</ModalContent>
+			<ModalContent modalRef={ref} {...rest}>
+				{children}
+			</ModalContent>
 		</context.Provider>
 	);
 }

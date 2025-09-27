@@ -35,6 +35,14 @@ type ProductTag = {
   tag: Tag;
 };
 
+type ProductFeature = {
+  id: numebr;
+  product_id: number;
+  value: string;
+};
+
+type ProductFeatureSchema = Omit<ProductFeature, "id">;
+
 type Product = {
   id: number;
   product_name: string;
@@ -46,6 +54,7 @@ type Product = {
   attributes: ProductAttribute[];
   description: Description;
   product_tags: ProductTag[];
+  features: ProductFeature[];
 };
 
 type ProductSchema = Omit<
@@ -57,6 +66,7 @@ type ProductSchema = Omit<
   | "brand_id"
   | "description"
   | "product_tags"
+  | "features"
 > & {
   category_id: number | undefined;
   brand_id: number | undefined;

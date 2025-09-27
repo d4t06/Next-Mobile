@@ -23,7 +23,7 @@ export async function generateStaticParams() {
   const params: Params["params"][] = [];
 
   for await (const c of categories) {
-    const data = await getAllProducts({ category_id: c.id });
+    const data = await getAllProducts({ category_id: c.id + "" });
 
     if (data) {
       const payload = data.products.map((p) => ({

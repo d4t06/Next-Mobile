@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import TagSelectModal from "./TagSelectModal";
 import useFetch from "@/hooks/useFetch";
 import { runRevalidateTag } from "@/app/actions";
-import { Cog6ToothIcon } from "@heroicons/react/16/solid";
+import { PlusIcon } from "@heroicons/react/16/solid";
 import { useToastContext } from "@/stores/ToastContext";
 
 type Props = {
@@ -70,7 +70,7 @@ export default function AddTagBtn({ tags, product }: Props) {
         className={`p-1.5 ml-5`}
         size={"clear"}
       >
-        <Cog6ToothIcon className="w-5" />
+        <PlusIcon className="w-5" />
         <div className="hidden md:block">Add tag</div>
       </Button>
 

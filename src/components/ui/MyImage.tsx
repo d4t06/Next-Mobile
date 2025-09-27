@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import simonCat from "@/assets/search-empty.png";
 import { ReactEventHandler } from "react";
 
 type Props = {
@@ -18,7 +17,7 @@ export default function MyImage({ alt, height, src, width, className, onLoad }: 
       onLoad={onLoad}
       className={className || ""}
       alt={alt || ""}
-      src={src || simonCat}
+      src={src || "/cho_vo_tri.jpg"}
       height={height}
       width={width}
     />

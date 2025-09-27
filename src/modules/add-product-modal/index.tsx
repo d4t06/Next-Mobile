@@ -1,14 +1,13 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
-import { generateId, initProductObject } from "@/utils/appHelper";
+import { useMemo, useRef } from "react";
+import { generateId } from "@/utils/appHelper";
 import Button from "@/components/ui/Button";
 import { PhotoIcon } from "@heroicons/react/24/outline";
 import { Modal, ModalContentWrapper, ModalHeader, ModalRef } from "@/components/modal";
 import useAddProductModal from "./useAddProductModal";
 import { MyImage, MyInput } from "@/components";
 import Gallery from "../gallery";
-import { useModalContext } from "@/components/modal/Modal";
 
 type AddProduct = {
   type: "Add";
@@ -23,54 +22,18 @@ type EditProduct = {
 
 type Props = AddProduct | EditProduct;
 
-export default function AddProductModal({ categories, ...props }: Props) {
-  const { closeModal } = useModalContext();
-
-  const [productData, setProductData] = useState<ProductSchema>(() => {
-    switch (props.type) {
-      case "Edit":
-        const { product } = props;
-
-        return initProductObject({
-          image_url: product.image_url,
-          product_name: product.product_name,
-          product_name_ascii: product.product_name_ascii,
-          brand_id: product.brand_id,
-          category_id: product.category_id,
-        });
-      default:
-        return initProductObject({});
-    }
-  });
-
-  const [isChange, setIsChange] = useState(false);
-
-  const nameRef = useRef(null);
+export default function AddProductModal(props: Props) {
   const modalRef = useRef<ModalRef>(null);
 
-  // use hooks
-  const { actions, isFetching } = useAddProductModal();
-
-  const currentCategory = useMemo(
-    () =>
-      productData ? categories.find((c) => c.id === productData.category_id) : undefined,
-    [categories, productData?.category_id],
-  );
-
-  const brandByCategory = useMemo(
-    () => (currentCategory ? currentCategory.brands : []),
-    [productData?.category_id],
-  );
-
-  const ableToSubmit = useMemo(
-    () =>
-      productData &&
-      isChange &&
-      !!productData.product_name &&
-      productData.category_id !== undefined &&
-      productData.brand_id !== undefined,
-    [productData, isChange],
-  );
+  const {
+    ableToSubmit,
+    updateProductData,
+    productData,
+    isChange,
+    brandByCategory,
+    isFetching,
+    handleSubmit,
+  } = useAddProductModal(props);
 
   const title = useMemo(() => {
     switch (props.type) {
@@ -82,40 +45,17 @@ export default function AddProductModal({ categories, ...props }: Props) {
   }, []);
 
   const handleInput = (field: keyof ProductSchema, value: any) => {
-    if (!productData) return;
-    setIsChange(true);
-
     if (field === "product_name") {
-      return setProductData({
-        ...productData,
+      return updateProductData({
         [field]: value,
         product_name_ascii: generateId(value),
       });
     }
 
-    setProductData({ ...productData, [field]: value });
+    updateProductData({ [field]: value });
   };
 
-  const handleSubmit = async () => {
-    if (!ableToSubmit || !productData) return;
-
-    switch (props.type) {
-      case "Add":
-        await actions({ variant: "Add", product: productData });
-        break;
-
-      case "Edit":
-        await actions({
-          variant: "Edit",
-          product: productData,
-          id: props.product.id,
-        });
-
-        break;
-    }
-
-    closeModal();
-  };
+  if (!productData) return <></>;
 
   return (
     <>
@@ -146,7 +86,6 @@ export default function AddProductModal({ categories, ...props }: Props) {
                 <div className="space-y-1">
                   <label htmlFor="">Name</label>
                   <MyInput
-                    ref={nameRef}
                     name="name"
                     type="text"
                     value={productData.product_name}
@@ -167,8 +106,8 @@ export default function AddProductModal({ categories, ...props }: Props) {
                     className={"my-input"}
                   >
                     <option value={undefined}>- - -</option>
-                    {!!categories.length &&
-                      categories.map((category, index) => (
+                    {!!props.categories.length &&
+                      props.categories.map((category, index) => (
                         <option key={index} value={category.id}>
                           {category.category_name}
                         </option>
@@ -202,7 +141,7 @@ export default function AddProductModal({ categories, ...props }: Props) {
         <div className="text-right mt-3">
           <Button
             loading={isFetching}
-            disabled={!ableToSubmit}
+            disabled={!ableToSubmit || !isChange}
             onClick={handleSubmit}
             border={"clear"}
           >

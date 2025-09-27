@@ -1,12 +1,12 @@
 "use client";
 
 import { Title } from "@/components";
-import TagItem from "@/components/ui/TagItem";
-import AddTagBtn from "./AddTagBtn";
 import { useCurrentCategoryContext } from "../../../_components/CurrentCategoryContext";
 import { useCurrentProductContext } from "../CurrentProductContext";
+import FeatureItem from "./FeatureItem";
+import AddFeatureBtn from "./AddFeatureBtn";
 
-export default function TagSection() {
+export default function FeatureSection() {
 	const { product } = useCurrentProductContext();
 	const { currentCategory } = useCurrentCategoryContext();
 
@@ -15,13 +15,13 @@ export default function TagSection() {
 	return (
 		<>
 			<div className="flex justify-between items-center">
-				<Title title="Tag" variant={"h2"} />
-				<AddTagBtn tags={currentCategory?.tags} product={product} />
+				<Title title="Feature" variant={"h2"} />
+				<AddFeatureBtn />
 			</div>
 
 			<div className="flex flex-wrap gap-2">
-				{product.product_tags.length
-					? product.product_tags.map((pT, i) => <TagItem  className="bg-transparent primary-shadow"  key={i} tag={pT.tag} />)
+				{product.features.length
+					? product.features.map((f, i) => <FeatureItem key={i} feature={f} />)
 					: "..."}
 			</div>
 		</>

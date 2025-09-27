@@ -40,7 +40,7 @@ export default function AddToCompareButton({ product }: Props) {
           <span className="ml-1">{isAdded ? "Remove" : "Add to compare"}</span>
         </Button>
 
-        {session && <LikeBtn user={session} product_id={product.id} />}
+        <LikeBtn user={session} product_id={product.id} />
 
         <Button
           onClick={() => setIsOpen(!isOpen)}

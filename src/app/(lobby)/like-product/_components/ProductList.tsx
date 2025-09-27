@@ -6,14 +6,16 @@ import { ProductListSkelton } from "@/components/skeleton";
 import useFetch from "@/hooks/useFetch";
 import { useAuthContext } from "@/stores/AuthContext";
 import { useToastContext } from "@/stores/ToastContext";
+import { getImageByBrand } from "@/utils/appHelper";
 import { Session } from "next-auth";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 type Props = {
 	session: Session;
+	categories?: Category[];
 };
 
-export default function ProductList(_props: Props) {
+export default function ProductList({ categories }: Props) {
 	const { user } = useAuthContext();
 	const { setErrorToast } = useToastContext();
 
@@ -24,6 +26,11 @@ export default function ProductList(_props: Props) {
 	const ranEffect = useRef(false);
 
 	const $fetch = useFetch();
+
+	const imageByBrand = useMemo(
+		() => (categories ? getImageByBrand(categories) : {}),
+		[categories],
+	);
 
 	const getLikeProducts = async () => {
 		try {
@@ -49,8 +56,6 @@ export default function ProductList(_props: Props) {
 		}
 	}, [user]);
 
-	if (isFetching) return;
-
 	return (
 		<>
 			<div className="mt-5 space-y-3">
@@ -64,6 +69,10 @@ export default function ProductList(_props: Props) {
 									href={`/product/${lP.product.id}`}
 									key={index}
 									product={lP.product}
+									image_url={
+										lP.product.image_url ||
+										imageByBrand[lP.product.category_id][lP.product.brand_id]
+									}
 								/>
 							))
 						) : (

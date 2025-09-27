@@ -1,34 +1,56 @@
 import { sleep } from "@/utils/appHelper";
 
-export const getAllProducts = async (props?: {
-   page?: number | string;
-   category_id?: string | number;
-   brand_id?: string | number;
-   tag_id?: string | number;
-}) => {
-   const { category_id, page, brand_id, tag_id } = props || {};
+export type GetAllProduct = {
+  page?: string;
+  category_id?: string;
+  brand_id?: string[];
+  tag_id?: string[];
+};
 
-   let params = `?page=${page || 1}`;
+export const getAllProducts = async (props?: GetAllProduct) => {
+  const { category_id, page = "1", brand_id, tag_id } = props || {};
 
-   if (category_id) params += `&category_id=${category_id}`;
-   if (brand_id) params += `&brand_id=${brand_id}`;
-   if (brand_id) params += `&tag_id=${tag_id}`;
+  const serializedQuery: Record<string, string> = {
+    page: page,
+  };
 
-   const res = await fetch(
-      `${
-         process.env.NEXT_PUBLIC_API_ENDPOINT ||
-         "https://nest-mobile-production.up.railway.app/api"
-      }/products${params}`,
-      {
-         next: {
-            tags: category_id ? [`products-${category_id}`] : ["products"],
-         },
-      }
-   );
+  if (category_id) serializedQuery["category_id"] = category_id;
+  if (brand_id) {
+    serializedQuery["brand_id"] =
+      typeof brand_id === "string"
+        ? [brand_id].join(",")
+        : brand_id.length
+          ? brand_id.join(",")
+          : "";
+  }
 
-   if (!res.ok) return undefined;
+  if (tag_id)
+    serializedQuery["tag_id"] =
+      typeof tag_id === "string"
+        ? [tag_id].join(",")
+        : tag_id.length
+          ? tag_id.join(",")
+          : "";
 
-   if (process.env.NODE_ENV === "development") await sleep(500);
+  const params = new URLSearchParams(serializedQuery);
 
-   return res.json() as Promise<ProductResponse>;
+  console.log("get all products ", params.toString());
+
+  const res = await fetch(
+    `${
+      process.env.NEXT_PUBLIC_API_ENDPOINT ||
+      "https://nest-mobile-production.up.railway.app/api"
+    }/products?${params.toString()}`,
+    {
+      next: {
+        tags: [`products-${params.toString()}`],
+      },
+    },
+  );
+
+  if (!res.ok) return undefined;
+
+  if (process.env.NODE_ENV === "development") await sleep(300);
+
+  return res.json() as Promise<ProductResponse>;
 };

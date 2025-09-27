@@ -49,12 +49,13 @@ export default function UserCta() {
   return (
     <>
       {/*<div className={classes.container}>*/}
+
       <MyPopup>
         <MyPopupTrigger ref={triggerRef} className="flex items-center">
           <button className="flex hover:brightness-90">
             <MyImage
               className="rounded-full"
-              src="/meo_vo_tri.png"
+              src={session?.user ? "/meo_vo_tri.png" : "/cho_vo_tri.jpg"}
               height={40}
               width={40}
             />
@@ -69,14 +70,14 @@ export default function UserCta() {
             <div className="flex items-center p-[10px] pb-0">
               <MyImage
                 className="rounded-full"
-                src="/meo_vo_tri.png"
+                src={session?.user ? "/meo_vo_tri.png" : "/cho_vo_tri.jpg"}
                 height={50}
                 width={50}
               />
 
               <div className="ml-[12px]">
                 <h5 className="font-semibold line-clamp-1">
-                  {session ? session.user.username : "Login"}
+                  {session ? session.user.username : "Sign in"}
                 </h5>
               </div>
             </div>
@@ -127,11 +128,7 @@ export default function UserCta() {
       </MyPopup>
 
       <Modal ref={modalRef}>
-        <ConfirmModal
-          label="Logout ?"
-          callback={signOut}
-          loading={false}
-        />
+        <ConfirmModal label="Logout ?" callback={signOut} loading={false} />
       </Modal>
     </>
   );

@@ -5,7 +5,6 @@ import { getAllProducts } from "@/libs/getAllProducts";
 import Link from "next/link";
 import { Suspense } from "react";
 import Loading from "./loading";
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
 import ProductItem from "@/components/ProductItem";
 import CategoryLabel from "./_components/CategoryLabel";
 import { TagIcon } from "@heroicons/react/24/outline";
@@ -17,7 +16,7 @@ type Params = {
   params: {
     categoryId: string;
   };
-  searchParams: { page: string; brand_id: string };
+  searchParams: { page?: string; brand_id?: string[]; tag_id?: string[] };
 };
 
 export async function generateStaticParams() {
@@ -29,27 +28,25 @@ export async function generateStaticParams() {
 }
 
 async function ProductList({
-  categoryId,
-  brandId,
+  category_id,
   page,
+  ...rest
 }: {
-  categoryId: string;
-  brandId: string;
-  page: number;
-}) {
+  category_id: string;
+} & Params["searchParams"] & { page: string }) {
   const categories = await getAllCategories();
 
   const data = await getAllProducts({
     page,
-    category_id: categoryId,
-    brand_id: brandId,
+    category_id,
+    ...rest,
   });
 
   if (!data) return <NoProduct />;
 
   const isRemaining = data.page_size * data.page < data.count;
 
-  const curCategory = categories?.find((c) => c.id === +categoryId);
+  const curCategory = categories?.find((c) => c.id === +category_id);
   const brandObj: Record<number, string> = {};
   curCategory?.brands.forEach((b) => {
     brandObj[b.id] = b.image_url;
@@ -73,10 +70,10 @@ async function ProductList({
 
       {!!data.products.length && (
         <Pagination
-          href={`/${categoryId}`}
-          page={page}
+          href={`/${category_id}`}
+          page={+page}
           isHasNextPage={isRemaining}
-          query={{ brand_id: brandId }}
+          query={rest}
         />
       )}
     </>
@@ -84,55 +81,110 @@ async function ProductList({
 }
 
 async function BrandListServerSide({
-  brandId,
-  categoryId,
+  category_id,
+  ...rest
 }: {
-  brandId: string;
-  categoryId: string;
-}) {
+  category_id: string;
+} & Params["searchParams"]) {
   const categories = await getAllCategories();
 
-  const curCategory = categories?.find((c) => c.id === +categoryId);
+  const curCategory = categories?.find((c) => c.id === +category_id);
 
   return (
     <div className="mt-3">
       <p className="faded-text">Brands:</p>
 
       <div className="flex flex-wrap gap-2 mt-1 text-sm">
-        <Button
-          href={`/${categoryId}`}
-          colors={"second"}
-          size={"clear"}
-          active={!brandId}
-          className="py-1 px-3"
+        <Link
+          href={{
+            pathname: `/${category_id}`,
+            query: { ...rest, brand_id: [], page: 1 },
+          }}
         >
-          All
-        </Button>
-        {curCategory?.brands.map((b, index) => (
           <Button
-            key={index}
-            href={`/${categoryId}${`?brand_id=${b.id}`}`}
             colors={"second"}
             size={"clear"}
-            active={+brandId === b.id}
+            active={!rest.brand_id}
             className="py-1 px-3"
           >
-            {b.brand_name}
+            All
           </Button>
-        ))}
+        </Link>
+
+        {curCategory?.brands.map((b, index) => {
+          let brandIds = [...(rest.brand_id || [])];
+
+          if (brandIds.includes(b.id + ""))
+            brandIds = brandIds.filter((id) => id !== b.id + "");
+          else brandIds.push(b.id + "");
+
+          return (
+            <Link
+              href={{
+                pathname: `/${category_id}`,
+                query: { ...rest, brand_id: brandIds, page: 1 },
+              }}
+              key={index}
+            >
+              <Button
+                colors={"second"}
+                size={"clear"}
+                active={rest.brand_id?.includes(b.id + "")}
+                className="py-1 px-3"
+              >
+                {b.brand_name}
+              </Button>
+            </Link>
+          );
+        })}
       </div>
 
       <p className="faded-text mt-3">Tags:</p>
 
       <div className="flex flex-wrap gap-2 mt-1 text-sm">
-        {curCategory?.tags.map((t, i) => (
-          <Link href={`/tag/${t.id}`} key={i}>
-            <Button colors={"second"} size={"clear"} className="py-1 px-3">
-              <TagIcon className="w-5" />
-              <span>{t.name}</span>
-            </Button>
-          </Link>
-        ))}
+        <Link
+          href={{
+            pathname: `/${category_id}`,
+            query: { ...rest, tag_id: [], page: 1 },
+          }}
+        >
+          <Button
+            colors={"second"}
+            size={"clear"}
+            active={!rest.tag_id}
+            className="py-1 px-3"
+          >
+            All
+          </Button>
+        </Link>
+
+        {curCategory?.tags.map((t, i) => {
+          let tagIds = [...(rest.tag_id || [])];
+
+          if (tagIds.includes(t.id + ""))
+            tagIds = tagIds.filter((id) => id !== t.id + "");
+          else tagIds.push(t.id + "");
+
+          return (
+            <Link
+              key={i}
+              href={{
+                pathname: `/${category_id}`,
+                query: { ...rest, tag_id: tagIds, page: 1 },
+              }}
+            >
+              <Button
+                active={rest.tag_id?.includes(t.id + "")}
+                colors={"second"}
+                size={"clear"}
+                className="py-1 px-3"
+              >
+                <TagIcon className="w-5" />
+                <span>{t.name}</span>
+              </Button>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );
@@ -144,19 +196,20 @@ export default async function ProductPage({
 }: Params) {
   const page =
     typeof searchParams.page === "string" && +searchParams.page >= 1
-      ? +searchParams.page
-      : 1;
+      ? searchParams.page
+      : "1";
 
   return (
     <>
       <CategoryLabel categoryId={categoryId} />
 
-      <BrandListServerSide brandId={searchParams.brand_id} categoryId={categoryId} />
+      <BrandListServerSide category_id={categoryId} {...searchParams} />
 
       <Suspense fallback={<Loading />}>
         <ProductList
-          categoryId={categoryId}
-          brandId={searchParams.brand_id}
+          category_id={categoryId}
+          brand_id={searchParams.brand_id}
+          tag_id={searchParams.tag_id}
           page={page}
         />
       </Suspense>

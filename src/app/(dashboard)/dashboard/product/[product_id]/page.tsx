@@ -7,6 +7,7 @@ import { getProductDetail } from "@/libs/getProductDetail";
 import TagSection from "./_components/TagSection";
 import CurrentCategoryProvider from "../../_components/CurrentCategoryContext";
 import CurrentProductProdiver from "./CurrentProductContext";
+import FeatureSection from "./_components/FeatureSection";
 
 type Props = {
   params: {
@@ -28,9 +29,11 @@ export default async function EditProduct({ params: { product_id } }: Props) {
     <CurrentProductProdiver categories={categories} product={productDetail}>
       <CurrentCategoryProvider>
         <div className="space-y-5">
-          <ProductInfo  />
+          <ProductInfo />
 
           <Specification />
+
+          <FeatureSection />
 
           <TagSection />
 

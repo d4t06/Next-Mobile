@@ -8,6 +8,7 @@ import Image from "next/image";
 type Props = {
   children?: ReactNode;
   className?: string;
+  desc?: string;
   variant?: "less" | "with-home-button" | "default";
 };
 
@@ -15,6 +16,7 @@ export default function NotFound({
   children,
   variant = "default",
   className = "",
+  desc = "No result found, ¯\_(ツ)_/¯",
 }: Props) {
   const renderContent = () => {
     switch (variant) {
@@ -23,7 +25,7 @@ export default function NotFound({
       case "with-home-button":
         return (
           <>
-            <p className="text-center">No result found, ¯\_(ツ)_/¯</p>
+            <p className="text-center">{desc}</p>
             <p className="text-center mt-5">
               <Link href={"/"}>
                 <Button>
@@ -35,7 +37,7 @@ export default function NotFound({
           </>
         );
       case "default":
-        return <p className="text-center">No result found, ¯\_(ツ)_/¯</p>;
+        return <p className="text-center">{desc}</p>;
     }
   };
 

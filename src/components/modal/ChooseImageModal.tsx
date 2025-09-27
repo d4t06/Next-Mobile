@@ -87,7 +87,7 @@ export default function ChooseImageModal({ title, modalRef, ...props }: Props) {
       <p className="text-center mt-5">
         <Button onClick={() => labelRef.current?.click()}>
           <FolderOpenIcon className="w-6" />
-          <span>Choose from computer</span>
+          <span>Choose image</span>
         </Button>
       </p>
     </ModalContentWrapper>
