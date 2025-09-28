@@ -24,7 +24,7 @@ export default function DashBoardSidebar() {
     logoText: "text-[22px] font-[500] whitespace-nowrap tracking-[-1px]",
     logoImage: "max-w-[50px] p-[4px]",
     itemActive: "bg-[--a-10-cl]",
-    linkList: `[&_svg]:w-6 [&_svg]:flex-shrink-0 [&_a]:font-bold [&_a]:flex [&_a]:space-x-2 [&_a]:items-center [&_a]:justify-center [&_a]:p-2 hover:[&_a]:bg-[--a-5-cl] group-[.expand]:[&_a]:justify-start [&_span]:whitespace-nowrap [&_span]:hidden group-[.expand]:[&_span]:block`,
+    linkList: `[&_svg]:w-6 [&_svg]:flex-shrink-0 [&_a]:font-semibold [&_a]:flex [&_a]:space-x-2 [&_a]:items-center [&_a]:justify-center [&_a]:p-2 hover:[&_a]:bg-[--a-5-cl] group-[.expand]:[&_a]:justify-start [&_span]:whitespace-nowrap [&_span]:hidden group-[.expand]:[&_span]:block`,
   };
 
   const getActive = (path: string) => {

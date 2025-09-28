@@ -21,7 +21,7 @@ export default function TagSection() {
 
 			<div className="flex flex-wrap gap-2">
 				{product.product_tags.length
-					? product.product_tags.map((pT, i) => <TagItem  className="bg-transparent primary-shadow"  key={i} tag={pT.tag} />)
+					? product.product_tags.map((pT, i) => <TagItem  className="bg-transparent primary-shadow text-base px-3 py-1"  key={i} tag={pT.tag} />)
 					: "..."}
 			</div>
 		</>

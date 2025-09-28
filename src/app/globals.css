@@ -12,7 +12,7 @@
   }
 
   .spec-table {
-    @apply [&_tr]:border-b last:[&_tr]:border-none [&_tr]:border-[--a-5-cl] [&_tr>*]:py-1 [&_tr>*]:px-2 [&_tr>*]:text-sm sm:[&_tr>*]:py-2 [&_td]:whitespace-break-spaces
+    @apply w-full [&_tr]:border-b last:[&_tr]:border-none [&_tr]:border-[--a-5-cl] [&_tr>*]:py-1 [&_tr>*]:px-2 [&_tr>*]:text-sm sm:[&_tr>*]:py-2 [&_td]:whitespace-break-spaces
   }
 
   .tag-item {
@@ -22,6 +22,10 @@
   .login-form {
     @apply p-5 border border-[--a-5-cl] w-[400px] max-w-[90vw] primary-shadow bg-white dark:bg-slate-900 rounded-xl space-y-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
   }
+
+/*  .markdown-content {
+    @apply [&_pre]:overflow-auto;
+  }*/
 
   label {
     @apply text-gray-600 dark:text-gray-100;

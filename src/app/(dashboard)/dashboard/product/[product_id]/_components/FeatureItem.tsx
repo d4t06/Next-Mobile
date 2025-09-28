@@ -1,9 +1,10 @@
 import { useRef, useState } from "react";
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { AddItem, Modal, ModalRef } from "@/components/modal";
+import { Modal, ModalRef } from "@/components/modal";
 import ConfirmModal from "@/components/modal/Confirm";
 import ItemRightCtaFrame from "@/components/dashboard/ItemRightCta";
 import useFeatureAction from "../_hooks/useFeatureAction";
+import AddFeatureModal from "./AddFeatureModal";
 
 type Props = {
 	feature: ProductFeature;
@@ -26,7 +27,7 @@ export default function FeatureItem({ feature }: Props) {
 
 	return (
 		<>
-			<ItemRightCtaFrame>
+			<ItemRightCtaFrame className="text-base">
 				<span>{feature.value}</span>
 
 				<div>
@@ -40,19 +41,7 @@ export default function FeatureItem({ feature }: Props) {
 			</ItemRightCtaFrame>
 
 			<Modal ref={modalRef}>
-				{modal === "edit" && (
-					<AddItem
-						cbWhenSubmit={(v) =>
-							action({
-								type: "Edit",
-								id: feature.id,
-								value: v,
-							})
-						}
-						title="Edit feature"
-						loading={isFetching}
-					/>
-				)}
+				{modal === "edit" && <AddFeatureModal variant="Edit" feature={feature} />}
 
 				{modal === "delete" && (
 					<ConfirmModal

@@ -19,6 +19,8 @@ type Props = {
   children?: ReactNode;
   loading?: boolean;
   variant?: "input" | "text-are";
+  setValueFromProp?: (v: string) => void;
+  valueFromProps?: string;
 };
 
 export default function AddItem({
@@ -28,12 +30,17 @@ export default function AddItem({
   loading,
   children,
   variant = "input",
+  setValueFromProp,
+  valueFromProps
 }: Props) {
   const [value, setValue] = useState(initValue || "");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   const isChanged = useMemo(() => value !== initValue, [value]);
+
+  const _setValue = setValueFromProp || setValue;
+  const _value = valueFromProps || value
 
   useEffect(() => {
     inputRef.current?.focus();
@@ -43,7 +50,7 @@ export default function AddItem({
     e.preventDefault();
     if (!isChanged) return;
 
-    cbWhenSubmit(value);
+    cbWhenSubmit(_value);
   };
 
   return (
@@ -55,8 +62,8 @@ export default function AddItem({
             className="w-full"
             ref={inputRef}
             placeholder="name..."
-            value={value}
-            cb={(value) => setValue(value)}
+            value={_value}
+            cb={(value) => _setValue(value)}
           />
         )}
 
@@ -65,8 +72,8 @@ export default function AddItem({
             className={`my-input`}
             ref={inputRef as RefObject<any>}
             placeholder="name..."
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={_value}
+            onChange={(e) => _setValue(e.target.value)}
           />
         )}
 

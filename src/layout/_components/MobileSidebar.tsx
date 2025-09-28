@@ -124,7 +124,6 @@ export default function MobileSidebar({ categories }: Props) {
 
             {!session && (
               <Link href={"/signin"}>
-                button
                 <ArrowLeftEndOnRectangleIcon />
                 <span>Sign in</span>
               </Link>
@@ -159,11 +158,7 @@ export default function MobileSidebar({ categories }: Props) {
       )}
 
       <Modal ref={modalRef}>
-        <ConfirmModal
-          label="Logout ?"
-          callback={signOut}
-          loading={false}
-        />
+        <ConfirmModal label="Logout ?" callback={signOut} loading={false} />
       </Modal>
     </>
   );

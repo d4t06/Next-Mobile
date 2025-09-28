@@ -14,7 +14,7 @@ export default function useFeatureAction() {
 
   type Add = {
     type: "Add";
-    feature: ProductFeatureSchema;
+    value: string;
   };
 
   type Edit = {
@@ -35,7 +35,12 @@ export default function useFeatureAction() {
       setIsFetching(true);
       switch (props.type) {
         case "Add":
-          await $fetch.post<Tag>("/products/features", props.feature);
+          const featureSchema: ProductFeatureSchema = {
+            value: props.value,
+            product_id: product.id,
+          };
+
+          await $fetch.post<Tag>("/products/features", featureSchema);
           break;
 
         case "Edit":

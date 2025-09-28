@@ -1,18 +1,13 @@
 "use client";
 
 import { Button } from "@/components";
-import { AddItem, Modal, ModalRef } from "@/components/modal";
+import { Modal, ModalRef } from "@/components/modal";
 import { useRef } from "react";
-import { useCurrentProductContext } from "../CurrentProductContext";
-import useFeatureAction from "../_hooks/useFeatureAction";
 import { PlusIcon } from "@heroicons/react/16/solid";
+import AddFeatureModal from "./AddFeatureModal";
 
 export default function AddFeatureBtn() {
-  const { product } = useCurrentProductContext();
-
   const modalRef = useRef<ModalRef>(null);
-
-  const { action, isFetching } = useFeatureAction();
 
   return (
     <>
@@ -26,19 +21,7 @@ export default function AddFeatureBtn() {
       </Button>
 
       <Modal ref={modalRef}>
-        <AddItem
-          cbWhenSubmit={(v) =>
-            action({
-              type: "Add",
-              feature: {
-                product_id: product.id,
-                value: v,
-              },
-            })
-          }
-          title="Add feature"
-          loading={isFetching}
-        />
+        <AddFeatureModal variant="Add" />
       </Modal>
     </>
   );

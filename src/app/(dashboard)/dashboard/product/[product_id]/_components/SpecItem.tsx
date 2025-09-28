@@ -2,10 +2,11 @@
 
 import AddItem from "@/components/modal/AddItem";
 import Button from "@/components/ui/Button";
-import { useMemo, useRef } from "react";
+import { useMemo, useRef, useState } from "react";
 import useSpecAction from "../_hooks/useSpecAction";
 import { PencilSquareIcon } from "@heroicons/react/24/outline";
 import { Modal, ModalRef } from "@/components/modal";
+import useFeatureAction from "../_hooks/useFeatureAction";
 
 type Props = {
   product: Product;
@@ -14,10 +15,12 @@ type Props = {
 };
 
 export default function SpecItem({ id, product, productCategory }: Props) {
+  const [isAsFeature, setIsAsFeature] = useState(false);
   const modalRef = useRef<ModalRef>(null);
 
   //    hooks
   const { actions, isFetching } = useSpecAction({ productId: product.id });
+  const { action } = useFeatureAction();
 
   const foundedCatAttribute = useMemo(
     () => productCategory.attributes.find((c) => c.id === +id),
@@ -33,6 +36,7 @@ export default function SpecItem({ id, product, productCategory }: Props) {
   );
 
   const handleUpdateAttribute = async (value: string) => {
+    // edit case
     if (foundedAttribute) {
       const schema: ProductAttributeSchema = {
         ...foundedAttribute,
@@ -44,6 +48,7 @@ export default function SpecItem({ id, product, productCategory }: Props) {
         attribute: schema,
         id: foundedAttribute.id,
       });
+      // add new case
     } else if (foundedCatAttribute) {
       if (!product) return;
       const schema: ProductAttributeSchema = {
@@ -52,10 +57,13 @@ export default function SpecItem({ id, product, productCategory }: Props) {
         product_id: product.id,
       };
 
-      await actions({
-        type: "Add",
-        attribute: schema,
-      });
+      await Promise.all([
+        actions({
+          type: "Add",
+          attribute: schema,
+        }),
+        isAsFeature ? action({ type: "Add", value: schema.value }) : {},
+      ]);
     }
 
     modalRef.current?.close();
@@ -93,7 +101,20 @@ export default function SpecItem({ id, product, productCategory }: Props) {
           cbWhenSubmit={(value) => handleUpdateAttribute(value)}
           title={`Edit '${foundedCatAttribute.attribute_name}'`}
           initValue={foundedAttribute?.value || ""}
-        />
+        >
+          <div className="flex items-center mt-3">
+            <input
+              id="is-feature"
+              type="checkbox"
+              checked={isAsFeature}
+              onChange={() => setIsAsFeature(!isAsFeature)}
+            />
+
+            <label htmlFor="is-feature" className="ml-2">
+              As feature
+            </label>
+          </div>
+        </AddItem>
       </Modal>
     </>
   );
