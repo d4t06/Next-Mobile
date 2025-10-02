@@ -3,6 +3,7 @@ import { useCurrentProductContext } from "../CurrentProductContext";
 import useFeatureAction from "../_hooks/useFeatureAction";
 import { useState } from "react";
 import { Button } from "@/components";
+import { useModalContext } from "@/components/modal/Modal";
 
 type Add = {
 	variant: "Add";
@@ -14,6 +15,7 @@ type Edit = {
 };
 
 export default function AddFeatureModal(props: Add | Edit) {
+	const { closeModal } = useModalContext();
 	const { product } = useCurrentProductContext();
 	const { action, isFetching } = useFeatureAction();
 
@@ -23,26 +25,30 @@ export default function AddFeatureModal(props: Add | Edit) {
 		setValue((prev) => (prev ? prev + ", " + att.value : att.value));
 	};
 
+	const handleSubmit = async () => {
+		props.variant === "Add"
+			? await action({
+					type: "Add",
+					value,
+				})
+			: await action({
+					type: "Edit",
+					value,
+					id: props.feature.id,
+				});
+
+		closeModal();
+	};
+
 	return (
 		<AddItem
 			valueFromProps={value}
 			setValueFromProp={setValue}
-			cbWhenSubmit={(v) =>
-				props.variant === "Add"
-					? action({
-							type: "Add",
-							value: v,
-						})
-					: action({
-							type: "Edit",
-							value: v,
-							id: props.feature.id,
-						})
-			}
+			cbWhenSubmit={handleSubmit}
 			title={`${props.variant} feature`}
 			loading={isFetching}
 		>
-			<div className="mt-5 flex gap-2">
+			<div className="mt-5 flex gap-2 flex-wrap">
 				{product.attributes.map((att, i) => {
 					return (
 						<Button

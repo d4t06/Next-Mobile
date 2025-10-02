@@ -1,19 +1,32 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useChatContext } from ".";
 
 export default function useChatInput() {
+	const { chatInputRef } = useChatContext();
+
 	const [value, setValue] = useState("");
 
-	const textareaRef = useRef<HTMLTextAreaElement>(null);
+	const changeEventHanlder: EventListener = (e) => {
+		setValue((e.target as HTMLTextAreaElement).value);
+	};
 
 	useEffect(() => {
-		if (!textareaRef.current) return;
+		if (!chatInputRef.current) return;
 
-		textareaRef.current.style.height = "auto";
+		chatInputRef.current.style.height = "auto";
 
-		if (textareaRef.current.scrollHeight > textareaRef.current.offsetHeight) {
-			textareaRef.current.style.height = textareaRef.current.scrollHeight + "px";
+		if (chatInputRef.current.scrollHeight > chatInputRef.current.offsetHeight) {
+			chatInputRef.current.style.height = chatInputRef.current.scrollHeight + "px";
 		}
 	}, [value]);
 
-	return { value, setValue, textareaRef };
+	useEffect(() => {
+		chatInputRef.current?.addEventListener("change", changeEventHanlder);
+
+		return () => {
+			chatInputRef.current?.removeEventListener("change", changeEventHanlder);
+		};
+	});
+
+	return { setValue };
 }

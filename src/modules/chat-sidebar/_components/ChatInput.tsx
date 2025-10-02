@@ -5,30 +5,30 @@ import useAIChat from "../useAIChat";
 import { FormEventHandler } from "react";
 
 export default function ChatInput() {
-  const { isFetching } = useChatContext();
-
-  const { textareaRef, value, setValue } = useChatInput();
+  const { isFetching, chatInputRef } = useChatContext();
 
   const { sendMessage } = useAIChat();
+  const { setValue } = useChatInput();
 
   const handleSubmit: FormEventHandler = async (e) => {
     e.preventDefault();
 
-    if (!value.trim()) return;
-    setValue("");
+    if (!chatInputRef.current || !chatInputRef.current.value) return;
+    sendMessage(chatInputRef.current.value);
+    
+    chatInputRef.current.value = "";
+    setValue('')
 
-    sendMessage(value);
   };
 
   return (
     <>
       <form onSubmit={handleSubmit} className={`flex pb-3 items-end`}>
         <textarea
-          ref={textareaRef}
-          value={value}
+          ref={chatInputRef}
           onChange={(e) => setValue(e.target.value)}
           rows={1}
-          className={`my-input no-scrollbar resize-none max-h-[30vh] w-full`}
+          className={`my-input break-all no-scrollbar resize-none max-h-[30vh] w-full`}
         />
 
         <button type="submit" className={`p-1.5 hover:bg-white/10 rounded-full`}>

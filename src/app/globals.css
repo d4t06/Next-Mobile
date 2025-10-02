@@ -8,11 +8,11 @@
   }
 
   .prose {
-    @apply [&_*]:mt-5 [&_h5]:font-[500] [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:border-[2px] [&_img]:max-w-[80%] [&_img]:border-transparent;
+    @apply [&_*]:mt-4 [&_h5]:text-xl [&_img]:rounded-[6px] [&_img]:mx-auto [&_img]:border-[2px] [&_img]:max-w-[80%] [&_img]:border-transparent;
   }
 
   .spec-table {
-    @apply w-full [&_tr]:border-b last:[&_tr]:border-none [&_tr]:border-[--a-5-cl] [&_tr>*]:py-1 [&_tr>*]:px-2 [&_tr>*]:text-sm sm:[&_tr>*]:py-2 [&_td]:whitespace-break-spaces
+    @apply w-full [&_tr]:border-b last:[&_tr]:border-none [&_tr]:border-[--a-5-cl] [&_tr>*]:py-1 [&_tr>*]:px-2 [&_tr>*]:text-sm sm:[&_tr>*]:py-2 [&_td]:whitespace-break-spaces;
   }
 
   .tag-item {
@@ -23,7 +23,7 @@
     @apply p-5 border border-[--a-5-cl] w-[400px] max-w-[90vw] primary-shadow bg-white dark:bg-slate-900 rounded-xl space-y-5 absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2;
   }
 
-/*  .markdown-content {
+  /*  .markdown-content {
     @apply [&_pre]:overflow-auto;
   }*/
 
@@ -34,6 +34,13 @@
   .faded-text {
     @apply text-gray-600 dark:text-gray-100;
   }
+}
+
+.prose h5,
+h4,
+h3,
+h2 {
+  font-weight: bold;
 }
 
 button[disabled],

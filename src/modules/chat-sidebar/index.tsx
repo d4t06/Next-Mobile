@@ -1,7 +1,7 @@
 "use client";
 import Button from "@/components/ui/Button";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/16/solid";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import ChatInput from "./_components/ChatInput";
 import MessageList from "./_components/MessageList";
 
@@ -14,7 +14,9 @@ function useChat() {
   const [messages, setMessages] = useState<Messsage[]>([]);
   const [isFetching, setIsFetching] = useState(false);
 
-  return { messages, setMessages, isFetching, setIsFetching };
+  const chatInputRef = useRef<HTMLTextAreaElement>(null);
+
+  return { messages, setMessages, isFetching, setIsFetching, chatInputRef };
 }
 
 type ContextType = ReturnType<typeof useChat>;

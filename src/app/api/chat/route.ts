@@ -7,12 +7,10 @@ export async function POST(req: Request) {
 
   if (!content) return Response.error();
 
-  console.log(content)
-
   const start = Date.now();
 
   const res = await ai.models.generateContent({
-    model: "gemini-2.5-flash-lite",
+    model: "gemini-2.5-flash",
     contents: content,
   });
 

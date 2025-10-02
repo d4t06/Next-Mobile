@@ -10,8 +10,8 @@ export default function MessageItem({ message }: Props) {
 	switch (message.role) {
 		case "user":
 			return (
-				<div className="text-right">
-					<p className="inline-block p-1.5 px-2 text-right bg-[--a-5-cl] rounded-md break-normal whitespace-normal">
+				<div className="">
+					<p className="p-1.5 px-2 bg-[--a-5-cl] rounded-md break-all line-clamp-2">
 						{message.message}
 					</p>
 				</div>

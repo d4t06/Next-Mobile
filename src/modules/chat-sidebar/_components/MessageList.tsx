@@ -2,20 +2,24 @@ import { TrashIcon } from "@heroicons/react/16/solid";
 import { useChatContext } from "..";
 import MessageItem from "./MessageItem";
 import { Button } from "@/components";
-import useAIChat from "../useAIChat";
 import { AddItem, Modal, ModalRef } from "@/components/modal";
 import { useRef } from "react";
 
 export default function MessageList() {
-	const { messages, setMessages } = useChatContext();
-	const { sendMessage } = useAIChat();
+	const { messages, setMessages, chatInputRef } = useChatContext();
 
 	const modalRef = useRef<ModalRef>(null);
 
 	const handleSendMessage = (v: string) => {
-		sendMessage(
-			`find ${v}  weight, battery and material infomations, is it has robust chassis ?, is it upgradeable	 ? , is it quite when load ?, is it worthy to buy, reasons (assume at release) ? and critical issues if any, all answer in short`,
-		);
+		if (!chatInputRef.current) return;
+
+
+ // tomshardware.com, laptopmedia.com, storagereview.com,
+
+		chatInputRef.current.value = `${v} year release, material, cpu, display, ram (also show ram type), weight, battery infomation (assume base model). Is it has robust chassis ?, Is it has lightweight compare with it screen size ?, is it ram upgradeable ?, is it storage upgradeable ?, is it quite when load ?, props and critical issues if any ?. Find information from website notebookcheck.net if has, All answer in short`;
+
+		const changeEvent = new Event("change");
+		chatInputRef.current.dispatchEvent(changeEvent);
 
 		modalRef.current?.close();
 	};

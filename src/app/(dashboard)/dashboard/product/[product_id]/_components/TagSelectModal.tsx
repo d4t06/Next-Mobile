@@ -55,7 +55,7 @@ export default function TagSelectModal({ current, loading, choose, tags }: Props
 
               return (
                 <button key={i} onClick={() => selectTag(t)}>
-                  <TagItem tag={t} className={isSelected ? "text-red-500" : ""} />
+                  <TagItem tag={t} className={`text-base ${isSelected ? "text-red-500" : ""}`} />
                 </button>
               );
             })
